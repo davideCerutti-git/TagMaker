@@ -33,12 +33,7 @@ public class ModelSiemens {
 	static BufferedReader br;
 	private static final int MAX_NUM_COL_XLS = 15;
 	private static int tmp_num_db = 0;
-//	private static int[] tmp_num_word = { 0 };
-//	private static int[] tmp_num_bit = { 0 };
-//	private static int[] tmp_num_word = { 0 };
-//	private static int[] tmp_num_bit = { 0 };//	private static int[] tmp_num_word = { 0 };
-//	private static int[] tmp_num_bit = { 0 };//	private static int[] tmp_num_word = { 0 };
-//	private static int[] tmp_num_bit = { 0 };
+	
 	private static Address gAddr = new Address();
 	static Settings properties;
 
@@ -57,11 +52,9 @@ public class ModelSiemens {
 
 	protected CellStyle style;
 	protected Font font;
-	private Category category = null;
 	private MainViewControllerSiemens controller;
 	private CsvGenerator csvGenerator;
 	private static HashMap<String, String> PLCTags;
-//	static List<ItemUDT> UDT_list;
 	private static SimpleSiemensType lastSimpleType;
 
 	/** ###### CONSTRUCTORS ###### */
