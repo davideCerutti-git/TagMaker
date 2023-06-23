@@ -864,6 +864,7 @@ public class ModelSiemens {
 			ItemStruct struct_tmp = (ItemStruct) struct.clone();
 //			ModelSiemens.logSiem.warn("GlobalAddress: "+ModelSiemens.getgAddr());
 //			logSiem.info("Aggiunta Struct: " + struct_tmp.getName() + "[" + i + "]");
+			struct_tmp.updateName(getNameItemFromStringLine(lineReaded)+ "[" + i + "]");
 			struct_tmp.addAddresRec(gAddr);
 			ModelSiemens.getgAddr().add(sizeArray);
 			workingStruct.addItem(struct_tmp);
