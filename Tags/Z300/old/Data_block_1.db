@@ -1,0 +1,23 @@
+﻿TYPE "UDT_TEST"
+VERSION : 0.1
+   STRUCT
+      boolean : Bool;
+      integer : Int;
+      dinteger : DInt;
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "Data_block_1"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      udt_1 : "UDT_TEST";
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

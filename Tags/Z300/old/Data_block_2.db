@@ -1,0 +1,31 @@
+﻿TYPE "UDT_TEST"
+VERSION : 0.1
+   STRUCT
+      boolean : Bool;
+      integer : Int;
+      dinteger : DInt;
+   END_STRUCT;
+
+END_TYPE
+
+TYPE "UDT_TEST_2"
+VERSION : 0.1
+   STRUCT
+      udt_test { S7_SetPoint := 'False'} : "UDT_TEST";
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "Data_block_2"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+NON_RETAIN
+   VAR 
+      udt_2 { S7_SetPoint := 'False'} : "UDT_TEST_2";
+   END_VAR
+
+
+BEGIN
+
+END_DATA_BLOCK
+

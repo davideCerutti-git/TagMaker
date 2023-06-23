@@ -1,0 +1,69 @@
+﻿TYPE "UDT_HMI_Alarm_V2"
+VERSION : 0.1
+   STRUCT
+      t : Struct
+         x0 : Bool;
+         x1 : Bool;
+         x2 : Bool;
+         x3 : Bool;
+         x4 : Bool;
+         x5 : Bool;
+         x6 : Bool;
+         x7 : Bool;
+         x8 : Bool;
+         x9 : Bool;
+         x10 : Bool;
+         x11 : Bool;
+         x12 : Bool;
+         x13 : Bool;
+         x14 : Bool;
+         x15 : Bool;
+      END_STRUCT;
+      iHmiSumAlm : Word;
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "ChipsBlower_Alm"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tEmergencyAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop machine fault
+      tAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop next cycle faults
+      tWarning : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // Generic warning
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
+DATA_BLOCK "ChipsBlower_Hmi"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tHMR : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         iState : Int;   // Chips Blower State (1=Ready, 3=Run, 7=Anomaly)
+         xBlowActive : Bool;   // Blow Active {x|x|x|x|O}
+         xManualCommandEnabled : Bool;   // Manual Command Enable {x|x|x|x|O}
+         tManCmd : Struct
+            xBlowerEnabled : Bool;   // Blower Enable {x|x|x|x|O}
+         END_STRUCT;
+      END_STRUCT;
+      tHMW : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         xReqManualCommand : Bool;   // Enable Manual command {x|x|x|x|O}
+         xReqAutomaticCommand : Bool;   // Enable Automatic command {x|x|x|x|O}
+         xEnableBlow : Bool;   // Enable Blow {x|x|x|x|O}
+         tManCmd : Struct
+            Blow : Bool;   // Request enabled blower {x|x|x|x|O}
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

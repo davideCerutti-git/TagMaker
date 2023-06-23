@@ -1,0 +1,975 @@
+﻿DATA_BLOCK "DB_ZUPS_HMI"
+{ DB_Accessible_From_OPC_UA := 'FALSE' ;
+ DB_Accessible_From_Webserver := 'FALSE' ;
+ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tAlm { ExternalWritable := 'False'} : Struct   // HMI Alarms
+         tE { ExternalWritable := 'False'} : Struct   // Emergency alarms
+            xSpare_0 { ExternalWritable := 'False'} : Bool;
+            xMainEmergencyUPS { ExternalWritable := 'False'} : Bool;   // A117KE1.Main emergency UPS ON {X|X|X|X|O}
+            xLocalUPS1 { ExternalWritable := 'False'} : Bool;   // AxxSB1.Emergency localization MCC1201 {X|X|X|X|O}
+            xLocalUPS2 { ExternalWritable := 'False'} : Bool;   // M204S_SB1.Emergency localization M204S {X|X|X|X|O}
+            xLocalUPS3 { ExternalWritable := 'False'} : Bool;   // M204S_SB2.Emergency localization M204S {X|X|X|X|O}
+            xLocalUPS4 { ExternalWritable := 'False'} : Bool;   // CS4201A117SB1.Emergency localization spare {X|X|X|X|O}
+            xLocalUpS5 { ExternalWritable := 'False'} : Bool;   // AxxSBx.Emergency localization spare {X|X|X|X|O}
+            xSpare_7 { ExternalWritable := 'False'} : Bool;
+            xSpare_8 { ExternalWritable := 'False'} : Bool;
+            xSpare_9 { ExternalWritable := 'False'} : Bool;
+            xSpare_10 { ExternalWritable := 'False'} : Bool;
+            xSpare_11 { ExternalWritable := 'False'} : Bool;
+            xSpare_12 { ExternalWritable := 'False'} : Bool;
+            xSpare_13 { ExternalWritable := 'False'} : Bool;
+            xSpare_14 { ExternalWritable := 'False'} : Bool;
+            xSpare_15 { ExternalWritable := 'False'} : Bool;
+            xSpare_16 { ExternalWritable := 'False'} : Bool;
+            xSpare_17 { ExternalWritable := 'False'} : Bool;
+            xSpare_18 { ExternalWritable := 'False'} : Bool;
+            xSpare_19 { ExternalWritable := 'False'} : Bool;
+            xSpare_20 { ExternalWritable := 'False'} : Bool;
+            xSpare_21 { ExternalWritable := 'False'} : Bool;
+            xSpare_22 { ExternalWritable := 'False'} : Bool;
+            xSpare_23 { ExternalWritable := 'False'} : Bool;
+            xSpare_24 { ExternalWritable := 'False'} : Bool;
+            xSpare_25 { ExternalWritable := 'False'} : Bool;
+            xSpare_26 { ExternalWritable := 'False'} : Bool;
+            xSpare_27 { ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+         tS { ExternalWritable := 'False'} : Struct   // Stopping faults
+            xSpare_0 { ExternalWritable := 'False'} : Bool;
+            xSpare_1 { ExternalWritable := 'False'} : Bool;
+            xSpare_2 { ExternalWritable := 'False'} : Bool;
+            xSpare_3 { ExternalWritable := 'False'} : Bool;
+            xSpare_4 { ExternalWritable := 'False'} : Bool;
+            xSpare_5 { ExternalWritable := 'False'} : Bool;
+            xSpare_6 { ExternalWritable := 'False'} : Bool;
+            xSpare_7 { ExternalWritable := 'False'} : Bool;
+            xSpare_8 { ExternalWritable := 'False'} : Bool;
+            xSpare_9 { ExternalWritable := 'False'} : Bool;
+            xSpare_10 { ExternalWritable := 'False'} : Bool;
+            xSpare_11 { ExternalWritable := 'False'} : Bool;
+            xSpare_12 { ExternalWritable := 'False'} : Bool;
+            xSpare_13 { ExternalWritable := 'False'} : Bool;
+            xSpare_14 { ExternalWritable := 'False'} : Bool;
+            xSpare_15 { ExternalWritable := 'False'} : Bool;
+            xSpare_16 { ExternalWritable := 'False'} : Bool;
+            xSpare_17 { ExternalWritable := 'False'} : Bool;
+            xSpare_18 { ExternalWritable := 'False'} : Bool;
+            xSpare_19 { ExternalWritable := 'False'} : Bool;
+            xSpare_20 { ExternalWritable := 'False'} : Bool;
+            xSpare_21 { ExternalWritable := 'False'} : Bool;
+            xSpare_22 { ExternalWritable := 'False'} : Bool;
+            xSpare_23 { ExternalWritable := 'False'} : Bool;
+            xSpare_24 { ExternalWritable := 'False'} : Bool;
+            xSpare_25 { ExternalWritable := 'False'} : Bool;
+            xSpare_26 { ExternalWritable := 'False'} : Bool;
+            xSpare_27 { ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+         tF { ExternalWritable := 'False'} : Struct   // Faults
+            xSpare_0 { ExternalWritable := 'False'} : Bool;
+            xSpare_1 { ExternalWritable := 'False'} : Bool;
+            xSpare_2 { ExternalWritable := 'False'} : Bool;
+            xSpare_3 { ExternalWritable := 'False'} : Bool;
+            xSpare_4 { ExternalWritable := 'False'} : Bool;
+            xSpare_5 { ExternalWritable := 'False'} : Bool;
+            xSpare_6 { ExternalWritable := 'False'} : Bool;
+            xPowerSupply24vDrive1 { ExternalWritable := 'False'} : Bool;   // A110QF2.Power Supply 24V Drive
+            xSpare_8 { ExternalWritable := 'False'} : Bool;
+            xDriveSupply1 { ExternalWritable := 'False'} : Bool;   // A136QM1.Drive Supply
+            xSpare_10 { ExternalWritable := 'False'} : Bool;
+            xSpare_11 { ExternalWritable := 'False'} : Bool;
+            xSpare_12 { ExternalWritable := 'False'} : Bool;
+            xSpare_13 { ExternalWritable := 'False'} : Bool;
+            xSpare_14 { ExternalWritable := 'False'} : Bool;
+            xSpare_15 { ExternalWritable := 'False'} : Bool;
+            xSpare_16 { ExternalWritable := 'False'} : Bool;
+            xSpare_17 { ExternalWritable := 'False'} : Bool;
+            xSpare_18 { ExternalWritable := 'False'} : Bool;
+            xSpare_19 { ExternalWritable := 'False'} : Bool;
+            xSpare_20 { ExternalWritable := 'False'} : Bool;
+            xSpare_21 { ExternalWritable := 'False'} : Bool;
+            xSpare_22 { ExternalWritable := 'False'} : Bool;
+            xSpare_23 { ExternalWritable := 'False'} : Bool;
+            xSpare_24 { ExternalWritable := 'False'} : Bool;
+            xSpare_25 { ExternalWritable := 'False'} : Bool;
+            xSpare_26 { ExternalWritable := 'False'} : Bool;
+            xSpare_27 { ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+         tW { ExternalWritable := 'False'} : Struct   // Warnings
+            xSpare_0 { ExternalWritable := 'False'} : Bool;
+            xSpare_1 { ExternalWritable := 'False'} : Bool;
+            xSpare_2 { ExternalWritable := 'False'} : Bool;
+            xSpare_3 { ExternalWritable := 'False'} : Bool;
+            xSpare_4 { ExternalWritable := 'False'} : Bool;
+            xSpare_5 { ExternalWritable := 'False'} : Bool;
+            xSpare_6 { ExternalWritable := 'False'} : Bool;
+            xSpare_7 { ExternalWritable := 'False'} : Bool;
+            xSpare_8 { ExternalWritable := 'False'} : Bool;
+            xSpare_9 { ExternalWritable := 'False'} : Bool;
+            xSpare_10 { ExternalWritable := 'False'} : Bool;
+            xSpare_11 { ExternalWritable := 'False'} : Bool;
+            xSpare_12 { ExternalWritable := 'False'} : Bool;
+            xSpare_13 { ExternalWritable := 'False'} : Bool;
+            xSpare_14 { ExternalWritable := 'False'} : Bool;
+            xSpare_15 { ExternalWritable := 'False'} : Bool;
+            xSpare_16 { ExternalWritable := 'False'} : Bool;
+            xSpare_17 { ExternalWritable := 'False'} : Bool;
+            xSpare_18 { ExternalWritable := 'False'} : Bool;
+            xSpare_19 { ExternalWritable := 'False'} : Bool;
+            xSpare_20 { ExternalWritable := 'False'} : Bool;
+            xSpare_21 { ExternalWritable := 'False'} : Bool;
+            xSpare_22 { ExternalWritable := 'False'} : Bool;
+            xSpare_23 { ExternalWritable := 'False'} : Bool;
+            xSpare_24 { ExternalWritable := 'False'} : Bool;
+            xSpare_25 { ExternalWritable := 'False'} : Bool;
+            xSpare_26 { ExternalWritable := 'False'} : Bool;
+            xSpare_27 { ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+      END_STRUCT;
+      tHMR { ExternalWritable := 'False'} : Struct   // HMI Read
+         xSpare0 { ExternalWritable := 'False'} : Bool;
+         xSpare1 { ExternalWritable := 'False'} : Bool;
+         xSpare2 { ExternalWritable := 'False'} : Bool;
+         xSpare3 { ExternalWritable := 'False'} : Bool;
+         xSpare4 { ExternalWritable := 'False'} : Bool;
+         xSpare5 { ExternalWritable := 'False'} : Bool;
+         xSpare6 { ExternalWritable := 'False'} : Bool;
+         xSpare7 { ExternalWritable := 'False'} : Bool;
+         xSpare8 { ExternalWritable := 'False'} : Bool;
+         xSpare9 { ExternalWritable := 'False'} : Bool;
+         xSpare10 { ExternalWritable := 'False'} : Bool;
+         xSpare11 { ExternalWritable := 'False'} : Bool;
+         xSpare12 { ExternalWritable := 'False'} : Bool;
+         xSpare13 { ExternalWritable := 'False'} : Bool;
+         xSpare14 { ExternalWritable := 'False'} : Bool;
+         xZoneAlarm { ExternalWritable := 'False'} : Bool;   // Zone alarm {X|X|X|X|O}
+         xSpare16 { ExternalWritable := 'False'} : Bool;
+         xSpare17 { ExternalWritable := 'False'} : Bool;
+         xSpare18 { ExternalWritable := 'False'} : Bool;
+         xSpare19 { ExternalWritable := 'False'} : Bool;
+         xSpare20 { ExternalWritable := 'False'} : Bool;
+         xSpare21 { ExternalWritable := 'False'} : Bool;
+         xSpare22 { ExternalWritable := 'False'} : Bool;
+         xSpare23 { ExternalWritable := 'False'} : Bool;
+         xSpare24 { ExternalWritable := 'False'} : Bool;
+         xSpare25 { ExternalWritable := 'False'} : Bool;
+         xSpare26 { ExternalWritable := 'False'} : Bool;
+         xSpare27 { ExternalWritable := 'False'} : Bool;
+         xSpare28 { ExternalWritable := 'False'} : Bool;
+         xSpare29 { ExternalWritable := 'False'} : Bool;
+         xSpare30 { ExternalWritable := 'False'} : Bool;
+         xSpare31 { ExternalWritable := 'False'} : Bool;
+         xSpare { ExternalWritable := 'False'} : Array[0..15] of Bool;
+         iSpare0 { ExternalWritable := 'False'} : Int;
+         iSpare1 { ExternalWritable := 'False'} : Int;
+         iSpare2 { ExternalWritable := 'False'} : Int;
+         iSpare3 { ExternalWritable := 'False'} : Int;
+         iSpare4 { ExternalWritable := 'False'} : Int;
+         iSpare5 { ExternalWritable := 'False'} : Int;
+         iSpare6 { ExternalWritable := 'False'} : Int;
+         iSpare7 { ExternalWritable := 'False'} : Int;
+         iSpare8 { ExternalWritable := 'False'} : Int;
+         iSpare9 { ExternalWritable := 'False'} : Int;
+         iSpare10 { ExternalWritable := 'False'} : Int;
+         iSpare11 { ExternalWritable := 'False'} : Int;
+         iSpare12 { ExternalWritable := 'False'} : Int;
+         iSpare13 { ExternalWritable := 'False'} : Int;
+         iSpare14 { ExternalWritable := 'False'} : Int;
+         iSpare15 { ExternalWritable := 'False'} : Int;
+         iSpare16 { ExternalWritable := 'False'} : Int;
+         dSpare0 { ExternalWritable := 'False'} : DInt;
+         dZoneState { ExternalWritable := 'False'} : DInt;   // Zone status (1=CycleON 2=StopCyc 4=CycleReq 8=StopReq 1024=E-Stop) {X|X|X|X|O}
+         dSpare2 { ExternalWritable := 'False'} : DInt;
+         dSpare3 { ExternalWritable := 'False'} : DInt;
+         dSpare4 { ExternalWritable := 'False'} : DInt;
+         dSpare5 { ExternalWritable := 'False'} : DInt;
+         dSpare6 { ExternalWritable := 'False'} : DInt;
+         dSpare7 { ExternalWritable := 'False'} : DInt;
+         dSpare8 { ExternalWritable := 'False'} : DInt;
+         dSpare9 { ExternalWritable := 'False'} : DInt;
+         dSpare10 { ExternalWritable := 'False'} : DInt;
+         dSpare11 { ExternalWritable := 'False'} : DInt;
+         dSpare12 { ExternalWritable := 'False'} : DInt;
+         dSpare13 { ExternalWritable := 'False'} : DInt;
+         dSpare14 { ExternalWritable := 'False'} : DInt;
+         dSpare15 { ExternalWritable := 'False'} : DInt;
+         rSpare0 { ExternalWritable := 'False'} : Real;
+         rSpare1 { ExternalWritable := 'False'} : Real;
+         rSpare2 { ExternalWritable := 'False'} : Real;
+         rSpare3 { ExternalWritable := 'False'} : Real;
+         rSpare4 { ExternalWritable := 'False'} : Real;
+         rSpare5 { ExternalWritable := 'False'} : Real;
+         rSpare6 { ExternalWritable := 'False'} : Real;
+         rSpare7 { ExternalWritable := 'False'} : Real;
+         rSpare8 { ExternalWritable := 'False'} : Real;
+         tManCmd { ExternalWritable := 'False'} : Struct
+            xSpare0 { ExternalWritable := 'False'} : Bool;
+            xSpare1 { ExternalWritable := 'False'} : Bool;
+            xSpare2 { ExternalWritable := 'False'} : Bool;
+            xSpare3 { ExternalWritable := 'False'} : Bool;
+            xSpare4 { ExternalWritable := 'False'} : Bool;
+            xSpare5 { ExternalWritable := 'False'} : Bool;
+            xSpare6 { ExternalWritable := 'False'} : Bool;
+            xSpare7 { ExternalWritable := 'False'} : Bool;
+            xSpare8 { ExternalWritable := 'False'} : Bool;
+            xSpare9 { ExternalWritable := 'False'} : Bool;
+            xSpare10 { ExternalWritable := 'False'} : Bool;
+            xSpare11 { ExternalWritable := 'False'} : Bool;
+            xSpare12 { ExternalWritable := 'False'} : Bool;
+            xSpare13 { ExternalWritable := 'False'} : Bool;
+            xSpare14 { ExternalWritable := 'False'} : Bool;
+            xSpare15 { ExternalWritable := 'False'} : Bool;
+            xSpare { ExternalWritable := 'False'} : Array[0..15] of Bool;
+         END_STRUCT;
+      END_STRUCT;
+      tHMW : Struct   // HMI Write
+         xSpare0 : Bool;   //  
+         xSpare1 : Bool;
+         xSpare2 : Bool;
+         xSpare3 : Bool;
+         xSpare4 : Bool;
+         xStartCycleRequest : Bool;   // Start cycle request {X|X|X|X|O}
+         xStopCycleRequest : Bool;   // Stop cycle request {X|X|X|X|O}
+         xForceStopCycle : Bool;   // Force stop cycle {X|X|X|X|O}
+         xSpare8 : Bool;
+         xSpare9 { ExternalWritable := 'False'} : Bool;
+         xSpare10 : Bool;   //  
+         xSpare11 : Bool;
+         xSpare12 : Bool;
+         xSpare13 : Bool;
+         xSpare14 : Bool;   //  
+         xFaultsReset : Bool;   // Reset faults {X|X|X|X|O}
+         xSpare16 : Bool;
+         xSpare17 : Bool;
+         xSpare18 : Bool;
+         xSpare19 : Bool;
+         xSpare20 : Bool;
+         xSpare21 : Bool;
+         xSpare22 : Bool;
+         xSpare23 : Bool;
+         xSpare24 : Bool;
+         xSpare25 : Bool;
+         xSpare26 : Bool;
+         xSpare27 : Bool;
+         xSpare28 : Bool;
+         xSpare29 : Bool;
+         xSpare30 : Bool;
+         xSpare31 : Bool;
+         xSpare : Array[0..15] of Bool;
+         iSpare0 : Int;
+         iSpare1 : Int;
+         iSpare2 : Int;
+         iSpare3 : Int;
+         iSpare4 : Int;
+         iSpare5 : Int;
+         iSpare6 : Int;
+         iSpare7 : Int;
+         iSpare8 : Int;
+         iSpare9 : Int;
+         iSpare10 : Int;
+         iSpare11 : Int;
+         iSpare12 : Int;
+         iSpare13 : Int;
+         iSpare14 : Int;
+         iSpare15 : Int;
+         iSpare16 : Int;
+         dSpare0 : DInt;   //  
+         dSpare1 : DInt;   //  
+         dSpare2 : DInt;   //  
+         dSpare3 : DInt;
+         dSpare4 : DInt;
+         dSpare5 : DInt;
+         dSpare6 : DInt;
+         dSpare7 : DInt;
+         dSpare8 : DInt;
+         dSpare9 : DInt;
+         dSpare10 : DInt;
+         dSpare11 : DInt;
+         dSpare12 : DInt;
+         dSpare13 : DInt;
+         dSpare14 : DInt;
+         dSpare15 : DInt;
+         dSpare16 : DInt;
+         rSpare0 : Real;
+         rSpare1 : Real;
+         rSpare2 : Real;
+         rSpare3 : Real;
+         rSpare4 : Real;
+         rSpare5 : Real;
+         rSpare6 : Real;
+         rSpare7 : Real;
+         rSpare8 : Real;
+         tManCmd : Struct
+            xSpare0 : Bool;   //  
+            xSpare1 : Bool;
+            xSpare2 { ExternalWritable := 'False'} : Bool;
+            xSpare3 { ExternalWritable := 'False'} : Bool;
+            xSpare4 { ExternalWritable := 'False'} : Bool;
+            xSpare5 { ExternalWritable := 'False'} : Bool;
+            xSpare6 { ExternalWritable := 'False'} : Bool;
+            xSpare7 { ExternalWritable := 'False'} : Bool;
+            xSpare8 { ExternalWritable := 'False'} : Bool;
+            xSpare9 { ExternalWritable := 'False'} : Bool;
+            xSpare10 { ExternalWritable := 'False'} : Bool;
+            xSpare11 { ExternalWritable := 'False'} : Bool;
+            xSpare12 { ExternalWritable := 'False'} : Bool;
+            xSpare13 { ExternalWritable := 'False'} : Bool;
+            xSpare14 { ExternalWritable := 'False'} : Bool;
+            xSpare15 { ExternalWritable := 'False'} : Bool;
+            xSpare16 : Bool;
+            xSpare17 : Bool;
+            xSpare18 : Bool;
+            xSpare19 : Bool;
+            xSpare20 : Bool;
+            xSpare21 : Bool;
+            xSpare22 : Bool;
+            xSpare23 : Bool;
+            xSpare24 : Bool;
+            xSpare25 : Bool;
+            xSpare26 : Bool;
+            xSpare27 : Bool;
+            xSpare28 : Bool;
+            xSpare29 : Bool;
+            xSpare30 : Bool;
+            xSpare31 : Bool;
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+   tAlm.tE.xSpare_0 := TRUE;
+   tAlm.tE.xMainEmergencyUPS := TRUE;
+   tAlm.tE.xLocalUPS1 := TRUE;
+   tAlm.tE.xLocalUPS2 := TRUE;
+   tAlm.tE.xLocalUPS3 := TRUE;
+   tAlm.tE.xLocalUPS4 := TRUE;
+   tAlm.tE.xLocalUpS5 := TRUE;
+   tAlm.tE.xSpare_7 := TRUE;
+   tAlm.tE.xSpare_8 := TRUE;
+   tAlm.tE.xSpare_9 := TRUE;
+   tAlm.tE.xSpare_10 := FALSE;
+   tAlm.tE.xSpare_11 := FALSE;
+   tAlm.tE.xSpare_12 := FALSE;
+   tAlm.tE.xSpare_13 := FALSE;
+   tAlm.tE.xSpare_14 := FALSE;
+   tAlm.tE.xSpare_15 := FALSE;
+   tAlm.tE.xSpare_16 := FALSE;
+   tAlm.tE.xSpare_17 := FALSE;
+   tAlm.tE.xSpare_18 := FALSE;
+   tAlm.tE.xSpare_19 := FALSE;
+   tAlm.tE.xSpare_20 := FALSE;
+   tAlm.tE.xSpare_21 := FALSE;
+   tAlm.tE.xSpare_22 := FALSE;
+   tAlm.tE.xSpare_23 := FALSE;
+   tAlm.tE.xSpare_24 := FALSE;
+   tAlm.tE.xSpare_25 := FALSE;
+   tAlm.tE.xSpare_26 := FALSE;
+   tAlm.tE.xSpare_27 := FALSE;
+   tAlm.tE.xSpare_28 := FALSE;
+   tAlm.tE.xSpare_29 := FALSE;
+   tAlm.tE.xSpare_30 := FALSE;
+   tAlm.tE.xSpare_31 := FALSE;
+   tAlm.tS.xSpare_0 := FALSE;
+   tAlm.tS.xSpare_1 := FALSE;
+   tAlm.tS.xSpare_2 := FALSE;
+   tAlm.tS.xSpare_3 := FALSE;
+   tAlm.tS.xSpare_4 := FALSE;
+   tAlm.tS.xSpare_5 := FALSE;
+   tAlm.tS.xSpare_6 := FALSE;
+   tAlm.tS.xSpare_7 := FALSE;
+   tAlm.tS.xSpare_8 := FALSE;
+   tAlm.tS.xSpare_9 := FALSE;
+   tAlm.tS.xSpare_10 := FALSE;
+   tAlm.tS.xSpare_11 := FALSE;
+   tAlm.tS.xSpare_12 := FALSE;
+   tAlm.tS.xSpare_13 := FALSE;
+   tAlm.tS.xSpare_14 := FALSE;
+   tAlm.tS.xSpare_15 := FALSE;
+   tAlm.tS.xSpare_16 := FALSE;
+   tAlm.tS.xSpare_17 := FALSE;
+   tAlm.tS.xSpare_18 := FALSE;
+   tAlm.tS.xSpare_19 := FALSE;
+   tAlm.tS.xSpare_20 := FALSE;
+   tAlm.tS.xSpare_21 := FALSE;
+   tAlm.tS.xSpare_22 := FALSE;
+   tAlm.tS.xSpare_23 := FALSE;
+   tAlm.tS.xSpare_24 := FALSE;
+   tAlm.tS.xSpare_25 := FALSE;
+   tAlm.tS.xSpare_26 := FALSE;
+   tAlm.tS.xSpare_27 := FALSE;
+   tAlm.tS.xSpare_28 := FALSE;
+   tAlm.tS.xSpare_29 := FALSE;
+   tAlm.tS.xSpare_30 := FALSE;
+   tAlm.tS.xSpare_31 := FALSE;
+   tAlm.tF.xSpare_0 := FALSE;
+   tAlm.tF.xSpare_1 := FALSE;
+   tAlm.tF.xSpare_2 := FALSE;
+   tAlm.tF.xSpare_3 := FALSE;
+   tAlm.tF.xSpare_4 := FALSE;
+   tAlm.tF.xSpare_5 := FALSE;
+   tAlm.tF.xSpare_6 := FALSE;
+   tAlm.tF.xPowerSupply24vDrive1 := FALSE;
+   tAlm.tF.xSpare_8 := FALSE;
+   tAlm.tF.xDriveSupply1 := FALSE;
+   tAlm.tF.xSpare_10 := FALSE;
+   tAlm.tF.xSpare_11 := FALSE;
+   tAlm.tF.xSpare_20 := FALSE;
+   tAlm.tF.xSpare_21 := FALSE;
+   tAlm.tF.xSpare_22 := FALSE;
+   tAlm.tF.xSpare_23 := FALSE;
+   tAlm.tF.xSpare_24 := FALSE;
+   tAlm.tF.xSpare_25 := FALSE;
+   tAlm.tF.xSpare_26 := FALSE;
+   tAlm.tF.xSpare_27 := FALSE;
+   tAlm.tF.xSpare_28 := FALSE;
+   tAlm.tF.xSpare_29 := FALSE;
+   tAlm.tF.xSpare_30 := FALSE;
+   tAlm.tF.xSpare_31 := FALSE;
+   tAlm.tW.xSpare_0 := FALSE;
+   tAlm.tW.xSpare_1 := FALSE;
+   tAlm.tW.xSpare_2 := FALSE;
+   tAlm.tW.xSpare_3 := FALSE;
+   tAlm.tW.xSpare_4 := FALSE;
+   tAlm.tW.xSpare_5 := FALSE;
+   tAlm.tW.xSpare_6 := FALSE;
+   tAlm.tW.xSpare_7 := FALSE;
+   tAlm.tW.xSpare_8 := FALSE;
+   tAlm.tW.xSpare_9 := FALSE;
+   tAlm.tW.xSpare_10 := FALSE;
+   tAlm.tW.xSpare_11 := FALSE;
+   tAlm.tW.xSpare_12 := FALSE;
+   tAlm.tW.xSpare_13 := FALSE;
+   tAlm.tW.xSpare_14 := FALSE;
+   tAlm.tW.xSpare_15 := FALSE;
+   tAlm.tW.xSpare_16 := FALSE;
+   tAlm.tW.xSpare_17 := FALSE;
+   tAlm.tW.xSpare_18 := FALSE;
+   tAlm.tW.xSpare_19 := FALSE;
+   tAlm.tW.xSpare_20 := FALSE;
+   tAlm.tW.xSpare_21 := FALSE;
+   tAlm.tW.xSpare_22 := FALSE;
+   tAlm.tW.xSpare_23 := FALSE;
+   tAlm.tW.xSpare_24 := FALSE;
+   tAlm.tW.xSpare_25 := FALSE;
+   tAlm.tW.xSpare_26 := FALSE;
+   tAlm.tW.xSpare_27 := FALSE;
+   tAlm.tW.xSpare_28 := FALSE;
+   tAlm.tW.xSpare_29 := FALSE;
+   tAlm.tW.xSpare_30 := FALSE;
+   tAlm.tW.xSpare_31 := FALSE;
+   tHMR.xZoneAlarm := FALSE;
+   tHMR.dZoneState := 1024;
+   tHMW.xStartCycleRequest := FALSE;
+   tHMW.xStopCycleRequest := FALSE;
+   tHMW.xForceStopCycle := FALSE;
+   tHMW.xFaultsReset := FALSE;
+   tHMW.xSpare16 := FALSE;
+
+END_DATA_BLOCK
+
+DATA_BLOCK "DB_Z201_HMI"
+{ DB_Accessible_From_OPC_UA := 'FALSE' ;
+ DB_Accessible_From_Webserver := 'FALSE' ;
+ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tAlm : Struct   // HMI Alarms
+         tE : Struct   // Emergency alarms
+            xMainEmergency { ExternalWritable := 'False'} : Bool;   // A122KE1.Main emergency ON {X|X|X|X|O}
+            xSpare_1 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_2 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_3 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_4 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_5 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xLocalMain1 : Bool;   // A118SB1.Emergency localization MCC1201 {X|X|X|X|O}
+            xLocalMain2 : Bool;   // A118SB2.Emergency localization CS4201 {X|X|X|X|O}
+            xLocalMain3 : Bool;   // M204SSB3.Emergency localization M204S {X|X|X|X|O}
+            xLocalMain4 : Bool;   // M204SSB4.Emergency localization M204S {X|X|X|X|O}
+            xLocalMain5 : Bool;   // M211SB1.Emergency localization M211 {X|X|X|X|O}
+            xLocalMain6 : Bool;   // M211SB2.Emergency localization M211 {X|X|X|X|O}
+            xLocalMain7 : Bool;   // M218SB1.Emergency localization M218 {X|X|X|X|O}
+            xLocalMain8 : Bool;   // M218SB2.Emergency localization M218 {X|X|X|X|O}
+            xLocalMain9 : Bool;   // M214SB1.Emergency localization M214 {X|X|X|X|O}
+            xLocalMain10 : Bool;   // M214SB2.Emergency localization M214 {X|X|X|X|O}
+            xLocalMain11 : Bool;   // M203SB1.Emergency localization M203 {X|X|X|X|O}
+            xLocalMain12 : Bool;   // AxxSBx.Emergency localization Spare {X|X|X|X|O}
+            xLocalMain13 : Bool;   // AxxSBx.Emergency localization Spare {X|X|X|X|O}
+            xSpare_19 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xEmergencyONArea201 : Bool;   // Emergency ON Area 201
+            xEmergencyONArea301 : Bool;   // Emergency ON Area 301
+            xEmergencyONArea302 : Bool;   // Emergency ON Area 302
+            xEmergencyONArea501 : Bool;   // Emergency ON Area 501
+            xEmergencyONArea601 : Bool;   // Emergency ON Area 601
+            xEmergencyONArea701 : Bool;   // Emergency ON Area 701
+            xEmergencyONArea303 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Emergency ON Area 303
+            xSpare_27 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+         tS : Struct   // Stopping faults
+            xZ300NotReady { ExternalWritable := 'False'} : Bool;   // Area 300 is not ready {X|X|X|X|O}
+            xSpare_1 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_2 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_3 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_4 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_5 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_6 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_7 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_8 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_9 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_10 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_11 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_12 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_13 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_14 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_15 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_16 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_17 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_18 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_19 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_20 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_21 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_22 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_23 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_24 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_25 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_26 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_27 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+         tF : Struct   // Faults
+            xPowerFailure230vAux : Bool;   // NU_A10QF1/2.Power failure 230v auxiliary
+            xPowerSupply24vLogic : Bool;   // A109QF2.Power supply 24v logic
+            xPowerSupply24vLogic2 : Bool;   // A109QF3.Power supply 24v logic
+            xPowerSuppluyOut24vUnderUpsEmOk : Bool;   // A108QF5.Out24vUnderUpsEmOk
+            xPowerSupply24vLogic3 : Bool;   // NU_A19QF1.Power supply 24v logic
+            xPowerSupply24vLogic4 : Bool;   // NU_A19QF2.Power supply 24v logic
+            xPowerSuppluyOut24vUnderEmOk : Bool;   // A108QF6.Out24vUnderEmOk
+            xSpare_7 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xPowerSupply24vDrive2 : Bool;   // NU_A20QF4.Power Supply 24V Drive
+            xSpare_9 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xDriveSupply2 : Bool;   // A137QM1.Drive Supply
+            xSpare_11 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xM216FanProtection : Bool;   // M216.A141QM1.Fan protection
+            xM216FanFeedback : Bool;   // M216.A141KM1.Feedback rotation
+            xM209FanFeedback : Bool;   // M209.A178KM1.Feedback Rotation
+            xSpare_15 : Bool;
+            xSpare_16 : Bool;
+            xSpare_17 : Bool;   //  
+            xSpare_18 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_19 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_20 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_21 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_22 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_23 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_24 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_25 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_26 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_27 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_28 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_29 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_30 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+            xSpare_31 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         END_STRUCT;
+         tW : Struct   // Warnings
+            xSpare_0 : Bool;
+            xSpare_1 : Bool;
+            xSpare_2 : Bool;
+            xSpare_3 : Bool;
+            xSpare_4 : Bool;
+            xSpare_5 : Bool;
+            xSpare_6 : Bool;
+            xSpare_7 : Bool;
+            xSpare_8 : Bool;
+            xSpare_9 : Bool;
+            xSpare_10 : Bool;
+            xSpare_11 : Bool;
+            xSpare_12 : Bool;
+            xSpare_13 : Bool;
+            xSpare_14 : Bool;
+            xSpare_15 : Bool;
+            xSpare_16 : Bool;
+            xSpare_17 : Bool;
+            xSpare_18 : Bool;
+            xSpare_19 : Bool;
+            xSpare_20 : Bool;
+            xSpare_21 : Bool;
+            xSpare_22 : Bool;
+            xSpare_23 : Bool;
+            xSpare_24 : Bool;
+            xSpare_25 : Bool;
+            xSpare_26 : Bool;
+            xSpare_27 : Bool;
+            xSpare_28 : Bool;
+            xSpare_29 : Bool;
+            xSpare_30 : Bool;
+            xSpare_31 : Bool;
+         END_STRUCT;
+      END_STRUCT;
+      tHMR { ExternalWritable := 'False'} : Struct   // HMI Read
+         xSpare0 { ExternalWritable := 'False'} : Bool;
+         xSpare1 { ExternalWritable := 'False'} : Bool;
+         xSpare2 { ExternalWritable := 'False'} : Bool;
+         xSpare3 { ExternalWritable := 'False'} : Bool;
+         xSpare4 { ExternalWritable := 'False'} : Bool;
+         xSpare5 { ExternalWritable := 'False'} : Bool;
+         xSpare6 { ExternalWritable := 'False'} : Bool;
+         xSpare7 { ExternalWritable := 'False'} : Bool;
+         xSpare8 { ExternalWritable := 'False'} : Bool;
+         xSpare9 { ExternalWritable := 'False'} : Bool;
+         xSpare10 { ExternalWritable := 'False'} : Bool;
+         xSpare11 { ExternalWritable := 'False'} : Bool;
+         xSpare12 { ExternalWritable := 'False'} : Bool;
+         xSpare13 { ExternalWritable := 'False'} : Bool;
+         xSpare14 { ExternalWritable := 'False'} : Bool;
+         xZoneAlarm { ExternalWritable := 'False'} : Bool;   // Zone alarm {X|X|X|X|O}
+         xSpare16 { ExternalWritable := 'False'} : Bool;
+         xSpare17 { ExternalWritable := 'False'} : Bool;
+         xSpare18 { ExternalWritable := 'False'} : Bool;
+         xSpare19 { ExternalWritable := 'False'} : Bool;
+         xSpare20 { ExternalWritable := 'False'} : Bool;
+         xSpare21 { ExternalWritable := 'False'} : Bool;
+         xSpare22 { ExternalWritable := 'False'} : Bool;
+         xSpare23 { ExternalWritable := 'False'} : Bool;
+         xSpare24 { ExternalWritable := 'False'} : Bool;
+         xSpare25 { ExternalWritable := 'False'} : Bool;
+         xSpare26 { ExternalWritable := 'False'} : Bool;
+         xSpare27 { ExternalWritable := 'False'} : Bool;
+         xSpare28 { ExternalWritable := 'False'} : Bool;
+         xSpare29 { ExternalWritable := 'False'} : Bool;
+         xSpare30 { ExternalWritable := 'False'} : Bool;
+         xSpare31 { ExternalWritable := 'False'} : Bool;
+         xSpare { ExternalWritable := 'False'} : Array[0..15] of Bool;
+         iSpare0 { ExternalWritable := 'False'} : Int;
+         iSpare1 { ExternalWritable := 'False'} : Int;
+         iSpare2 { ExternalWritable := 'False'} : Int;
+         iSpare3 { ExternalWritable := 'False'} : Int;
+         iSpare4 { ExternalWritable := 'False'} : Int;
+         iSpare5 { ExternalWritable := 'False'} : Int;
+         iSpare6 { ExternalWritable := 'False'} : Int;
+         iSpare7 { ExternalWritable := 'False'} : Int;
+         iSpare8 { ExternalWritable := 'False'} : Int;
+         iSpare9 { ExternalWritable := 'False'} : Int;
+         iSpare10 { ExternalWritable := 'False'} : Int;
+         iSpare11 { ExternalWritable := 'False'} : Int;
+         iSpare12 { ExternalWritable := 'False'} : Int;
+         iSpare13 { ExternalWritable := 'False'} : Int;
+         iSpare14 { ExternalWritable := 'False'} : Int;
+         iSpare15 { ExternalWritable := 'False'} : Int;
+         iSpare16 { ExternalWritable := 'False'} : Int;
+         dSpare0 { ExternalWritable := 'False'} : DInt;
+         dZoneState { ExternalWritable := 'False'} : DInt;   // Zone status (1=CycleON 2=StopCyc 4=CycleReq 8=StopReq 1024=E-Stop) {X|X|X|X|O}
+         dCabinetStatusMCC { ExternalWritable := 'False'} : DInt;   // Cabinet status MCC1201 (1=OK;2=General power alarm;3=Local power alarm) {X|X|X|X|O}
+         dDistanceFromSnaproll_cmm_M209 { ExternalWritable := 'False'} : DInt;   // Distance from snaproll [mm/100] {mm/100|mm|0|60000|M}
+         dDistanceFromSnaproll_cmm_M216 { ExternalWritable := 'False'} : DInt;   // Distance from snaproll [mm/100] {mm/100|mm|0|60000|M}
+         dSpare5 { ExternalWritable := 'False'} : DInt;
+         dSpare6 { ExternalWritable := 'False'} : DInt;
+         dSpare7 { ExternalWritable := 'False'} : DInt;
+         dSpare8 { ExternalWritable := 'False'} : DInt;
+         dSpare9 { ExternalWritable := 'False'} : DInt;
+         dSpare10 { ExternalWritable := 'False'} : DInt;
+         dSpare11 { ExternalWritable := 'False'} : DInt;
+         dSpare12 { ExternalWritable := 'False'} : DInt;
+         dSpare13 { ExternalWritable := 'False'} : DInt;
+         dSpare14 { ExternalWritable := 'False'} : DInt;
+         dSpare15 { ExternalWritable := 'False'} : DInt;
+         rSpare0 { ExternalWritable := 'False'} : Real;
+         rSpare1 { ExternalWritable := 'False'} : Real;
+         rSpare2 { ExternalWritable := 'False'} : Real;
+         rSpare3 { ExternalWritable := 'False'} : Real;
+         rSpare4 { ExternalWritable := 'False'} : Real;
+         rSpare5 { ExternalWritable := 'False'} : Real;
+         rSpare6 { ExternalWritable := 'False'} : Real;
+         rSpare7 { ExternalWritable := 'False'} : Real;
+         rSpare8 { ExternalWritable := 'False'} : Real;
+         tManCmd { ExternalWritable := 'False'} : Struct
+            xFdbkRunFw { ExternalWritable := 'False'} : Bool;   // Feedback rotation FW all conveyors {x|x|x|x|O}
+            xSpare1 { ExternalWritable := 'False'} : Bool;
+            xSpare2 { ExternalWritable := 'False'} : Bool;
+            xSpare3 { ExternalWritable := 'False'} : Bool;
+            xSpare4 { ExternalWritable := 'False'} : Bool;
+            xSpare5 { ExternalWritable := 'False'} : Bool;
+            xSpare6 { ExternalWritable := 'False'} : Bool;
+            xSpare7 { ExternalWritable := 'False'} : Bool;
+            xSpare8 { ExternalWritable := 'False'} : Bool;
+            xSpare9 { ExternalWritable := 'False'} : Bool;
+            xSpare10 { ExternalWritable := 'False'} : Bool;
+            xSpare11 { ExternalWritable := 'False'} : Bool;
+            xSpare12 { ExternalWritable := 'False'} : Bool;
+            xSpare13 { ExternalWritable := 'False'} : Bool;
+            xSpare14 { ExternalWritable := 'False'} : Bool;
+            xSpare15 { ExternalWritable := 'False'} : Bool;
+            xSpare { ExternalWritable := 'False'} : Array[0..15] of Bool;
+         END_STRUCT;
+      END_STRUCT;
+      tHMW : Struct   // HMI Write
+         xSpare0 : Bool;   //  
+         xSpare1 : Bool;
+         xSpare2 : Bool;
+         xSpare3 : Bool;
+         xSpare4 : Bool;
+         xStartCycleRequest : Bool;   // Start cycle request {X|X|X|X|O}
+         xStopCycleRequest : Bool;   // Stop cycle request {X|X|X|X|O}
+         xForceStopCycle : Bool;   // Force stop cycle {X|X|X|X|O}
+         xSpare8 : Bool;
+         xEnabledChipsBlowerM216 : Bool;   // Chips Blower M216 Enabled {X|X|X|X|O}
+         xEnabledChipsBlowerM209 : Bool;   // Chips Blower M209 Enabled {X|X|X|X|O}
+         xUpdateDistSnap_M209 : Bool;   // Update distance from snap roll {x|x|x|x|M}
+         xUpdateDistSnap_M216 : Bool;
+         xSpare13 : Bool;
+         xEnableManualCommand : Bool;   // Enable Disable Manual command {x|x|x|x|O}
+         xFaultsReset : Bool;   // Reset faults {X|X|X|X|O}
+         xGeneralReset : Bool;   // General reset {X|X|X|X|M}
+         xSpare17 : Bool;
+         xSpare18 : Bool;
+         xSpare19 : Bool;
+         xSpare20 : Bool;
+         xSpare21 : Bool;
+         xSpare22 : Bool;
+         xSpare23 : Bool;
+         xSpare24 : Bool;
+         xSpare25 : Bool;
+         xSpare26 : Bool;
+         xSpare27 : Bool;
+         xSpare28 : Bool;
+         xSpare29 : Bool;
+         xSpare30 : Bool;
+         xSpare31 : Bool;
+         xSpare : Array[0..15] of Bool;
+         iSpare0 : Int;
+         iSpare1 : Int;
+         iSpare2 : Int;
+         iSpare3 : Int;
+         iSpare4 : Int;
+         iSpare5 : Int;
+         iSpare6 : Int;
+         iSpare7 : Int;
+         iSpare8 : Int;
+         iSpare9 : Int;
+         iSpare10 : Int;
+         iSpare11 : Int;
+         iSpare12 : Int;
+         iSpare13 : Int;
+         iSpare14 : Int;
+         iSpare15 : Int;
+         iSpare16 : Int;
+         dDistanceFromSnaproll_cmm_M209 : DInt;   // Distance from snaproll [mm/100]  [mm/100] {mm/100|mm|0|60000|M}
+         dDistanceFromSnaproll_cmm_M216 : DInt;   // Distance from snaproll [mm/100]  [mm/100] {mm/100|mm|0|60000|M}
+         dSpare2 : DInt;   //  
+         dSpare3 : DInt;
+         dSpare4 : DInt;
+         dSpare5 : DInt;
+         dSpare6 : DInt;
+         dSpare7 : DInt;
+         dSpare8 : DInt;
+         dSpare9 : DInt;
+         dSpare10 : DInt;
+         dSpare11 : DInt;
+         dSpare12 : DInt;
+         dSpare13 : DInt;
+         dSpare14 : DInt;
+         dSpare15 : DInt;
+         dSpare16 : DInt;
+         rSpare0 : Real;
+         rSpare1 : Real;
+         rSpare2 : Real;
+         rSpare3 : Real;
+         rSpare4 : Real;
+         rSpare5 : Real;
+         rSpare6 : Real;
+         rSpare7 : Real;
+         rSpare8 : Real;
+         tManCmd : Struct
+            xRunFw : Bool;   // Rotation FW all conveyors {x|x|x|x|O}
+            xSpare1 : Bool;
+            xSpare2 { ExternalWritable := 'False'} : Bool;
+            xSpare3 { ExternalWritable := 'False'} : Bool;
+            xSpare4 { ExternalWritable := 'False'} : Bool;
+            xSpare5 { ExternalWritable := 'False'} : Bool;
+            xSpare6 { ExternalWritable := 'False'} : Bool;
+            xSpare7 { ExternalWritable := 'False'} : Bool;
+            xSpare8 { ExternalWritable := 'False'} : Bool;
+            xSpare9 { ExternalWritable := 'False'} : Bool;
+            xSpare10 { ExternalWritable := 'False'} : Bool;
+            xSpare11 { ExternalWritable := 'False'} : Bool;
+            xSpare12 { ExternalWritable := 'False'} : Bool;
+            xSpare13 { ExternalWritable := 'False'} : Bool;
+            xSpare14 { ExternalWritable := 'False'} : Bool;
+            xSpare15 { ExternalWritable := 'False'} : Bool;
+            xSpare16 : Bool;
+            xSpare17 : Bool;
+            xSpare18 : Bool;
+            xSpare19 : Bool;
+            xSpare20 : Bool;
+            xSpare21 : Bool;
+            xSpare22 : Bool;
+            xSpare23 : Bool;
+            xSpare24 : Bool;
+            xSpare25 : Bool;
+            xSpare26 : Bool;
+            xSpare27 : Bool;
+            xSpare28 : Bool;
+            xSpare29 : Bool;
+            xSpare30 : Bool;
+            xSpare31 : Bool;
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+   tAlm.tE.xMainEmergency := TRUE;
+   tAlm.tE.xSpare_1 := TRUE;
+   tAlm.tE.xSpare_2 := TRUE;
+   tAlm.tE.xSpare_3 := TRUE;
+   tAlm.tE.xSpare_4 := TRUE;
+   tAlm.tE.xSpare_5 := TRUE;
+   tAlm.tE.xLocalMain1 := TRUE;
+   tAlm.tE.xLocalMain2 := TRUE;
+   tAlm.tE.xLocalMain3 := TRUE;
+   tAlm.tE.xLocalMain4 := TRUE;
+   tAlm.tE.xLocalMain5 := FALSE;
+   tAlm.tE.xLocalMain6 := FALSE;
+   tAlm.tE.xLocalMain7 := FALSE;
+   tAlm.tE.xLocalMain8 := FALSE;
+   tAlm.tE.xLocalMain9 := FALSE;
+   tAlm.tE.xLocalMain10 := FALSE;
+   tAlm.tE.xLocalMain11 := FALSE;
+   tAlm.tE.xLocalMain12 := FALSE;
+   tAlm.tE.xLocalMain13 := FALSE;
+   tAlm.tE.xSpare_19 := FALSE;
+   tAlm.tE.xEmergencyONArea201 := FALSE;
+   tAlm.tE.xEmergencyONArea301 := FALSE;
+   tAlm.tE.xEmergencyONArea302 := FALSE;
+   tAlm.tE.xEmergencyONArea501 := FALSE;
+   tAlm.tE.xEmergencyONArea601 := FALSE;
+   tAlm.tE.xEmergencyONArea701 := FALSE;
+   tAlm.tE.xEmergencyONArea303 := FALSE;
+   tAlm.tE.xSpare_27 := FALSE;
+   tAlm.tE.xSpare_28 := FALSE;
+   tAlm.tE.xSpare_29 := FALSE;
+   tAlm.tE.xSpare_30 := FALSE;
+   tAlm.tE.xSpare_31 := FALSE;
+   tAlm.tS.xZ300NotReady := FALSE;
+   tAlm.tS.xSpare_1 := FALSE;
+   tAlm.tS.xSpare_2 := FALSE;
+   tAlm.tS.xSpare_3 := FALSE;
+   tAlm.tS.xSpare_4 := FALSE;
+   tAlm.tS.xSpare_5 := FALSE;
+   tAlm.tS.xSpare_6 := FALSE;
+   tAlm.tS.xSpare_7 := FALSE;
+   tAlm.tS.xSpare_8 := FALSE;
+   tAlm.tS.xSpare_9 := FALSE;
+   tAlm.tS.xSpare_10 := FALSE;
+   tAlm.tS.xSpare_11 := FALSE;
+   tAlm.tS.xSpare_12 := FALSE;
+   tAlm.tS.xSpare_13 := FALSE;
+   tAlm.tS.xSpare_14 := FALSE;
+   tAlm.tS.xSpare_15 := FALSE;
+   tAlm.tS.xSpare_16 := FALSE;
+   tAlm.tS.xSpare_17 := FALSE;
+   tAlm.tS.xSpare_18 := FALSE;
+   tAlm.tS.xSpare_19 := FALSE;
+   tAlm.tS.xSpare_20 := FALSE;
+   tAlm.tS.xSpare_21 := FALSE;
+   tAlm.tS.xSpare_22 := FALSE;
+   tAlm.tS.xSpare_23 := FALSE;
+   tAlm.tS.xSpare_24 := FALSE;
+   tAlm.tS.xSpare_25 := FALSE;
+   tAlm.tS.xSpare_26 := FALSE;
+   tAlm.tS.xSpare_27 := FALSE;
+   tAlm.tS.xSpare_28 := FALSE;
+   tAlm.tS.xSpare_29 := FALSE;
+   tAlm.tS.xSpare_30 := FALSE;
+   tAlm.tS.xSpare_31 := FALSE;
+   tAlm.tF.xPowerFailure230vAux := FALSE;
+   tAlm.tF.xPowerSupply24vLogic := FALSE;
+   tAlm.tF.xPowerSupply24vLogic2 := FALSE;
+   tAlm.tF.xPowerSuppluyOut24vUnderUpsEmOk := FALSE;
+   tAlm.tF.xPowerSupply24vLogic3 := FALSE;
+   tAlm.tF.xPowerSupply24vLogic4 := FALSE;
+   tAlm.tF.xPowerSuppluyOut24vUnderEmOk := FALSE;
+   tAlm.tF.xSpare_7 := FALSE;
+   tAlm.tF.xPowerSupply24vDrive2 := FALSE;
+   tAlm.tF.xSpare_9 := FALSE;
+   tAlm.tF.xDriveSupply2 := FALSE;
+   tAlm.tF.xSpare_11 := FALSE;
+   tAlm.tF.xSpare_20 := FALSE;
+   tAlm.tF.xSpare_21 := FALSE;
+   tAlm.tF.xSpare_22 := FALSE;
+   tAlm.tF.xSpare_23 := FALSE;
+   tAlm.tF.xSpare_24 := FALSE;
+   tAlm.tF.xSpare_25 := FALSE;
+   tAlm.tF.xSpare_26 := FALSE;
+   tAlm.tF.xSpare_27 := FALSE;
+   tAlm.tF.xSpare_28 := FALSE;
+   tAlm.tF.xSpare_29 := FALSE;
+   tAlm.tF.xSpare_30 := FALSE;
+   tAlm.tF.xSpare_31 := FALSE;
+   tAlm.tW.xSpare_0 := FALSE;
+   tAlm.tW.xSpare_1 := FALSE;
+   tAlm.tW.xSpare_2 := FALSE;
+   tAlm.tW.xSpare_3 := FALSE;
+   tAlm.tW.xSpare_4 := FALSE;
+   tAlm.tW.xSpare_5 := FALSE;
+   tAlm.tW.xSpare_6 := FALSE;
+   tAlm.tW.xSpare_7 := FALSE;
+   tAlm.tW.xSpare_8 := FALSE;
+   tAlm.tW.xSpare_9 := FALSE;
+   tAlm.tW.xSpare_10 := FALSE;
+   tAlm.tW.xSpare_11 := FALSE;
+   tAlm.tW.xSpare_12 := FALSE;
+   tAlm.tW.xSpare_13 := FALSE;
+   tAlm.tW.xSpare_14 := FALSE;
+   tAlm.tW.xSpare_15 := FALSE;
+   tAlm.tW.xSpare_16 := FALSE;
+   tAlm.tW.xSpare_17 := FALSE;
+   tAlm.tW.xSpare_18 := FALSE;
+   tAlm.tW.xSpare_19 := FALSE;
+   tAlm.tW.xSpare_20 := FALSE;
+   tAlm.tW.xSpare_21 := FALSE;
+   tAlm.tW.xSpare_22 := FALSE;
+   tAlm.tW.xSpare_23 := FALSE;
+   tAlm.tW.xSpare_24 := FALSE;
+   tAlm.tW.xSpare_25 := FALSE;
+   tAlm.tW.xSpare_26 := FALSE;
+   tAlm.tW.xSpare_27 := FALSE;
+   tAlm.tW.xSpare_28 := FALSE;
+   tAlm.tW.xSpare_29 := FALSE;
+   tAlm.tW.xSpare_30 := FALSE;
+   tAlm.tW.xSpare_31 := FALSE;
+   tHMR.xZoneAlarm := FALSE;
+   tHMR.dZoneState := 1024;
+   tHMR.dCabinetStatusMCC := 1;
+   tHMW.xStartCycleRequest := FALSE;
+   tHMW.xStopCycleRequest := FALSE;
+   tHMW.xForceStopCycle := FALSE;
+   tHMW.xFaultsReset := FALSE;
+   tHMW.xGeneralReset := FALSE;
+
+END_DATA_BLOCK
+

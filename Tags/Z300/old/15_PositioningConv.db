@@ -1,0 +1,18 @@
+﻿DATA_BLOCK "ConvM324Pos_HMI"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tHMR : Struct
+         b0 : Bool;   // (NU)
+      END_STRUCT;
+      tHMW : Struct
+         dOffsetPositioning : DInt;   // Offset positioning {mm/100|mm|-50|+50|O}
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

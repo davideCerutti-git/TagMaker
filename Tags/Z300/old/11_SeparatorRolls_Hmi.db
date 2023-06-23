@@ -1,0 +1,108 @@
+﻿TYPE "UDT_HMI_Alarm_V2"
+VERSION : 0.1
+   STRUCT
+      t : Struct
+         x0 : Bool;
+         x1 : Bool;
+         x2 : Bool;
+         x3 : Bool;
+         x4 : Bool;
+         x5 : Bool;
+         x6 : Bool;
+         x7 : Bool;
+         x8 : Bool;
+         x9 : Bool;
+         x10 : Bool;
+         x11 : Bool;
+         x12 : Bool;
+         x13 : Bool;
+         x14 : Bool;
+         x15 : Bool;
+      END_STRUCT;
+      iHmiSumAlm : Word;
+   END_STRUCT;
+
+END_TYPE
+
+TYPE "UDT_SeparatorRolls_HMI"
+VERSION : 0.1
+   STRUCT
+      tHMR : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         rgtRoller : Array["STARTARRAY".."DNUMROLLS"] of Struct   // High Position - Roller#
+            xHighPosRoller : Bool;   // High position roller{x|x|x|x|O}
+            xInclinedRoller : Bool;   // Incline {x|x|x|x|O}
+            xEnableRoller : Bool;   // Enable roller {x|x|x|x|O}
+         END_STRUCT;
+         xDynamicModeSeparation : Bool;   // Dynamic - Mode Separation {x|x|x|x|O}
+         xAutomaticInclusion : Bool;   // Automatic inclusion {x|x|x|x|O}
+         iState { ExternalWritable := 'False'} : Int;   // State (1=No alarm, 3=Run, 7=Alarm) {x|x|x|x|O}
+         xManualCommandEnabled { ExternalWritable := 'False'} : Bool;   // Manual Mode Enable {x|x|x|x|O}
+         tManCmd : Struct
+            xForwardAllRolls : Bool;   // xForwardAllRolls {x|x|x|x|O}
+            xBackwardAllRolls : Bool;   // Backward - All Rolls {x|x|x|x|O}
+            xRoller : Array["STARTARRAY".."DNUMROLLS"] of Struct   // Rise - Roller# {x|x|x|x|O}
+               xRise : Bool;   // Rise - Roller#1 {x|x|x|x|O}
+               xInclination : Bool;   // Inclination - Roller#1 {x|x|x|x|O}
+            END_STRUCT;
+         END_STRUCT;
+      END_STRUCT;
+      tHMW : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         rgtRoller : Array["STARTARRAY".."DNUMROLLS"] of Struct   // Enable - Roller# {x|x|x|x|O}
+            xEnable : Bool;   // Enable Roller 1
+         END_STRUCT;
+         xDynamicModeSeparation : Bool;   // Dynamic - Mode Separation {x|x|x|x|O}
+         xStaticModeSeparation : Bool;   // Static  - Mode Separation {x|x|x|x|O}
+         xManualInclusion : Bool;
+         iPercRollInclination : Int;   // Percent of Roll occupation for inclination [%] {x|x|x|x|O}
+         iPlateLenghtRiseRoll : Int;   // Rate of Plate lenght for rise roll {x|x|x|x|O}
+         dReactionTime_ms : DInt;   // Reaction time {ms|ms|x|x|O}
+         dOffsetRise_cmm : DInt;   // Offset rise bar {mm/100|mm|x|x|O}
+         dOffsetDescent_cmm : DInt;   // Offset descent bar {mm/100|mm|x|x|O}
+         dGapBetweenLites_cmm : DInt;   // Gap between lites {mm/100|mm|x|x|O}
+         dReactionTime_s : Real;   // Reaction time {s|s|x|x|O}
+         rOffsetRise_mm : Real;   // Offset rise bar [{mm|mm|x|x|O}
+         rOffsetDescent_mm : Real;   // Offset descent bar {mm|mm|x|x|O}
+         rGapBetweenLites_mm : Real;   // Gap between lites {mm|mm|x|x|O}
+         xEnableDisableManualCommand : Bool;   // Enable/Disable manual command{x|x|x|x|O}
+         tManCmd : Struct
+            xForwardAllRolls : Bool;   // xForwardAllRolls {x|x|x|x|O}
+            xBackwardAllRolls : Bool;   // Backward - All Rolls {x|x|x|x|O}
+            rgtRoller : Array["STARTARRAY".."DNUMROLLS"] of Struct   // Roller# {x|x|x|x|O}
+               xRise : Bool;   // Rise - Roller#1 {x|x|x|x|O}
+               xInclination : Bool;   // Inclination - Roller#1 {x|x|x|x|O}
+            END_STRUCT;
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "SeparatorRolls_Alm"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tRoll : Array["STARTARRAY".."DNUMSEPARATOR"] of Struct
+         tEmergencyAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop machine fault
+         tAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop next cycle faults
+         tWarning : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // Generic warning
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
+DATA_BLOCK "SeparatorRolls_Hmi"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+   STRUCT 
+      tRoll { S7_SetPoint := 'False'} : Array["STARTARRAY".."DNUMSEPARATOR"] of "UDT_SeparatorRolls_HMI";
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

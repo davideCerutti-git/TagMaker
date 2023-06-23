@@ -1,0 +1,20 @@
+﻿DATA_BLOCK "SelvMaFrame_Ma_HMI"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+NON_RETAIN
+   VAR 
+      tFr : Array["STARTARRAY".."DNUMFRAME"] of Struct
+         tHMR : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+            Head_cmm : DInt;
+            Tail_cmm : DInt;
+            dWander : DInt;
+            xHooked : Bool;
+         END_STRUCT;
+      END_STRUCT;
+   END_VAR
+
+
+BEGIN
+
+END_DATA_BLOCK
+

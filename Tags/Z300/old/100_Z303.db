@@ -1,0 +1,100 @@
+﻿TYPE "UDT_HMI_Alarm_V2"
+VERSION : 0.1
+   STRUCT
+      t : Struct
+         x0 : Bool;
+         x1 : Bool;
+         x2 : Bool;
+         x3 : Bool;
+         x4 : Bool;
+         x5 : Bool;
+         x6 : Bool;
+         x7 : Bool;
+         x8 : Bool;
+         x9 : Bool;
+         x10 : Bool;
+         x11 : Bool;
+         x12 : Bool;
+         x13 : Bool;
+         x14 : Bool;
+         x15 : Bool;
+      END_STRUCT;
+      iHmiSumAlm : Word;
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "Z303_Alm"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tEmergencyAlarm { S7_SetPoint := 'False'} : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop machine fault
+      tAlarm { S7_SetPoint := 'False'} : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop next cycle faults
+      tWarning { S7_SetPoint := 'False'} : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // Generic warning
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
+DATA_BLOCK "Z303_Hmi"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+   STRUCT 
+      tHMR { ExternalWritable := 'False'} : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         xZoneError { ExternalWritable := 'False'} : Bool;   // Zone Error {x|x|x|x|O}
+         xChangeThickEnabled { ExternalWritable := 'False'} : Bool;   // Change Thickness Enabled {x|x|x|x|O}
+         xCleanEnabled { ExternalWritable := 'False'} : Bool;   // Cleaning Zone 1 Enabled {x|x|x|x|O}
+         iCabinetState { ExternalWritable := 'False'} : Int;   // Cabinet State (0=OK; 1=General power alarm; 2=Local power alarm) {x|x|x|x|O}
+         iZoneMode { ExternalWritable := 'False'} : Int;   // Zone mode (1=Manual 4=Automatic 8=Manual Req) {x|x|x|x|O}
+         iZoneStatus { ExternalWritable := 'False'} : Int;   // Zone mode (1=Cycle 2=Stop 4=Start Cycle Req. 8=Stop Cycle Req. , 1024=Emergency) {x|x|x|x|O}
+         iCleaningState1 { ExternalWritable := 'False'} : Int;   // Cleaning State 1 (1=CycleON 2=StopCyc 4=CycleReq 8=StopReq) {x|x|x|x|O}
+         iCleaningState2 { ExternalWritable := 'False'} : Int;   // Cleaning State 2 (1=CycleON 2=StopCyc 4=CycleReq 8=StopReq) {x|x|x|x|O}
+         xAutoSpeedEnabled { ExternalWritable := 'False'} : Bool;   // Auto Mode Enabled {x|x|x|x|O}
+         rSpeedRatio { ExternalWritable := 'False'} : Real;   // Speed ratio {x|xx|x|O}
+         dAutoSpeed_mm_min { ExternalWritable := 'False'} : DInt;
+         rAutoSpeed_m_min { ExternalWritable := 'False'} : Real;   // Auto Speed {m/min|m/min|x|x|O}
+         dMinAutoSpeed_mm_min { ExternalWritable := 'False'} : DInt;
+         rMinAutoSpeed_m_min { ExternalWritable := 'False'} : Real;   // Min Auto Speed {m/min|m/min|x|x|O}
+         dPositionBarCleanRemove_cmm { ExternalWritable := 'False'} : DInt;   // Position Bar After remove Cleaning {x|xx|x|O} 
+         sDescritionConditionStop { ExternalWritable := 'False'} : String;   // Description String
+         dCleaningSpace { ExternalWritable := 'False'} : DInt;
+         tManCmd { ExternalWritable := 'False'} : Struct
+            xCmdFwd { ExternalWritable := 'False'} : Bool;   // Manual Command Forward {x|x|x|x|O}
+            xCmdBkw { ExternalWritable := 'False'} : Bool;   // Manual Command backward {x|x|x|x|O}
+         END_STRUCT;
+      END_STRUCT;
+      tHMW : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         xResetError : Bool;   // Reset Error {x|x|x|x|O}
+         xEnableChangeThick : Bool;   // Enable Change Thickness {x|x|x|x|O}
+         xDisableChangeThick : Bool;   // Disable Change Thickness {x|x|x|x|O}
+         xEnableAutoSpeed : Bool;   // Enable Auto Speed {x|x|x|x|O}
+         xDisableAutoSpeed : Bool;   // Disable Auto Speed {x|x|x|x|O}
+         xManualModeReq : Bool;   // Manual Mode Req {x|x|x|x|O}
+         xAutoModeReq : Bool;   // Auto mode Request {x|x|x|x|O}
+         xStartCycleRequest : Bool;   // Start Cycle Request {x|x|x|x|O}
+         xStopCycleRequest : Bool;   // Stop Cycle Request {x|x|x|x|O}
+         xForceStopCycle : Bool;   // Stop Force Request {x|x|x|x|O}
+         xStartCleaning1 : Bool;   // Start Cleaning Zone 1{x|x|x|x|O}
+         xStopCleaning1 : Bool;   // Stop Cleaning Zone 1{x|x|x|x|O}
+         xStartCleaning2 : Bool;   // Start Cleaning Zone 2{x|x|x|x|O}
+         xStopCleaning2 : Bool;   // Stop Cleaning Zone 2{x|x|x|x|O}
+         dAutoSpeed_mm_min : DInt;
+         rAutoSpeed_m_min : Real;   // Auto Speed {m/min|m/min|21.0|90.0|O}
+         dManualSpeed_mm_min : DInt;
+         rManualSpeed_m_min : Real;   // Manual Speed {m/min|m/min|21|21|O}
+         rSpeedRatio : Real;   // Speed ratio {x|x|4.0|x|O}
+         tManCmd : Struct
+            xCmdFwd : Bool;   // Manual Command Forward {x|x|x|x|O}
+            xCmdBkw : Bool;   // Manual Command backward {x|x|x|x|O}
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

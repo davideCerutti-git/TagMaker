@@ -1,0 +1,81 @@
+﻿TYPE "UDT_HMI_Alarm_V2"
+VERSION : 0.1
+   STRUCT
+      t : Struct
+         x0 : Bool;
+         x1 : Bool;
+         x2 : Bool;
+         x3 : Bool;
+         x4 : Bool;
+         x5 : Bool;
+         x6 : Bool;
+         x7 : Bool;
+         x8 : Bool;
+         x9 : Bool;
+         x10 : Bool;
+         x11 : Bool;
+         x12 : Bool;
+         x13 : Bool;
+         x14 : Bool;
+         x15 : Bool;
+      END_STRUCT;
+      iHmiSumAlm : Word;
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "SelvMaLiftFrame_Alm"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tLiftFrame : Array["STARTARRAY".."DNUMLIFTFRAME"] of Struct
+         tEmergencyAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop machine fault
+         tAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop next cycle faults
+         tWarning : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // Generic warning
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
+DATA_BLOCK "SelvMaLiftFrame_Hmi"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+   STRUCT 
+      tLiftFrame : Array["STARTARRAY".."DNUMLIFTFRAME"] of Struct
+         tHMR : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+            xEnabled : Bool;   // Enabled - lift Frame {x|x|x|x|O}
+            xHighPos : Bool;   // Lift frame Up Position
+            xDownPos : Bool;   // Lift frame Down Position
+            xManualCommandEnabled : Bool;   // Manual Mode Enable {x|x|x|x|O}
+            iStateTape : Int;   // State (1=No alarm, 3=Run, 7=Alarm) {x|x|x|x|O}
+            iStateLiftFrame : Int;   // State (1=No alarm, 3=Run, 7=Alarm) {x|x|x|x|O}
+            tManCmd : Struct
+               xRise : Bool;   // Rise Command {x|x|x|x|O}
+               xDescend : Bool;   // Descend Command {x|x|x|x|O}
+               xRunTape : Bool;   // Run tape Command {x|x|x|x|O}
+               xReverseTape : Bool;   // Reverse tape Command {x|x|x|x|O}
+            END_STRUCT;
+         END_STRUCT;
+         tHMW : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+            xEnable : Bool;   // Enabled - Lift Frame  {x|x|x|x|O}
+            xDisable : Bool;   // Enabled - Lift Frame  {x|x|x|x|O}
+            xEnableDisableManualCommand : Bool;   // Enable/Disable manual command{x|x|x|x|O}
+            tManCmd : Struct
+               xRise : Bool;   // Rise Command {x|x|x|x|O}
+               xDescend : Bool;   // Descend Command {x|x|x|x|O}
+               xRunTape : Bool;   // Run tape Command {x|x|x|x|O}
+               xReverseTape : Bool;   // Reverse tape Command {x|x|x|x|O}
+            END_STRUCT;
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

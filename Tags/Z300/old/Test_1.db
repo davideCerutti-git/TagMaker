@@ -1,0 +1,127 @@
+﻿TYPE "UDT_HMI_Alarm_V2"
+VERSION : 0.1
+   STRUCT
+      t : Struct
+         x0 : Bool;
+         x1 : Bool;
+         x2 : Bool;
+         x3 : Bool;
+         x4 : Bool;
+         x5 : Bool;
+         x6 : Bool;
+         x7 : Bool;
+         x8 : Bool;
+         x9 : Bool;
+         x10 : Bool;
+         x11 : Bool;
+         x12 : Bool;
+         x13 : Bool;
+         x14 : Bool;
+         x15 : Bool;
+      END_STRUCT;
+      iHmiSumAlm : Word;
+   END_STRUCT;
+
+END_TYPE
+
+TYPE "UDT_IECTOFF_V1.00"
+VERSION : 0.1
+   STRUCT
+      INTERNAL_dRetainOFF_ms { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;   // Retain OFF timer
+      INTERNAL_xLastSignalState { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Last signal state
+      INTERNAL_dLastTimeCount_ms { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;   // Last time count
+      OUT_xDone { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Timer done
+   END_STRUCT;
+
+END_TYPE
+
+TYPE "UDT_IECTON_V1.00"
+VERSION : 0.1
+   STRUCT
+      INTERNAL_dWaitingON_ms { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;   // Waiting ON timer
+      INTERNAL_xLastSignalState { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Last signal state
+      INTERNAL_dLastTimeCount_ms { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;   // Last time count
+      OUT_xDone { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;   // Timer done
+   END_STRUCT;
+
+END_TYPE
+
+TYPE "UDT_AlmSquaring"
+VERSION : 0.1
+   STRUCT
+      tEmergencyAlm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";
+      tAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";
+      tWarning : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";
+   END_STRUCT;
+
+END_TYPE
+
+TYPE "UDT_Breaker"
+VERSION : 0.1
+   STRUCT
+      ST_xEnableControlError : Bool;
+      ST_xWarning : Bool;
+      ST_xStopMachineFault : Bool;
+      ST_xStopNextCycleFault : Bool;
+      ST_xMachineFault : Bool;
+      ST_xOutputEnable : Bool;
+      ST_xManualCommandAccepted : Bool;
+      ST_xRunBreakerFW : Bool;
+      ST_xConveyorForSmallArmsOk : Bool;
+      ST_xConveyorForBrakerOk : Bool;
+      IN_xBreakerReady : Bool;
+      IN_xBreakerRotationFeedback : Bool;
+      IN_xBreakerProtection : Bool;
+      IN_xStarterAnomaly : Bool;
+      IN_xBreakerSwitch : Bool;
+      IN_xBreakerFeedback : Bool;
+      IN_xBreakerProtectionConveyorM322 : Bool;
+      IN_xBreakerProtectionConveyorM321 : Bool;
+      IN_xBreakerSwitchConveyorM322 : Bool;
+      IN_xThermalProbeConveyorM322 : Bool;
+      IN_xBreakerSwitchConveyorM321 : Bool;
+      IN_xThermalProbeConveyorM321 : Bool;
+      IN_xFeedbackMotorConveyor : Bool;
+      IN_xProtectionMotorRollerM320 : Bool;
+      IN_xLocalSwitchInferiorRorrerM320 : Bool;
+      IN_xThermalProbeInferiorRollerM320 : Bool;
+      OUT_xStartBreaker : Bool;
+      tmON_Rotation {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'} : IEC_TIMER;
+      tmOF_DrievEnable_BreakerConveyor : "UDT_IECTOFF_V1.00";
+      tm_ON_DelayReadyToMove : "UDT_IECTON_V1.00";
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "Test_1"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      boolean : Bool;
+      integer : Int;
+      dinteger : DInt;
+      "real" : Real;
+      "byte" : Byte;
+      "word" : Word;
+      "timer" {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'} : IEC_TIMER;
+      boolean_array : Array[0..10] of Bool;
+      integer_array : Array[0..10] of Int;
+      dinteger_array : Array[0..10] of DInt;
+      real_array : Array[0..10] of Real;
+      byte_array : Array[0..10] of Byte;
+      word_array : Array[0..10] of Word;
+      timer_array {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; S7_SetPoint := 'False'} : Array[0..10] of IEC_TIMER;
+      udt_1 { S7_SetPoint := 'False'} : "UDT_AlmSquaring";
+      udt_2 : "UDT_Breaker";
+      udt_1_array : Array[0..5] of "UDT_AlmSquaring";
+      udt_2_array : Array[0..5] of "UDT_Breaker";
+      udt_1_array_bis : Array["STARTARRAY".."DNMCONVEYOR"] of "UDT_AlmSquaring";
+      udt_2_array_bis : Array["STARTARRAY".."DNMCONVEYOR"] of "UDT_Breaker";
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

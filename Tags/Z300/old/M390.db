@@ -1,0 +1,78 @@
+﻿TYPE "UDT_HMI_Alarm_V2"
+VERSION : 0.1
+   STRUCT
+      t : Struct
+         x0 : Bool;
+         x1 : Bool;
+         x2 : Bool;
+         x3 : Bool;
+         x4 : Bool;
+         x5 : Bool;
+         x6 : Bool;
+         x7 : Bool;
+         x8 : Bool;
+         x9 : Bool;
+         x10 : Bool;
+         x11 : Bool;
+         x12 : Bool;
+         x13 : Bool;
+         x14 : Bool;
+         x15 : Bool;
+      END_STRUCT;
+      iHmiSumAlm : Word;
+   END_STRUCT;
+
+END_TYPE
+
+DATA_BLOCK "BreakerM390_Alm"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tEmergencyAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop machine fault
+      tAlarm : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // stop next cycle faults
+      tWarning : Array["STARTARRAY".."DALARM"] of "UDT_HMI_Alarm_V2";   // Generic warning
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
+DATA_BLOCK "BreakerM390_Hmi"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      tHMR : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         xManualCommandEnabled : Bool;   // Manual Comand enabled {x|x|x|x|O}
+         xRunBreakerEnabled : Bool;   // Run Always Breaker Enabled {x|x|x|x|O}
+         iStateBreaker : Int;   // Breaker State (1=Ready, 3=Run, 7=Anomaly)
+         iStateConveyorM321 : Int;   // State Conveyor M321
+         iStateConveyorM322 : Int;   // State Conveyor M322
+         iStateConveyorM320Inferior : Int;   // State Conveyor M320 Inferior
+         tManCmd : Struct
+            xRunFwEnabled : Bool;   // Breaker Motor Rotation Enabled FW {x|x|x|x|O}
+            xRunBwEnabled : Bool;   // Breaker Motor Rotation Enabled BW {x|x|x|x|O}
+            xRunFWConveyorEnabled : Bool;   // Enable Breaker conveyor FW {x|x|x|x|O}
+            xRunBWConveyorEnabled : Bool;   // Enable Breaker conveyor BW {x|x|x|x|O}
+         END_STRUCT;
+      END_STRUCT;
+      tHMW : Struct   // {[Unit]|[Scada Unit]|[LowLimit]|[HigLimit]|[Acces]}
+         xEnableDisableManualCommand : Bool;   // Enable Manual command {x|x|x|x|O}
+         xEnableDisableRunBreaker : Bool;   // Enable Run Always Breaker {x|x|x|x|O}
+         dTimeToRetainBreakerInRun : DInt;   // Time To Retain Breaker In Run After Rise {ms|s|x|x|O}
+         tManCmd : Struct
+            xRunFW : Bool;   // Enable Breaker Rotation FW {x|x|x|x|O}
+            xRunBW : Bool;   // Enable Breaker Rotation BW {x|x|x|x|O}
+            xRunFWConveyor : Bool;   // Enable Breaker conveyor FW {x|x|x|x|O}
+            xRunBWConveyor : Bool;   // Enable Breaker conveyor BW {x|x|x|x|O}
+         END_STRUCT;
+      END_STRUCT;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
