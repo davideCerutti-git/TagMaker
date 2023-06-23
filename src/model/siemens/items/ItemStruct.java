@@ -387,7 +387,7 @@ public class ItemStruct extends Item {
 
 	private void insertStringItem(Item item, Row rowGen) {
 //		 System.err.println("#### "+item.getDbName()); 
-		String strFormula = item.getDbName() + "_DB" + intToStringFormatted(item.getAddress().getDB()) + "STR"
+		String strFormula = item.getDbName() + "_DB" + intToStringFormatted(item.getAddress().getDB()) + "TX"
 				+ intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBS" + item.getAddress().gByte());

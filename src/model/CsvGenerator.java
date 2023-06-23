@@ -677,10 +677,12 @@ public class CsvGenerator {
 			} else if (umPlc.equals(umScada)) {
 				return "-1";// per 1
 			}
-			logger.error("Conversion rule not found -> " + umConversion);
+			logger.warn("Conversion rule not found -> " + umConversion);
 		}
 		return "-1";
 	}
+	
+	//ckdjksòlfj
 
 	/**
 	 * Restituisce il valore di scalatura alto leggendo dalla descrizione cio che si
@@ -726,7 +728,7 @@ public class CsvGenerator {
 			} else if (umPlc.equals(umScada)) {
 				return "1";// per 1
 			}
-			logger.error("Conversion rule not found -> " + umConversion);
+			logger.warn("Conversion rule not found -> " + umConversion);
 		}
 		return "1";
 	}
@@ -885,7 +887,7 @@ public class CsvGenerator {
 		}
 		String s3 = s2.replaceAll(";", "");
 		String s4 = s3.replaceAll("\"", "");
-		System.out.println(s4);
+//		System.out.println(s4);
 		return s4;
 	}
 

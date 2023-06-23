@@ -19,6 +19,7 @@ import model.rockwell.ModelRockwell;
 import model.siemens.items.*;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 
 import settings.Settings;
 
@@ -1165,6 +1166,7 @@ public class ModelSiemens {
 	}
 
 	public boolean readXlsxFile(File f) {
+		ZipSecureFile.setMinInflateRatio(0);
 		Workbook workbook = null;
 		Iterator<Sheet> sheetIterator = null;
 
@@ -1172,10 +1174,11 @@ public class ModelSiemens {
 			workbook = WorkbookFactory.create(f);
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+//		ModelSiemens.logSiem.info("readXlsxFile");
+		
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
 		sheetIterator = workbook.sheetIterator();
@@ -1183,6 +1186,7 @@ public class ModelSiemens {
 		if (workbook == null)
 			;
 
+		
 		while (sheetIterator.hasNext()) {
 			Sheet sheet = sheetIterator.next();
 			/*
