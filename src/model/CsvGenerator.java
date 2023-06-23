@@ -682,7 +682,6 @@ public class CsvGenerator {
 		return "-1";
 	}
 	
-	//ckdjksòlfj
 
 	/**
 	 * Restituisce il valore di scalatura alto leggendo dalla descrizione cio che si
