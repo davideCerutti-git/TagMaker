@@ -329,7 +329,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 					}
 					file = f;
 				}
-				model.getCsvGenerator().generateCSV(file.getAbsolutePath().replace(".xlsx", ".csv"));
+				model.getCsvGenerator().generateCSV(file.getAbsolutePath().replace(".xlsx", ".csv"),false,false);
 				model.clearListEntry();
 			}
 			return null;
@@ -431,13 +431,13 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		for (String s : menuItemStringsList) {
 			s = s.trim();
 		}
-		for (String s : menuItemStringsList) {
-			MenuItem menuItem = new MenuItem(s.trim());
-			menuItem.setOnAction(e -> {
-				mbPrefixDriver.setText(((MenuItem) e.getSource()).getText());
-			});
-			mbPrefixDriver.getItems().add(menuItem);
-		}
+//		for (String s : menuItemStringsList) {
+//			MenuItem menuItem = new MenuItem(s.trim());
+//			menuItem.setOnAction(e -> {
+//				mbPrefixDriver.setText(((MenuItem) e.getSource()).getText());
+//			});
+//			mbPrefixDriver.getItems().add(menuItem);
+//		}
 
 		validationSupportDb.registerValidator(textFieldChooseDb, Validator.createEmptyValidator("Field required"));
 		ValidationSupport.setRequired(textFieldChooseDb, false);

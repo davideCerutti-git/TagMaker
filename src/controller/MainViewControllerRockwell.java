@@ -144,6 +144,7 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 		model = new ModelRockwell(null);
 		properties = new Settings();
 		properties.load(new FileReader("properties/rockwellImporterSettings.cfg"));
+		
 
 	}
 
@@ -423,10 +424,10 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 						model.readXsl(f.getAbsolutePath());
 						if (Files.exists(Paths.get(properties.getProperty("filePath")))) {
 							model.getCsvGenerator().generateCSV(properties.getProperty("filePath") + "\\"
-									+ FilenameUtils.removeExtension(f.getName()) + ".csv");
+									+ FilenameUtils.removeExtension(f.getName()) + ".csv",true,true);
 						} else {
 							model.getCsvGenerator().generateCSV(System.getProperty("user.home") + "\\"
-									+ FilenameUtils.removeExtension(f.getName()) + ".csv");
+									+ FilenameUtils.removeExtension(f.getName()) + ".csv",true,true);
 						}
 					} else {
 						this.cancel();
@@ -461,14 +462,14 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 		for (String s : menuItemStringsList) {
 			s = s.trim();
 		}
-		for (String s : menuItemStringsList) {
-			MenuItem menuItem = new MenuItem(s.trim());
-			menuItem.setOnAction(e -> {
-				System.out.println(((MenuItem) e.getSource()).getText());
-				mbPrefixDriver.setText(((MenuItem) e.getSource()).getText());
-			});
-			mbPrefixDriver.getItems().add(menuItem);
-		}
+//		for (String s : menuItemStringsList) {
+//			MenuItem menuItem = new MenuItem(s.trim());
+//			menuItem.setOnAction(e -> {
+//				System.out.println(((MenuItem) e.getSource()).getText());
+//				mbPrefixDriver.setText(((MenuItem) e.getSource()).getText());
+//			});
+//			mbPrefixDriver.getItems().add(menuItem);
+//		}
 
 		validationSupportXml.registerValidator(textFieldChooseXml, Validator.createEmptyValidator("Field required"));
 		validationSupportXls.registerValidator(textFieldChooseXls, Validator.createEmptyValidator("Field required"));

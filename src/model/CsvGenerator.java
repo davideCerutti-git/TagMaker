@@ -13,14 +13,15 @@ import org.apache.log4j.Logger;
 import controller.MainViewControllerRockwell;
 import controller.MainViewControllerSiemens;
 import controller.ViewController;
+import model.rockwell.ModelRockwell;
+import model.siemens.ModelSiemens;
 import settings.Settings;
 
 public class CsvGenerator {
 
 	/*
-	 * ================================================================== 
-	 * Liste di "righe" prese dal file Excel
-	 * DA = digital alarm
+	 * ================================================================== Liste di
+	 * "righe" prese dal file Excel DA = digital alarm
 	 * ==================================================================
 	 */
 	private ArrayList<EntryXlsx> listEntry_DA = new ArrayList<EntryXlsx>();
@@ -56,7 +57,7 @@ public class CsvGenerator {
 	 * @param path
 	 * @throws IOException
 	 */
-	public void generateCSV(String path) throws IOException {
+	public void generateCSV(String path, boolean flagSymbolicAddress,boolean flagRockwellSiemens) throws IOException {
 
 		String[] arrayMul1000000 = properties.getProperty("scaleMul_1000000").split(";");
 		for (String s : arrayMul1000000) {
@@ -132,23 +133,25 @@ public class CsvGenerator {
 		listOfScaleDiv_100 = Arrays.asList(arrayDiv100);
 		listOfScaleDiv_10 = Arrays.asList(arrayDiv10);
 
-//		System.out.println("‡‡‡‡");
-		File f=new File(path);
-		fileNameNoExtension=FilenameUtils.removeExtension(f.getName());
+		File f = new File(path);
+		fileNameNoExtension = FilenameUtils.removeExtension(f.getName());
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(path));
 		writer.write(properties.getProperty("csvHeaderMain_1") + "\n\n");
 		writer.write(properties.getProperty("csvHeaderMain_2") + "\n");
 
 		if (!listEntry_DA.isEmpty()) {
+
 			writer.write(properties.getProperty("csvHeader1_DA") + "\n");
 			writer.write(properties.getProperty("csvHeader2_DA") + "\n");
 			List<String[]> listRows_DA = new ArrayList<String[]>();
 			for (EntryXlsx entry : listEntry_DA) {
-				if (entry.fDescrizioneEstesa.isEmpty()) {
-					;
+				if (entry.fDescrizioneEstesa.isEmpty() || entry.fDescrizioneEstesa.isBlank()) {
 				} else {
-					listRows_DA.add(generateEntryVectString_DA(entry));
+					if (listRows_DA == null) {
+						;
+					}
+					listRows_DA.add(generateEntryVectString_DA(entry, flagSymbolicAddress,flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_DA);
@@ -162,7 +165,7 @@ public class CsvGenerator {
 				if (entry.fDescrizioneEstesa.isEmpty()) {
 					;
 				} else {
-					listRows_AA.add(generateEntryVectString_AA(entry));
+					listRows_AA.add(generateEntryVectString_AA(entry, flagSymbolicAddress,flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_AA);
@@ -176,7 +179,7 @@ public class CsvGenerator {
 				if (entry.fDescrizioneEstesa.isEmpty()) {
 					;
 				} else {
-					listRows_DI.add(generateEntryVectString_DI(entry));
+					listRows_DI.add(generateEntryVectString_DI(entry, flagSymbolicAddress,flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_DI);
@@ -190,7 +193,7 @@ public class CsvGenerator {
 				if (entry.fDescrizioneEstesa.isEmpty()) {
 					;
 				} else {
-					listRows_AI.add(generateEntryVectString_AI(entry));
+					listRows_AI.add(generateEntryVectString_AI(entry, flagSymbolicAddress, flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_AI);
@@ -230,17 +233,17 @@ public class CsvGenerator {
 
 	}
 
-	private String[] generateEntryVectString_AA(EntryXlsx entry) {
+	private String[] generateEntryVectString_AA(EntryXlsx entry, boolean flagSymbolicAddress,boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "AA");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
 		array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
 		// TODO finire
-		array.add(4, (false ? "IGS" : "S7A"));
+		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
 		// TODO finire
-		array.add(6, getDriverPrefix() + (false ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
+		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(7, "AUTO");
 		array.add(8, "ON");
 		array.add(9, "1");
@@ -313,18 +316,19 @@ public class CsvGenerator {
 	 * @param entry
 	 * @return
 	 */
-	private String[] generateEntryVectString_DA(EntryXlsx entry) {
+	private String[] generateEntryVectString_DA(EntryXlsx entry, boolean flagSymbolicAddress,boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "DA");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
-		//array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
-		array.add(3, fileNameNoExtension+"."+cleanNewLines(entry));
+		// array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
+		array.add(3, fileNameNoExtension + "." + cleanNewLines(entry));
 		// TODO finire
-		array.add(4, (false ? "IGS" : "S7A"));
+		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
 		// TODO finire
-		array.add(6, getDriverPrefix() + (false ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
+		getDriverPrefix();
+		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(7, "AUTO");
 		array.add(8, "ON");
 		array.add(9, "1");
@@ -354,8 +358,8 @@ public class CsvGenerator {
 		array.add(33, "");
 		array.add(34, "");
 		array.add(35, "");
-		array.add(36, fileNameNoExtension+"."+cleanNewLines(entry));
-		array.add(37, fileNameNoExtension+"."+cleanNewLines(entry));
+		array.add(36, fileNameNoExtension + "." + cleanNewLines(entry));
+		array.add(37, fileNameNoExtension + "." + cleanNewLines(entry));
 		array.add(38, "");
 		array.add(39, "");
 		array.add(40, "");
@@ -397,17 +401,16 @@ public class CsvGenerator {
 	 * @param entry
 	 * @return
 	 */
-	private String[] generateEntryVectString_DI(EntryXlsx entry) {
+	private String[] generateEntryVectString_DI(EntryXlsx entry, boolean flagSymbolicAddress,boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "DI");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
 		array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
-		// TODO il false Ë da correggere
-		array.add(4, (false ? "IGS" : "S7A"));
+		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
 		// TODO il false Ë da correggere
-		array.add(6, getDriverPrefix() + (false ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
+		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(7, "AUTO");
 		array.add(8, "ON");
 		array.add(9, "0,10");
@@ -472,7 +475,8 @@ public class CsvGenerator {
 	 * @param entry
 	 * @return
 	 */
-	private String[] generateEntryVectString_AI(EntryXlsx entry) {
+	private String[] generateEntryVectString_AI(EntryXlsx entry, boolean flagSymbolicAddress,
+			boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "AI");
 		array.add(1, entry.getfTagNameSCADA());
@@ -481,9 +485,9 @@ public class CsvGenerator {
 		array.add(4, "ON");
 		array.add(5, "0,10");// Scan time
 		array.add(6, "0");
-		array.add(7, getDriverName());// I/O Device
+		array.add(7, getDriverName(flagRockwellSiemens));// I/O Device
 		array.add(8, "");
-		array.add(9, getDriverPrefix() + (false ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
+		array.add(9, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(10, "None");
 		array.add(11, "-999999");
 		array.add(12, "999999");
@@ -568,19 +572,24 @@ public class CsvGenerator {
 	 * prefisso corretto da aggiungere all'indirizzo plc
 	 */
 	private String getDriverPrefix() {
-		if (controller instanceof MainViewControllerRockwell)
+		if (controller instanceof MainViewControllerRockwell) {
 			return ((MainViewControllerRockwell) controller).getPrefixSelected() + ":";
-		else {
+		} else {
 			return ((MainViewControllerSiemens) controller).getPrefixSelected() + ":";
 		}
 	}
 
 	/**
+	 * @param flagRockwellSiemens
 	 * @return
 	 */
-	private String getDriverName() {
+	private String getDriverName(boolean flagRockwellSiemens) {
 		// TODO Finire
-		return "S7A";
+		if (flagRockwellSiemens) {
+			return "IGS";
+		} else {
+			return "S7A";
+		}
 	}
 
 	/**
@@ -681,7 +690,6 @@ public class CsvGenerator {
 		}
 		return "-1";
 	}
-	
 
 	/**
 	 * Restituisce il valore di scalatura alto leggendo dalla descrizione cio che si
