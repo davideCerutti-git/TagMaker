@@ -69,7 +69,7 @@ public class ModelSiemens {
 
 		// TODO Attenzione! il costruttore viene richiamato due volte
 	}
-
+	//-----
 	public static boolean readDBFile(File f) throws IOException, CloneNotSupportedException {
 //		ModelSiemens.logSiem.info("readDBFile" + f.getName());
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));

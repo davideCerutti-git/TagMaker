@@ -52,7 +52,7 @@ public class CsvGenerator {
 		CsvGenerator.logger = logger;
 		CsvGenerator.controller = controller;
 	}
-
+	//-----
 	/**
 	 * @param path
 	 * @throws IOException

@@ -41,7 +41,7 @@ public abstract class EntryXlsx {
 
 	}
 	
-
+	//-----
 	/**
 	 * @return the fAddrAbsPlc
 	 */

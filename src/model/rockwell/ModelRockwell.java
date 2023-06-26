@@ -804,7 +804,7 @@ public class ModelRockwell {
 //		File file = fileChooser.showSaveDialog(primaryStage);
 		
 //		System.out.println(getProperties().getProperty("filePath")+"\\"+path);
-		
+		//-----
 		File file=new File(getProperties().getProperty("filePath")+"\\"+path);
 		if (file != null) {
 			try (FileOutputStream outputStream = new FileOutputStream(file.getAbsolutePath())) {
