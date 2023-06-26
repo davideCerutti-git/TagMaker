@@ -1228,32 +1228,36 @@ public class ModelSiemens {
 							cells[3].trim(), cells[4].trim(), cells[5].trim(), cells[6].trim(), 0, cells[8].trim(),
 							cells[9].trim(), cells[10].trim(), cells[11].trim(), cells[12].trim(), cells[13].trim(),
 							cells[14].trim(), cells[15].trim(), cells[16].trim(), cells[17].trim(), false);
+					
+					
 
-					if (entry.getfTipo().trim().equals("bit_Anomalies<DA_BIT>")) {
-						this.getCsvGenerator().getListEntry_DA().add(entry);
-					} else if (entry.getfTipo().trim().equals("int_Anomalies<AA_INT>")) {
-						this.getCsvGenerator().getListEntry_AI().add(entry);// TODO per ora li metto in AI e non AA
-					} else if (entry.getfTipo().trim().equals("bit_read<DI_BIT>")
-							|| entry.getfTipo().trim().equals("bit_manual_cmd<WDI_BIT>")
-							|| entry.getfTipo().trim().equals("bit_manual_cmd<DI_BIT>")
-							|| entry.getfTipo().trim().equals("bit_write<WDI_BIT>")) {
-						this.getCsvGenerator().getListEntry_DI().add(entry);
-					} else if (entry.getfTipo().trim().equals("string_write<WTX_STRING>")
-							|| entry.getfTipo().trim().equals("dint_read<AI_DINT>")
-							|| entry.getfTipo().trim().equals("int_write<WAI_INT>")
-							|| entry.getfTipo().trim().equals("string_read<TX_STRING>")
-							|| entry.getfTipo().trim().equals("real_write<WAI_REAL>")
-							|| entry.getfTipo().trim().equals("dint_write<WAI_DINT>")
-							|| entry.getfTipo().trim().equals("int_read<AI_INT>")
-							|| entry.getfTipo().trim().equals("real_read<AI_REAL>")
-							|| entry.getfTipo().trim().equals("byte_write<WDI_BYTE>")
-							|| entry.getfTipo().trim().equals("byte_read<DI_BYTE>")) {
-						this.getCsvGenerator().getListEntry_AI().add(entry);
-					} else {
-						ModelSiemens.logSiem.error("Errore: " + entry.getfTipo().trim());
-						return false;
+					if (!entry.getfDescrizioneEstesa().isBlank() && !entry.getfDescrizioneEstesa().isEmpty()) {
+						if (entry.getfTipo().trim().equals("bit_Anomalies<DA_BIT>")) {
+							this.getCsvGenerator().getListEntry_DA().add(entry);
+						} else if (entry.getfTipo().trim().equals("int_Anomalies<AA_INT>")) {
+							this.getCsvGenerator().getListEntry_AI().add(entry);// TODO per ora li metto in AI e non AA
+						} else if (entry.getfTipo().trim().equals("bit_read<DI_BIT>")
+								|| entry.getfTipo().trim().equals("bit_manual_cmd<WDI_BIT>")
+								|| entry.getfTipo().trim().equals("bit_manual_cmd<DI_BIT>")
+								|| entry.getfTipo().trim().equals("bit_write<WDI_BIT>")) {
+							this.getCsvGenerator().getListEntry_DI().add(entry);
+						} else if (entry.getfTipo().trim().equals("string_write<WTX_STRING>")
+								|| entry.getfTipo().trim().equals("dint_read<AI_DINT>")
+								|| entry.getfTipo().trim().equals("int_write<WAI_INT>")
+								|| entry.getfTipo().trim().equals("string_read<TX_STRING>")
+								|| entry.getfTipo().trim().equals("real_write<WAI_REAL>")
+								|| entry.getfTipo().trim().equals("dint_write<WAI_DINT>")
+								|| entry.getfTipo().trim().equals("int_read<AI_INT>")
+								|| entry.getfTipo().trim().equals("real_read<AI_REAL>")
+								|| entry.getfTipo().trim().equals("byte_write<WDI_BYTE>")
+								|| entry.getfTipo().trim().equals("byte_read<DI_BYTE>")) {
+							this.getCsvGenerator().getListEntry_AI().add(entry);
+						} else {
+							ModelSiemens.logSiem.error("Errore. Tipo non riconosciuto: " + entry.getfTipo().trim());
+							return false;
+						}
+						// TODO aggiungere gli altri casi, e controllare questi
 					}
-					// TODO aggiungere gli altri casi, e controllare questi
 
 				}
 
