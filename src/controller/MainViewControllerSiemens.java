@@ -7,47 +7,107 @@ package controller;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+//import java.io.File;
+//import java.io.FileWriter;
+//import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.FileOutputStream;
-import java.net.URL;
+//import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import org.apache.poi.hssf.record.Margin;
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.ResourceBundle;
+//import java.util.HashSet;
+import javafx.scene.control.ToggleGroup;
+//import java.util.Set;
 import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.PopOver;
+//import org.controlsfx.control.textfield.AutoCompletionBinding;
+//import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
+//import javafx.concurrent.Task;
+//import javafx.event.ActionEvent;
+//import javafx.event.EventHandler;
+//import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+//import javafx.fxml.Initializable;
+//import javafx.geometry.Insets;
+//import javafx.scene.Node;
+//import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+//import javafx.scene.control.Button;
+//import javafx.scene.control.Label;
+//import javafx.scene.control.MenuBar;
+//import javafx.scene.control.MenuButton;
+//import javafx.scene.control.MenuItem;
+//import javafx.scene.control.ProgressBar;
+//import javafx.scene.control.TextField;
+//import javafx.scene.image.ImageView;
+//import javafx.scene.input.KeyEvent;
+//import javafx.scene.layout.BorderPane;
+//import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+//import javafx.stage.Stage;
+//import javafx.stage.FileChooser.ExtensionFilter;
+//import model.siemens.ModelSiemens;
+//import settings.Settings;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import org.controlsfx.ControlsFXSample;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.samples.Utils;
+
+import impl.org.controlsfx.skin.AutoCompletePopup;
+import impl.org.controlsfx.skin.AutoCompletePopupSkin;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import model.siemens.ModelSiemens;
 import settings.Settings;
+
 
 public class MainViewControllerSiemens extends ViewController implements Initializable {
 	ModelSiemens model;
@@ -61,6 +121,10 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 	Settings properties;
 
 	private MaskerPane masker = new MaskerPane();
+	
+//	private AutoCompletionBinding<String> autoCompletionBinding;
+//    private String[] _possibleSuggestions;// = {"ZYC1", "ZYC2", "ZMRK", "Z200", "Z300", "Z400", "Z500", "Z600", "Z700"};
+//    private Set<String> possibleSuggestions;// = new HashSet<>(Arrays.asList(_possibleSuggestions));
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -136,10 +200,23 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 
 	@FXML // fx:id="txtFieldPrefixDriver"
 	private TextField txtFieldPrefixDriver; // Value injected by FXMLLoader
+	
+    @FXML // fx:id="rbAbsolute"
+    private RadioButton rbAbsolute; // Value injected by FXMLLoader
+
+    @FXML // fx:id="rbSymbolic"
+    private RadioButton rbSymbolic; // Value injected by FXMLLoader
+
 
 	public MainViewControllerSiemens() {
 		model = new ModelSiemens(null);
 		properties = model.getProp();
+//		ModelSiemens.logSiem.info(Arrays.asList(properties.getProperty("listOfPrefixes").split(";")));
+//		_possibleSuggestions=properties.getProperty("listOfPrefixes").split(";");
+//		for(String s: _possibleSuggestions) {
+//			s=s.trim();
+//		}
+//		possibleSuggestions = new HashSet<>(Arrays.asList(_possibleSuggestions));
 	}
 
 	public void setModel(ModelSiemens modelSiemens) {
@@ -183,14 +260,18 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 
 		properties.setProperty("filePath", filePath);
 
+		storePropertiesOnFile();
+//		ModelSiemens.logSiem.debug("Siemens settings changes saved ");
+
+		textFieldChooseDb.setText(s);
+	}
+
+	private void storePropertiesOnFile() {
 		try {
 			properties.store(new FileWriter("properties/siemensImporterSettings.cfg"), null);
 		} catch (IOException e) {
 			ModelSiemens.logSiem.debug("IOException");
 		}
-		ModelSiemens.logSiem.debug("Siemens settings changes saved ");
-
-		textFieldChooseDb.setText(s);
 	}
 
 	@FXML
@@ -261,6 +342,8 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 	void openChooseFileXlsx(ActionEvent event) {
 
 		ValidationSupport.setRequired(textFieldChooseXlsx, false);
+		ValidationSupport.setRequired(txtFieldPrefixDriver, false);
+		
 		String filePath = "";
 		model.readProperties();
 		FileChooser fc = new FileChooser();
@@ -294,16 +377,26 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		} catch (IOException e) {
 			ModelSiemens.logSiem.debug("IOException");
 		}
-		ModelSiemens.logSiem.debug("Siemens settings changes saved ");
+//		ModelSiemens.logSiem.debug("Siemens settings changes saved ");
 
 		textFieldChooseXlsx.setText(s);
 	}
 
 	@FXML
 	void xlsxToCsv(ActionEvent event) throws IOException, CloneNotSupportedException {
+		boolean error=false;
 		if (selectedXlsxFiles == null) {
 			ValidationSupport.setRequired(textFieldChooseXlsx, true);
-		} else {
+			error=true;
+		} 
+		
+		if (txtFieldPrefixDriver.getText().isEmpty()) {
+			ValidationSupport.setRequired(txtFieldPrefixDriver, true);
+			error=true;
+		} 
+		
+		
+		if(!error) {
 			ConvertXlsx task = new ConvertXlsx(event);
 			setDisable(true);
 			new Thread(task).start();
@@ -329,7 +422,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 					}
 					file = f;
 				}
-				model.getCsvGenerator().generateCSV(file.getAbsolutePath().replace(".xlsx", ".csv"),false,false);
+				model.getCsvGenerator().generateCSV(file.getAbsolutePath().replace(".xlsx", ".csv"),rbSymbolic.isSelected(),false);
 				model.clearListEntry();
 			}
 			return null;
@@ -339,6 +432,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		protected void succeeded() {
 			selectedXlsxFiles = null;
 			textFieldChooseXlsx.setText("select a file...");
+			txtFieldPrefixDriver.setText("");
 			model.clearDbList();
 			setDisable(false);
 		}
@@ -347,6 +441,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		protected void cancelled() {
 			selectedXlsxFiles = null;
 			textFieldChooseXlsx.setText("select a file...");
+			txtFieldPrefixDriver.setText("");
 			model.clearDbList();
 			setDisable(false);
 			new Alert(Alert.AlertType.ERROR, "Errore converisone file .xlsx ").showAndWait();
@@ -423,6 +518,9 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 				: "fx:id=\"textFieldChooseXlsx\" was not injected: check your FXML file 'MainViewSiemens.fxml'.";
 		assert txtFieldPrefixDriver != null
 				: "fx:id=\"txtFieldPrefixDriver\" was not injected: check your FXML file 'MainViewSiemens.fxml'.";
+		 assert rbAbsolute != null : "fx:id=\"rbAbsolute\" was not injected: check your FXML file 'MainViewSiemens.fxml'.";
+	        assert rbSymbolic != null : "fx:id=\"rbSymbolic\" was not injected: check your FXML file 'MainViewSiemens.fxml'.";
+	        
 	}
 
 	@Override
@@ -446,6 +544,9 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		validationSupportXlsx.registerValidator(textFieldChooseXlsx, Validator.createEmptyValidator("Field required"));
 		ValidationSupport.setRequired(textFieldChooseXlsx, false);
 		
+		validationSupportXlsx.registerValidator(txtFieldPrefixDriver, Validator.createEmptyValidator("Field required"));
+		ValidationSupport.setRequired(txtFieldPrefixDriver, false);
+		
 		makePopOverInfo(buttonDbToXls,
 				"Converte un file db (creato con TIA) in file xlsx (formato Bottero)\n"
 				+ "- I file db non hanno informazione del numero DB, quindi è necessario\n"
@@ -466,7 +567,35 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 
 		makePopOverInfo(buttonXlsxToCsv,
 				"Converte un file xlsx (formato Bottero) in \nfile csv (formato importabile in iFix)\nPer il momento solo in assoluto!");
+		
+//		txtFieldPrefixDriver.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//	            @Override
+//	            public void handle(KeyEvent ke) {
+//	                switch (ke.getCode()) {
+//	                case ENTER:
+//	                    autoCompletionLearnWord(txtFieldPrefixDriver.getText().trim());
+//	                    break;
+//	                default:
+//	                    break;
+//	                }
+//	            }
+//	        });
+		
+		ToggleGroup tg = new ToggleGroup();
+		
+		rbAbsolute.setSelected(Boolean.parseBoolean(properties.getProperty("absoluteAddressSelected")));
+		rbSymbolic.setSelected(!Boolean.parseBoolean(properties.getProperty("absoluteAddressSelected")));
+		
+		rbAbsolute.setToggleGroup(tg);
+		rbSymbolic.setToggleGroup(tg);
+		
+		rbAbsolute.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			properties.setProperty("absoluteAddressSelected", ""+rbAbsolute.isSelected());
+			storePropertiesOnFile();
+        });
 	}
+	
+	
 
 	private void makePopOverInfo(Button button, String string) {
 		PopOver popOver = new PopOver(createPopOverinfo(string));
@@ -552,4 +681,13 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		return this.model;
 	}
 
+//	 private void autoCompletionLearnWord(String newWord){
+//	        possibleSuggestions.add(newWord);
+//	        
+//	        // we dispose the old binding and recreate a new binding
+//	        if (autoCompletionBinding != null) {
+//	            autoCompletionBinding.dispose();
+//	        }
+//	        autoCompletionBinding = TextFields.bindAutoCompletion(txtFieldPrefixDriver, possibleSuggestions);
+//	    }
 }

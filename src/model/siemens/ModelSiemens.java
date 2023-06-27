@@ -34,7 +34,7 @@ public class ModelSiemens {
 	static BufferedReader br;
 	private static final int MAX_NUM_COL_XLS = 15;
 	private static int tmp_num_db = 0;
-	
+
 	private static Address gAddr = new Address();
 	static Settings properties;
 
@@ -69,7 +69,8 @@ public class ModelSiemens {
 
 		// TODO Attenzione! il costruttore viene richiamato due volte
 	}
-	//-----
+
+	// -----
 	public static boolean readDBFile(File f) throws IOException, CloneNotSupportedException {
 //		ModelSiemens.logSiem.info("readDBFile" + f.getName());
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
@@ -186,7 +187,7 @@ public class ModelSiemens {
 		ModelSiemens.getgAddr().resetAddress();
 		ModelSiemens.getgAddr().setDB(tmp_num_db);
 		dblist.add(tmpDbBlock);
-		while (!line.contains("STRUCT") && line != null) {
+		while ((!line.contains("STRUCT") && !line.contains("VAR")) && line != null) {
 			line = br.readLine();
 		}
 		readLineRecursive(br, tmpDbBlock.getMainStruct(), false);
@@ -276,7 +277,7 @@ public class ModelSiemens {
 //			logSiem.info("readLineRecursive: Linea letta da file: " + lineReaded);
 
 			if (lineReaded == null || lineReaded.contains("END_TYPE") || lineReaded.contains("END_DATA_BLOCK")
-					|| lineReaded.contains("END_STRUCT")) {
+					|| lineReaded.contains("END_STRUCT") || lineReaded.contains("END_VAR")) {
 				// end recursion
 //				logSiem.info("end recursion.");
 				return;
@@ -304,9 +305,50 @@ public class ModelSiemens {
 		if (str.split(":")[1].contains("Bool;")) {
 			manageBool(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.BOOL);
 			lastSimpleType = SimpleSiemensType.BOOL;
-		} else if (str.split(":")[1].contains("Int;") && !str.split(":")[1].contains("DInt;")) {
+		} else if (str.split(":")[1].contains("Int;") && !str.split(":")[1].contains("DInt;")
+				&& !str.split(":")[1].contains("LInt;") && !str.split(":")[1].contains("SInt;")
+				&& !str.split(":")[1].contains("UInt;")) {
 			manageInt(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.INT);
 			lastSimpleType = SimpleSiemensType.INT;
+		} else if (str.split(":")[1].contains("UInt;")) {
+			manageUInt(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.UINT);
+			lastSimpleType = SimpleSiemensType.UINT;
+		} else if (str.split(":")[1].contains("S5Time;")) {
+			manageS5Time(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.S5TIME);
+			lastSimpleType = SimpleSiemensType.S5TIME;
+		} else if (str.split(":")[1].contains("Date_And_Time;")) {
+			manageDateAndTime(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.DATEANDTIME);
+			lastSimpleType = SimpleSiemensType.DATEANDTIME;
+		} else if (str.split(":")[1].contains("Time_Of_Day;")) {
+			manageTimeOfDay(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.TIMEOFDAY);
+			lastSimpleType = SimpleSiemensType.TIMEOFDAY;
+		} else if (str.split(":")[1].contains("Date;")) {
+			manageDate(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.DATE);
+			lastSimpleType = SimpleSiemensType.DATE;
+		} else if (str.split(":")[1].contains("ULInt;")) {
+			manageULInt(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.ULINT);
+			lastSimpleType = SimpleSiemensType.ULINT;
+		} else if (str.split(":")[1].contains("LInt;")) {
+			manageLInt(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.LINT);
+			lastSimpleType = SimpleSiemensType.LINT;
+		} else if (str.split(":")[1].contains("USInt;")) {
+			manageUSInt(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.USINT);
+			lastSimpleType = SimpleSiemensType.USINT;
+		} else if (str.split(":")[1].contains("SInt;")) {
+			manageSInt(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.SINT);
+			lastSimpleType = SimpleSiemensType.SINT;
+		} else if (str.split(":")[1].contains("LReal;")) {
+			manageLReal(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.LREAL);
+			lastSimpleType = SimpleSiemensType.LREAL;
+		} else if (str.split(":")[1].contains("LTime;")) {
+			manageLTime(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.LTIME);
+			lastSimpleType = SimpleSiemensType.LTIME;
+		} else if (str.split(":")[1].contains("LWord;")) {
+			manageLWord(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.LWORD);
+			lastSimpleType = SimpleSiemensType.LWORD;
+		} else if (str.split(":")[1].contains("UDInt;")) {
+			manageUDint(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.UDINT);
+			lastSimpleType = SimpleSiemensType.UDINT;
 		} else if (str.split(":")[1].contains("DInt;")) {
 			manageDint(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.DINT);
 			lastSimpleType = SimpleSiemensType.DINT;
@@ -316,22 +358,28 @@ public class ModelSiemens {
 		} else if (str.split(":")[1].contains("Byte;")) {
 			manageByte(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.BYTE);
 			lastSimpleType = SimpleSiemensType.BYTE;
+		} else if (str.split(":")[1].contains("Char;")) {
+			manageChar(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.BYTE);
+			lastSimpleType = SimpleSiemensType.BYTE;
 		} else if (str.split(":")[1].contains("DWord;")) {
 			manageDWord(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.DWORD);
 			lastSimpleType = SimpleSiemensType.DWORD;
+		} else if (str.split(":")[1].contains("Time;")) {
+			manageTime(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.TIME);
+			lastSimpleType = SimpleSiemensType.TIME;
 		} else if (str.split(":")[1].contains("Word;") && !str.split(":")[1].contains("DWord;")) {
 			manageWord(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.WORD);
 			lastSimpleType = SimpleSiemensType.WORD;
 		} else if (str.split(":")[1].contains("IEC_TIMER;")) {
 			manageIEC_TIMER(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.IEC_TIMER);
 			lastSimpleType = SimpleSiemensType.IEC_TIMER;
-		}else if (str.split(":")[1].contains("String;")) {
+		} else if (str.split(":")[1].contains("String;")) {
 			manageString(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.STRING);
 			lastSimpleType = SimpleSiemensType.STRING;
 		} else if (str.split(":")[1].contains("String[")) {
 			manageStringInArrayForm(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.STRING);
 			lastSimpleType = SimpleSiemensType.STRING;
-		}else if (typeExist(lineReaded.split(":")[1].replace(";", "").trim())) {
+		} else if (typeExist(lineReaded.split(":")[1].replace(";", "").trim())) {
 //			logSiem.info("typeExist "+lineReaded.split(":")[1]);
 			if (flag)
 				manageUDT_Type(workingStruct, lineReaded);
@@ -368,6 +416,26 @@ public class ModelSiemens {
 //			} 
 //		}
 		ItemDWord item = (ItemDWord) ItemDWord.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+		workingStruct.addItem(item);
+//		logSiem.info(item.getAddress().toString());
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageTime(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+		// logSiem.info("manageTime");
+//		if (typeChanged) {
+//			
+//			if (ModelSiemens.getgAddr().gBit() > 0) {
+//				ModelSiemens.getgAddr().incrementAddress(1, 0);
+//				ModelSiemens.getgAddr().setBit(0);
+//			}
+//			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+//				ModelSiemens.getgAddr().incrByte(1);
+//			} 
+//		}
+		ItemTime item = (ItemTime) ItemTime.makeItemFromString(workingStruct, lineReaded, typeChanged);
 		item.setUpType();
 		workingStruct.addItem(item);
 //		logSiem.info(item.getAddress().toString());
@@ -471,7 +539,7 @@ public class ModelSiemens {
 
 	private static String getTypeString(String str) {
 
-		str=removeComment(str);
+		str = removeComment(str);
 		if (str.contains(Character.toString(':'))) {
 			str = str.split(":")[1].trim();
 			if (str.contains(Character.toString(';'))) {
@@ -526,7 +594,8 @@ public class ModelSiemens {
 		return replace.trim();
 	}
 
-	private static void manageIEC_TIMER(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+	private static void manageIEC_TIMER(ItemStruct workingStruct, String lineReaded, boolean typeChanged)
+			throws CloneNotSupportedException {
 //		logSiem.info("manageIEC_TIMER");
 
 		ItemIEC_TIMER itemIEC_TIMER = (ItemIEC_TIMER) ItemIEC_TIMER.makeItemFromString(workingStruct, lineReaded,
@@ -548,6 +617,16 @@ public class ModelSiemens {
 //						.toStringExtended());
 	}
 
+	private static void manageChar(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		logSiem.info("manageChar");
+
+		ItemChar item = (ItemChar) ItemChar.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
 	private static void manageReal(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
 		// logSiem.info("manageReal");
 
@@ -558,7 +637,7 @@ public class ModelSiemens {
 //				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
 //						.toStringExtended());
 	}
-	
+
 	private static void manageString(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
 		// logSiem.info("manageString");
 
@@ -569,7 +648,7 @@ public class ModelSiemens {
 //				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
 //						.toStringExtended());
 	}
-	
+
 	private static void manageStringInArrayForm(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
 		// logSiem.info("manageString");
 
@@ -592,11 +671,166 @@ public class ModelSiemens {
 //						.toStringExtended());
 	}
 
+	private static void manageUDint(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+		// logSiem.info("manageUDint");
+
+		ItemUDint item = (ItemUDint) ItemUDint.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageTimeOfDay(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+		// logSiem.info("manageTimeOfDay");
+
+		ItemTimeOfDay item = (ItemTimeOfDay) ItemTimeOfDay.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
 	private static void manageInt(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
 //		 logSiem.info("manageInt");
 
 		// logSiem.info(lineReaded);
 		ItemInt item = (ItemInt) ItemInt.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageUInt(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageUInt");
+
+		// logSiem.info(lineReaded);
+		ItemUInt item = (ItemUInt) ItemUInt.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageSInt(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageSInt");
+
+		// logSiem.info(lineReaded);
+		ItemSInt item = (ItemSInt) ItemSInt.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageUSInt(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageUSInt");
+
+		// logSiem.info(lineReaded);
+		ItemUSInt item = (ItemUSInt) ItemUSInt.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageS5Time(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageS5Time");
+
+		// logSiem.info(lineReaded);
+		ItemS5Time item = (ItemS5Time) ItemS5Time.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageDate(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageDate");
+
+		// logSiem.info(lineReaded);
+		ItemDate item = (ItemDate) ItemDate.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageDateAndTime(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageDatAndTimee");
+
+		// logSiem.info(lineReaded);
+		ItemDateAndTime item = (ItemDateAndTime) ItemDateAndTime.makeItemFromString(workingStruct, lineReaded,
+				typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageLInt(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageLInt");
+
+		// logSiem.info(lineReaded);
+		ItemLInt item = (ItemLInt) ItemLInt.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageULInt(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageULInt");
+
+		// logSiem.info(lineReaded);
+		ItemULInt item = (ItemULInt) ItemULInt.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageLReal(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageLReal");
+
+		// logSiem.info(lineReaded);
+		ItemLReal item = (ItemLReal) ItemLReal.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageLTime(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageLTime");
+
+		// logSiem.info(lineReaded);
+		ItemLTime item = (ItemLTime) ItemLTime.makeItemFromString(workingStruct, lineReaded, typeChanged);
+		item.setUpType();
+
+		workingStruct.addItem(item);
+//				System.out.println(workingStruct.getStructlist().get(workingStruct.getStructlist().size() - 1)
+//						.toStringExtended());
+	}
+
+	private static void manageLWord(ItemStruct workingStruct, String lineReaded, boolean typeChanged) {
+//		 logSiem.info("manageLWord");
+
+		// logSiem.info(lineReaded);
+		ItemLWord item = (ItemLWord) ItemLWord.makeItemFromString(workingStruct, lineReaded, typeChanged);
 		item.setUpType();
 
 		workingStruct.addItem(item);
@@ -722,30 +956,76 @@ public class ModelSiemens {
 			return;
 		}
 		String str = lineReaded.split(":")[1].split(" of ")[1];
-		str=removeComment(str);
+		str = removeComment(str);
 
 		if (str.contains("Bool;")) {
 //			ModelSiemens.logSiem.info("Array of bool");
 			manageArrayOfBool(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("UDInt;")) {
+//			ModelSiemens.logSiem.info("Array of UDint");
+			manageArrayOfUDint(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
 		} else if (str.contains("DInt;")) {
 //			ModelSiemens.logSiem.info("Array of Dint");
 			manageArrayOfDint(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
 		} else if (str.contains("Byte;")) {
 //			ModelSiemens.logSiem.info("Array of Byte");
 			manageArrayOfByte(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
-		} else if (str.contains("Word;")) {
+		} else if (str.contains("Char;")) {
+//			ModelSiemens.logSiem.info("Array of Char");
+			manageArrayOfChar(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("Word;") && !str.contains("LWord;") && !str.contains("DWord;")) {
 //			ModelSiemens.logSiem.info("Array of Word");
 			manageArrayOfWord(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
 		} else if (str.contains("DWord;")) {
 //			ModelSiemens.logSiem.info("Array of DWord");
 			manageArrayOfDword(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
-		} else if (str.contains("Int;")) {
+		} else if (str.contains("ULInt;")) {
+//			ModelSiemens.logSiem.info("Array of ULInt");
+			manageArrayOfULInt(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("UInt;")) {
+//			ModelSiemens.logSiem.info("Array of UInt");
+			manageArrayOfUInt(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("Int;") && !str.contains("LInt;") && !str.contains("SInt;") && !str.contains("DInt;")
+				&& !str.contains("UInt;")) {
 //			ModelSiemens.logSiem.info("Array of Int");
 			manageArrayOfInt(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("S5Time;") && !str.contains("LTime;")) {
+//			ModelSiemens.logSiem.info("Array of S5Time");
+			manageArrayOfS5Time(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("Date;") && !str.contains("Date_And_Time;") && !str.contains("Time_Of_Day;")) {
+//			ModelSiemens.logSiem.info("Array of Date");
+			manageArrayOfDate(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("Date_And_Time;")) {
+//			ModelSiemens.logSiem.info("Array of DateAndTime");
+			manageArrayOfDateAndTime(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("Time_Of_Day;")) {
+//			ModelSiemens.logSiem.info("Array of TimeOfDay");
+			manageArrayOfTimeOfDay(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("Time;") && !str.contains("LTime;") && !str.contains("S5Time;")) {
+//			ModelSiemens.logSiem.info("Array of Time");
+			manageArrayOfTime(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("LInt;")) {
+//			ModelSiemens.logSiem.info("Array of LInt");
+			manageArrayOfLInt(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("USInt;")) {
+//			ModelSiemens.logSiem.info("Array of USInt");
+			manageArrayOfUSInt(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("SInt;")) {
+//			ModelSiemens.logSiem.info("Array of SInt");
+			manageArrayOfSInt(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("LReal;")) {
+//			ModelSiemens.logSiem.info("Array of LReal");
+			manageArrayOfLReal(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("LTime;")) {
+//			ModelSiemens.logSiem.info("Array of LTime");
+			manageArrayOfLTime(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
+		} else if (str.contains("LWord;")) {
+//			ModelSiemens.logSiem.info("Array of LWord");
+			manageArrayOfLWord(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
 		} else if (str.contains("Real;")) {
 //			ModelSiemens.logSiem.info("Array of Real");
 			manageArrayOfReal(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
-		}else if (str.contains("String;")) {
+		} else if (str.contains("String;")) {
 //			ModelSiemens.logSiem.info("Array of String");
 			manageArrayOfString(workingStruct, lineReaded, lowerArrayIndex, upperArrayIndex);
 		} else if (str.contains("IEC_TIMER;")) {
@@ -792,14 +1072,13 @@ public class ModelSiemens {
 //			logSiem.info(str);
 			str = getTypeArrayString(str);
 
-
 //		ModelSiemens.logSiem.warn("manageArrayOfUDT: GlobalAddress: "+ModelSiemens.getgAddr());
-			ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, getNameItemFromStringLine(lineReaded)+ "[" + i + "]", workingStruct)
-					.clone();
+			ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, getNameItemFromStringLine(lineReaded) + "[" + i + "]",
+					workingStruct).clone();
 //			System.err.println("##"+workingStruct.getDbName());
 			itemUDT.updateDbName(workingStruct.getDbName());
 //		logSiem.warn("@@@@@@@"+getNameItemFromStringLine(lineReaded)+ "[" + i + "]");
-			itemUDT.updateName(getNameItemFromStringLine(lineReaded)+ "[" + i + "]");
+			itemUDT.updateName(getNameItemFromStringLine(lineReaded) + "[" + i + "]");
 			itemUDT.updateParent(workingStruct);
 			itemUDT.setUpType();
 //		logSiem.info("Global Address: " + ModelSiemens.getgAddr().gByte() + "." + ModelSiemens.getgAddr().gBit());
@@ -864,7 +1143,7 @@ public class ModelSiemens {
 			ItemStruct struct_tmp = (ItemStruct) struct.clone();
 //			ModelSiemens.logSiem.warn("GlobalAddress: "+ModelSiemens.getgAddr());
 //			logSiem.info("Aggiunta Struct: " + struct_tmp.getName() + "[" + i + "]");
-			struct_tmp.updateName(getNameItemFromStringLine(lineReaded)+ "[" + i + "]");
+			struct_tmp.updateName(getNameItemFromStringLine(lineReaded) + "[" + i + "]");
 			struct_tmp.addAddresRec(gAddr);
 			ModelSiemens.getgAddr().add(sizeArray);
 			workingStruct.addItem(struct_tmp);
@@ -874,9 +1153,10 @@ public class ModelSiemens {
 	}
 
 	private static void manageArrayOf_IEC_TIMER(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
-			int upperArrayIndex) {
-		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+			int upperArrayIndex) throws CloneNotSupportedException {
 
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+			ModelSiemens.getgAddr().incrementAddress(4, 0);
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -889,7 +1169,7 @@ public class ModelSiemens {
 					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
 							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
 					workingStruct));
-			ModelSiemens.getgAddr().incrementAddress(16, 0);
+//			ModelSiemens.getgAddr().incrementAddress(16, 0);
 		}
 	}
 
@@ -912,7 +1192,7 @@ public class ModelSiemens {
 			ModelSiemens.getgAddr().incrementAddress(4, 0);
 		}
 	}
-	
+
 	private static void manageArrayOfString(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
 			int upperArrayIndex) {
 		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
@@ -953,6 +1233,226 @@ public class ModelSiemens {
 		}
 	}
 
+	private static void manageArrayOfUInt(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemUInt(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(2, 0);
+		}
+	}
+
+	private static void manageArrayOfSInt(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+//			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+//				ModelSiemens.getgAddr().incrByte(1);
+//			}
+
+			workingStruct.addItem(new ItemSInt(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(1, 0);
+		}
+	}
+
+	private static void manageArrayOfUSInt(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+//			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+//				ModelSiemens.getgAddr().incrByte(1);
+//			}
+
+			workingStruct.addItem(new ItemUSInt(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(1, 0);
+		}
+	}
+
+	private static void manageArrayOfS5Time(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemS5Time(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(2, 0);
+		}
+	}
+
+	private static void manageArrayOfDate(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemDate(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(2, 0);
+		}
+	}
+
+	private static void manageArrayOfDateAndTime(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemDateAndTime(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(8, 0);
+		}
+	}
+
+	private static void manageArrayOfLInt(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemLInt(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(8, 0);
+		}
+	}
+
+	private static void manageArrayOfULInt(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemULInt(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(8, 0);
+		}
+	}
+
+	private static void manageArrayOfLReal(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemLReal(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(8, 0);
+		}
+	}
+
+	private static void manageArrayOfLTime(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemLTime(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(8, 0);
+		}
+	}
+
+	private static void manageArrayOfLWord(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemLWord(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(8, 0);
+		}
+	}
+
 	private static void manageArrayOfDword(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
 			int upperArrayIndex) {
 		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
@@ -966,6 +1466,46 @@ public class ModelSiemens {
 			}
 
 			workingStruct.addItem(new ItemDWord(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(4, 0);
+		}
+	}
+
+	private static void manageArrayOfTimeOfDay(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemTimeOfDay(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(4, 0);
+		}
+	}
+
+	private static void manageArrayOfTime(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemTime(workingStruct.getDbName(),
 					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
 							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
 					workingStruct));
@@ -1010,6 +1550,23 @@ public class ModelSiemens {
 		}
 	}
 
+	private static void manageArrayOfChar(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+
+			workingStruct.addItem(new ItemChar(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(1, 0);
+		}
+	}
+
 	private static void manageArrayOfDint(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
 			int upperArrayIndex) {
 		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
@@ -1023,6 +1580,26 @@ public class ModelSiemens {
 			}
 
 			workingStruct.addItem(new ItemDint(workingStruct.getDbName(),
+					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
+							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
+					workingStruct));
+			ModelSiemens.getgAddr().incrementAddress(4, 0);
+		}
+	}
+
+	private static void manageArrayOfUDint(ItemStruct workingStruct, String lineReaded, int lowerArrayIndex,
+			int upperArrayIndex) {
+		for (int i = lowerArrayIndex; i <= upperArrayIndex; i++) {
+
+			if (ModelSiemens.getgAddr().gBit() > 0) {
+				ModelSiemens.getgAddr().incrementAddress(1, 0);
+				ModelSiemens.getgAddr().setBit(0);
+			}
+			if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+				ModelSiemens.getgAddr().incrByte(1);
+			}
+
+			workingStruct.addItem(new ItemUDint(workingStruct.getDbName(),
 					lineReaded.split(":")[0].trim() + "[" + i + "]", "", new Address(workingStruct.getAddress().getDB(),
 							ModelSiemens.getgAddr().gByte(), ModelSiemens.getgAddr().gBit()),
 					workingStruct));
@@ -1179,7 +1756,7 @@ public class ModelSiemens {
 			e.printStackTrace();
 		}
 //		ModelSiemens.logSiem.info("readXlsxFile");
-		
+
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
 		sheetIterator = workbook.sheetIterator();
@@ -1187,7 +1764,6 @@ public class ModelSiemens {
 		if (workbook == null)
 			;
 
-		
 		while (sheetIterator.hasNext()) {
 			Sheet sheet = sheetIterator.next();
 			/*
@@ -1228,8 +1804,6 @@ public class ModelSiemens {
 							cells[3].trim(), cells[4].trim(), cells[5].trim(), cells[6].trim(), 0, cells[8].trim(),
 							cells[9].trim(), cells[10].trim(), cells[11].trim(), cells[12].trim(), cells[13].trim(),
 							cells[14].trim(), cells[15].trim(), cells[16].trim(), cells[17].trim(), false);
-					
-					
 
 					if (!entry.getfDescrizioneEstesa().isBlank() && !entry.getfDescrizioneEstesa().isEmpty()) {
 						if (entry.getfTipo().trim().equals("bit_Anomalies<DA_BIT>")) {

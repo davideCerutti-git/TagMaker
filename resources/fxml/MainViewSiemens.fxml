@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -98,7 +99,7 @@
                               <Insets />
                            </opaqueInsets>
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets right="20.0" />
                            </HBox.margin>
                         </Label>
                         <TextField fx:id="textFieldChooseXlsx" editable="false" focusTraversable="false" prefHeight="15.0" prefWidth="296.0" text="select a file...">
@@ -143,7 +144,10 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT">
                      <children>
-                        <Label fx:id="labelPrefixDriver" minWidth="66.0" text="Prefix Driver" />
+                        <Label fx:id="labelPrefixDriver" minWidth="66.0" text="Prefix Driver">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin></Label>
                         <TextField fx:id="txtFieldPrefixDriver">
                            <HBox.margin>
                               <Insets left="10.0" />
@@ -153,6 +157,34 @@
                      <padding>
                         <Insets left="10.0" />
                      </padding>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="251.0">
+                     <children>
+                        <Label fx:id="labelPrefixDriver1" minWidth="66.0" text="Address Type">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <RadioButton fx:id="rbAbsolute" mnemonicParsing="false" text="Absolute">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="rbSymbolic" mnemonicParsing="false" text="Symbolic">
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </HBox>
                </children>
             </VBox>

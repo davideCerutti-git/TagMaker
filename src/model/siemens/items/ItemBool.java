@@ -1,5 +1,7 @@
 package model.siemens.items;
 
+import org.apache.poi.ss.usermodel.Row;
+
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -16,7 +18,7 @@ public class ItemBool extends Item {
 		this.selected = false;
 		this.parent = _parent;
 		this.setUpType();
-//		ModelSiemens.logSiem.info(this.toStringExtended());
+		super.toStringExtended();
 	}
 
 	@Override
@@ -88,6 +90,39 @@ public class ItemBool extends Item {
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
+	}
+	
+	@Override
+	public  void insertItem(Item item, Row rowGen) {
+		String strFormula;
+		rowGen.createCell(2).setCellValue(item.getAddress().gBit());
+		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
+		rowGen.createCell(4).setCellValue(
+				"DB" + item.getAddress().getDB() + ".DBX" + item.getAddress().gByte() + "." + item.getAddress().gBit());
+		if (false) {
+//		if (struct.getSimbolicName().toString().contains("ALARM")) {
+//			strFormula = struct.getDbName() + "_DB" + intToStringFormatted(struct.getAddress().getDB()) + "X"
+//					+ intToStringFormatted(struct.getAddress().gByte()) + "_" + struct.getAddress().gBit() + "_ALM";
+//			rowGen.createCell(5).setCellValue(strFormula);
+//			rowGen.createCell(6).setCellValue("bit_Anomalies<DA_BIT>");
+//			for (int i = 0; i < 6; i++) {
+//				if (rowGen.getCell(i) != null) {
+//					rowGen.getCell(i).setCellStyle(style);
+//				}
+//			}
+		} else {
+			strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "X"
+					+ ItemStruct.intToStringFormatted(item.getAddress().gByte()) + "_" + item.getAddress().gBit();
+			rowGen.createCell(5).setCellValue(strFormula);
+			if (item.getSimbolicName().toString().contains(".W.ManCmd"))
+				rowGen.createCell(6).setCellValue("bit_manual_cmd<WDI_BIT>");
+			if (item.getSimbolicName().toString().contains(".R.ManCmd"))
+				rowGen.createCell(6).setCellValue("bit_manual_cmd<DI_BIT>");
+			if (item.getSimbolicName().toString().contains(".R._bool.W"))
+				rowGen.createCell(6).setCellValue("bit_read<DI_BIT>");
+			if (item.getSimbolicName().toString().contains(".W._bool.W"))
+				rowGen.createCell(6).setCellValue("bit_Write<WDI_BIT>");
+		}
 	}
 
 }

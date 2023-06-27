@@ -1,5 +1,7 @@
 package model.siemens.items;
 
+import org.apache.poi.ss.usermodel.Row;
+
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -14,10 +16,9 @@ public class ItemInt extends Item {
 		this.comment = stringComment;
 		this.address = addressGlobal;
 		this.selected = false;
-//		this.simbolicName=_simbolicName;
 		this.parent = _parent;
 		this.setUpType();
-//		ModelSiemens.logSiem.info(this.toStringExtended());
+		super.toStringExtended();
 	}
 
 	@Override
@@ -65,11 +66,6 @@ public class ItemInt extends Item {
 		return itemInt;
 	}
 
-//	private static void incrementAddress(int[] tmp_num_word, int[] tmp_num_bit) {
-//
-//		tmp_num_word[0]=tmp_num_word[0]+2;
-//	}
-
 	@Override
 	public Address getAddress() {
 		return this.address;
@@ -87,7 +83,8 @@ public class ItemInt extends Item {
 	public StringBuffer getSimbolicName() {
 		return parent.getSimbolicName().append("." + this.getName());
 	};
-	public void updateParent(ItemStruct workingStruct) {
+	
+    public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
 	
@@ -104,5 +101,19 @@ public class ItemInt extends Item {
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
+	}
+	
+	@Override
+	protected void insertItem(Item item, Row rowGen) {
+		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "INT"
+				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
+		rowGen.createCell(5).setCellValue(strFormula);
+		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBW" + item.getAddress().gByte());
+		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
+
+		if (item.getSimbolicName().toString().contains(".R."))
+			rowGen.createCell(6).setCellValue("Int_read<AI_INT>");
+		if (item.getSimbolicName().toString().contains(".W."))
+			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");
 	}
 }

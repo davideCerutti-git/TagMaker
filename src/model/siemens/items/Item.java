@@ -1,12 +1,13 @@
 package model.siemens.items;
 
+import org.apache.poi.ss.usermodel.Row;
+
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
 public abstract class Item {
 
 	// CLASSE DA FINIRE
-	// questa versione va bene con variabili bool, int, dint, real, string
 	protected String dbName;
 	protected String name;
 	protected String comment;
@@ -33,9 +34,6 @@ public abstract class Item {
 		this.name = name;
 	}
 
-//	public String getComment() {
-//		return comment;
-//	}
 	public abstract String getComment();
 
 	public void setComment(String comment) {
@@ -56,10 +54,6 @@ public abstract class Item {
 		this.selected = selected;
 	}
 
-//	public void setSimbolicName(String simbolicName) {
-//		this.simbolicName = simbolicName;
-//	}
-
 	public void setAddress(Address _address) {
 		this.address = _address;
 	}
@@ -76,7 +70,10 @@ public abstract class Item {
 	@Override
 	public abstract String toString();
 
-	public abstract String toStringExtended();
+	public String toStringExtended() {
+//		ModelSiemens.logSiem.info(this.toStringExtended());
+		return this.toStringExtended();
+	}
 
 	public void setUpType() {
 		if (!(this instanceof ItemStruct)) {
@@ -152,5 +149,10 @@ public abstract class Item {
 
 	protected abstract void updateDbName(String nameDbItem);
 
+	protected void insertItem(Item item, Row rowGen) {
+		ModelSiemens.logSiem.error("ERROR: " + item.getName());
+	}
+
+	
 
 }

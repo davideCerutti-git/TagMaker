@@ -5,11 +5,11 @@ import org.apache.poi.ss.usermodel.Row;
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
-public class ItemDWord extends Item{
+public class ItemTimeOfDay extends Item{
 
 	private int value;
 	
-	public ItemDWord(String dbName,String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
+	public ItemTimeOfDay(String dbName,String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
 		this.dbName=dbName;
 		this.value = 0;
 		this.name = stringName;
@@ -29,14 +29,14 @@ public class ItemDWord extends Item{
 	@Override
 	public String toStringExtended() {
 		if (comment.equals(""))
-			return "ItemDWord [value=" + value + ", name=" + name + ", address=" + address +", simbolicName=" + this.getSimbolicName() +"]";
-		return "ItemDWord [value=" + value + ", name=" + name + ", comment=" + comment + ", address=" + address
+			return "ItemTimeOfDay [value=" + value + ", name=" + name + ", address=" + address +", simbolicName=" + this.getSimbolicName() +"]";
+		return "ItemTimeOfDay [value=" + value + ", name=" + name + ", comment=" + comment + ", address=" + address
 				+", simbolicName=" + this.getSimbolicName() +"]";
 	}
 
 	@Override
 	public Item clone() throws CloneNotSupportedException {
-		return new ItemDWord(this.getDbName(),this.getName(), this.getComment(), this.getAddress().clone(), this.getParent());
+		return new ItemTimeOfDay(this.getDbName(),this.getName(), this.getComment(), this.getAddress().clone(), this.getParent());
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
@@ -48,10 +48,10 @@ public class ItemDWord extends Item{
 		if((ModelSiemens.getgAddr().gByte()%2)!=0) {
 			ModelSiemens.getgAddr().incrByte(1);
 		}
-		ItemDWord itemWord=new ItemDWord(workingStruct.getDbName(),str.split(":")[0].trim(),comment, new Address(workingStruct.getAddress().getDB(),ModelSiemens.getgAddr().gByte(),0),workingStruct);
+		ItemTimeOfDay itemTimeOfDay=new ItemTimeOfDay(workingStruct.getDbName(),str.split(":")[0].trim(),comment, new Address(workingStruct.getAddress().getDB(),ModelSiemens.getgAddr().gByte(),0),workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(4,0);
-//		ModelSiemens.logSiem.info(itemWord.toStringExtended());
-		return itemWord;
+//		ModelSiemens.logSiem.info(itemTimeOfDay.toStringExtended());
+		return itemTimeOfDay;
 	}
 
 	@Override
@@ -90,15 +90,17 @@ public class ItemDWord extends Item{
 	
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
-		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "DINT"
+		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "TIMEOFDAY"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBD" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
 		if (item.getSimbolicName().toString().contains(".R."))
-			rowGen.createCell(6).setCellValue("Dint_read<AI_DINT>");
+			rowGen.createCell(6).setCellValue("Dint_read<AI_DINT>");// TODO questo è un TimeOfDay ma per il momento
+																	// viene trattato come DInt
 		if (item.getSimbolicName().toString().contains(".W."))
-			rowGen.createCell(6).setCellValue("Dint_write<WAI_DINT>");
+			rowGen.createCell(6).setCellValue("Dint_write<WAI_DINT>");// TODO questo è un TimeOfDay ma per il momento
+																		// viene trattato come DInt
 
 	}
 }

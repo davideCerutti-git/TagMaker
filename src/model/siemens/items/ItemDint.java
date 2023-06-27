@@ -1,5 +1,7 @@
 package model.siemens.items;
 
+import org.apache.poi.ss.usermodel.Row;
+
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -16,7 +18,7 @@ public class ItemDint extends Item {
 		this.selected = false;
 		this.parent = _parent;
 		this.setUpType();
-//		ModelSiemens.logSiem.info(this.toStringExtended());
+		super.toStringExtended();
 	}
 
 	@Override
@@ -76,6 +78,7 @@ public class ItemDint extends Item {
 	public StringBuffer getSimbolicName() {
 		return parent.getSimbolicName().append("." + this.getName());
 	};
+	
 	public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
@@ -93,5 +96,19 @@ public class ItemDint extends Item {
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
+	}
+	
+	@Override
+	protected void insertItem(Item item, Row rowGen) {
+		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "DINT"
+				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
+		rowGen.createCell(5).setCellValue(strFormula);
+		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBD" + item.getAddress().gByte());
+		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
+		if (item.getSimbolicName().toString().contains(".R."))
+			rowGen.createCell(6).setCellValue("Dint_read<AI_DINT>");
+		if (item.getSimbolicName().toString().contains(".W."))
+			rowGen.createCell(6).setCellValue("Dint_write<WAI_DINT>");
+
 	}
 }

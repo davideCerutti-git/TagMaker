@@ -1,5 +1,7 @@
 package model.siemens.items;
 
+import org.apache.poi.ss.usermodel.Row;
+
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -16,7 +18,7 @@ public class ItemReal extends Item {
 		this.selected = false;
 		this.parent = _parent;
 		this.setUpType();
-//		ModelSiemens.logSiem.info(this.toStringExtended());
+		super.toStringExtended();
 	}
 
 	@Override
@@ -106,5 +108,18 @@ public class ItemReal extends Item {
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
+	}
+	
+	@Override
+	protected void insertItem(Item item, Row rowGen) {
+		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "REAL"
+				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
+		rowGen.createCell(5).setCellValue(strFormula);
+		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBF" + item.getAddress().gByte());
+		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
+		if (item.getSimbolicName().toString().contains(".R."))
+			rowGen.createCell(6).setCellValue("Real_read<AI_REAL>");
+		if (item.getSimbolicName().toString().contains(".W."))
+			rowGen.createCell(6).setCellValue("Real_write<WAI_REAL>");
 	}
 }

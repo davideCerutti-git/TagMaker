@@ -5,14 +5,14 @@ import org.apache.poi.ss.usermodel.Row;
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
-public class ItemWord extends Item {
+public class ItemUDint extends Item {
 
-	private int value;
+	private long value;
 
-	public ItemWord(String dbName, String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
+	public ItemUDint(String dbName, String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
 		this.dbName = dbName;
 		this.value = 0;
-		this.name = stringName;
+		this.name = stringName;// .replaceAll("\"", "");
 		this.comment = stringComment;
 		this.address = addressGlobal;
 		this.selected = false;
@@ -29,26 +29,24 @@ public class ItemWord extends Item {
 	@Override
 	public String toStringExtended() {
 		if (comment.equals(""))
-			return "ItemWord [value=" + value + ", name=" + name + ", address=" + address + ", simbolicName="
+			return "ItemUDint [value=" + value + ", name=" + name + ", address=" + address + ", simbolicName="
 					+ this.getSimbolicName() + "]";
-		return "ItemWord [value=" + value + ", name=" + name + ", comment=" + comment + ", address=" + address
+		return "ItemUDint [value=" + value + ", name=" + name + ", comment=" + comment + ", address=" + address
 				+ ", simbolicName=" + this.getSimbolicName() + "]";
 	}
 
 	@Override
 	public Item clone() throws CloneNotSupportedException {
-		return new ItemWord(this.getDbName(), this.getName(), this.getComment(), this.getAddress().clone(),
+		return new ItemUDint(this.getDbName(), this.getName(), this.getComment(), this.getAddress().clone(),
 				this.getParent());
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -57,11 +55,11 @@ public class ItemWord extends Item {
 				ModelSiemens.getgAddr().incrByte(1);
 			}
 		}
-		ItemWord itemWord = new ItemWord(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
+		ItemUDint itemUdint = new ItemUDint(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
-		ModelSiemens.getgAddr().incrementAddress(2, 0);
-//		ModelSiemens.logSiem.info(itemWord.toStringExtended());
-		return itemWord;
+		ModelSiemens.getgAddr().incrementAddress(4, 0);
+//		ModelSiemens.logSiem.info(itemUdint.toStringExtended());
+		return itemUdint;
 	}
 
 	@Override
@@ -70,9 +68,10 @@ public class ItemWord extends Item {
 	}
 
 	public void addAddresRec(Address gAddr) {
+//		ModelSiemens.logSiem.info("UDINT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.getgAddr().incrementAddress(2, 0);
+//		ModelSiemens.getgAddr().incrementAddress(4, 0);
 	}
 
 	@Override
@@ -86,7 +85,7 @@ public class ItemWord extends Item {
 	
 	@Override
 	public Address getByteOccupation() {
-		return new Address(0,2,0);
+		return new Address(0,4,0);
 	}
 	
 	@Override
@@ -101,15 +100,17 @@ public class ItemWord extends Item {
 	
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
-		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "INT"
+		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "UDINT"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
-		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBW" + item.getAddress().gByte());
+		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBD" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
-
 		if (item.getSimbolicName().toString().contains(".R."))
-			rowGen.createCell(6).setCellValue("Int_read<AI_INT>");
+			rowGen.createCell(6).setCellValue("Dint_read<AI_DINT>");// TODO questo è un UDInt ma per il momento viene
+																	// trattato come DInt
 		if (item.getSimbolicName().toString().contains(".W."))
-			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");
+			rowGen.createCell(6).setCellValue("Dint_write<WAI_DINT>");// TODO questo è un UDInt ma per il momento viene
+																		// trattato come DInt
+
 	}
 }

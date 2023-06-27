@@ -3,19 +3,38 @@ package model.siemens.items;
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
-public class ItemIEC_TIMER extends Item {
+public class ItemIEC_TIMER extends ItemStruct {
 
-	public ItemIEC_TIMER(String dbName, String stringName, String stringComment, Address addressGlobal,
-			ItemStruct _parent) {
+	public ItemIEC_TIMER(String dbName, String stringName, String stringComment, Address addressGlobal,ItemStruct _parent) throws CloneNotSupportedException {
+		
+		super("IEC_TIMER", dbName, stringName, stringComment, addressGlobal, _parent, 16, 0);
+		
 		this.dbName = dbName;
 		this.name = stringName;
 		this.comment = stringComment;
 		this.address = addressGlobal;
 		this.selected = false;
-//		this.simbolicName=_simbolicName;
 		this.parent = _parent;
 		this.setUpType();
-		ModelSiemens.logSiem.info(this.toStringExtended());
+		
+		
+		if (ModelSiemens.getgAddr().gBit() > 0) {
+			ModelSiemens.getgAddr().incrementAddress(1, 0);
+			ModelSiemens.getgAddr().setBit(0);
+		}
+		if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+			ModelSiemens.getgAddr().incrByte(1);
+		}
+		
+		this.getListStructsList().add(new ItemTime(dbName, "PT", "",  ModelSiemens.getgAddr().clone(), this));
+		ModelSiemens.getgAddr().incrementAddress(4, 0);
+		this.getListStructsList().add(new ItemTime(dbName, "ET", "", ModelSiemens.getgAddr().clone(), this));
+		ModelSiemens.getgAddr().incrementAddress(4, 1);//ci sono indirizzi non visibili ma utilizzati in tia portal
+		this.getListStructsList().add(new ItemBool(dbName, "IN", "", ModelSiemens.getgAddr().clone(), this));
+		ModelSiemens.getgAddr().incrementAddress(0, 1);
+		this.getListStructsList().add(new ItemBool(dbName, "Q", "", ModelSiemens.getgAddr().clone(), this));
+		ModelSiemens.getgAddr().incrementAddress(3, 1); //ci sono indirizzi non visibili ma utilizzati in tia portal
+		super.toStringExtended();
 	}
 
 	@Override
@@ -38,7 +57,7 @@ public class ItemIEC_TIMER extends Item {
 				this.getParent());
 	}
 
-	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
+	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) throws CloneNotSupportedException {
 
 		String comment = "";
 		if (str.split("//").length > 1) {
@@ -54,9 +73,11 @@ public class ItemIEC_TIMER extends Item {
 				ModelSiemens.getgAddr().incrByte(1);
 			}
 		}
+		ModelSiemens.getgAddr().incrementAddress(4, 0);
+		
 		ItemIEC_TIMER itemIEC_TIMER = new ItemIEC_TIMER(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
-		ModelSiemens.getgAddr().incrementAddress(16, 0);
+//		ModelSiemens.getgAddr().incrementAddress(16, 0);
 //		ModelSiemens.logSiem.info(itemIEC_TIMER.toStringExtended());
 		return itemIEC_TIMER;
 	}
