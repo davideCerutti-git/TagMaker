@@ -40,7 +40,7 @@ public class DB{
 	
 	public int generateXlsx(XSSFWorkbook wb, Sheet sheet, int ind, CellStyle styleRed) {
 //		ModelSiemens.logSiem.info(this.toStringExtended());
-		return mainStruct.generateXlsx(wb,sheet, ind, this.strName, styleRed);
+		return mainStruct.generateXlsx(wb,sheet, ind, this.strName, styleRed,false,false);
 	}
 
 	public void setStringName() {

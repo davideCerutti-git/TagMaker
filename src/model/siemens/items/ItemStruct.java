@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -87,23 +88,24 @@ public class ItemStruct extends Item {
 			return "Struct [UDTName=" + titleUDT + ",name=" + name + ", address=" + address + "]";
 		return "Struct [UDTName=" + titleUDT + ",name=" + name + ", comment=" + comment + ", address=" + address + "]";
 	}
+
 	public static String toAlphabetic(int i) {
 //		ModelSiemens.logSiem.info("# "+i);
-	    if( i<0 ) {
-	        return "-"+toAlphabetic(-i-1);
-	    }
+		if (i < 0) {
+			return "-" + toAlphabetic(-i - 1);
+		}
 
-	    int quot = i/26;
-	    int rem = i%26;
-	    char letter = (char)((int)'A' + rem);
-	    if( quot == 0 ) {
-	        return ""+letter;
-	    } else {
-	        return toAlphabetic(quot-1) + letter;
-	    }
+		int quot = i / 26;
+		int rem = i % 26;
+		char letter = (char) ((int) 'A' + rem);
+		if (quot == 0) {
+			return "" + letter;
+		} else {
+			return toAlphabetic(quot - 1) + letter;
+		}
 	}
 
-	public int generateXlsx(XSSFWorkbook wb, Sheet sheet, int ind, String strName, CellStyle style) {
+	public int generateXlsx(XSSFWorkbook wb, Sheet sheet, int ind, String strName, CellStyle style, boolean flagFirstLineInStruct,boolean enableFlagFirstLineInStruct) {
 //		ModelSiemens.logSiem.info("Struct.generateXlsx " + strName);
 		Font fontAlarms = makefontAlarms(wb);
 		Font fontReads = makefontReads(wb);
@@ -113,15 +115,26 @@ public class ItemStruct extends Item {
 		CellStyle styleWrites = makeStyleWrites(wb);
 		CellStyle stylePlates = makeStylePlates(wb);
 
+		CellStyle styleAlarms_InitialRow = makeStyleAlarms_InitialRow(wb);
+		CellStyle styleReads_InitialRow = makeStyleReads_InitialRow(wb);
+		CellStyle styleWrites_InitialRow = makeStyleWrites_InitialRow(wb);
+		CellStyle stylePlates_InitialRow = makeStylePlates_InitialRow(wb);
+
 		styleAlarms.setFont(fontAlarms);
 		styleReads.setFont(fontReads);
 		styleWrites.setFont(fontWrites);
+		
+		styleAlarms_InitialRow.setFont(fontAlarms);
+		styleReads_InitialRow.setFont(fontReads);
+		styleWrites_InitialRow.setFont(fontWrites);
 
 		for (Item item : getListStructsList()) {
 //			ModelSiemens.logSiem.info("Struct.generateXlsx  for: " + struct.getName());
 			if (item instanceof ItemStruct) {
 //				System.out.println("struct:" + struct.getName());
-				ind = ((ItemStruct) item).generateXlsx(wb, sheet, ind, strName, style);
+				flagFirstLineInStruct = true;
+				ind = ((ItemStruct) item).generateXlsx(wb, sheet, ind, strName, style,flagFirstLineInStruct,enableFlagFirstLineInStruct);
+				flagFirstLineInStruct = false;
 			} else {
 //			} else if (struct.getSimbolicName().contains("HMI") || struct.getSimbolicName().contains("ALARM")) {
 
@@ -138,7 +151,8 @@ public class ItemStruct extends Item {
 				rowGen.createCell(7).setCellValue("");
 				rowGen.createCell(8).setCellValue("");
 				rowGen.createCell(9).setCellValue(getLongComment(item.getComment()));
-				rowGen.createCell(10).setCellFormula("CONCATENATE("+toAlphabetic(8)+ind+","+toAlphabetic(9)+ind+")");
+				rowGen.createCell(10)
+						.setCellFormula("CONCATENATE(" + toAlphabetic(8) + ind + "," + toAlphabetic(9) + ind + ")");
 				rowGen.createCell(11).setCellValue(getLowLimit(item.getComment()));
 				rowGen.createCell(12).setCellValue(getHightLimit(item.getComment()));
 				rowGen.createCell(13).setCellValue(getUM(item.getComment()));
@@ -146,10 +160,15 @@ public class ItemStruct extends Item {
 				rowGen.createCell(15).setCellValue("");
 				rowGen.createCell(16).setCellValue(getLevel(item.getComment()));
 				rowGen.createCell(17).setCellValue("");
-				
+
 				item.insertItem(item, rowGen);
-				applyStyle(styleAlarms, styleReads, styleWrites, stylePlates, item, rowGen);
-				
+				applyStyle(wb, styleAlarms, styleReads, styleWrites, stylePlates, styleAlarms_InitialRow,
+						styleReads_InitialRow, styleWrites_InitialRow, stylePlates_InitialRow, flagFirstLineInStruct,enableFlagFirstLineInStruct, item,
+						rowGen);
+//				if (flag) {
+					flagFirstLineInStruct = false;
+//				}
+
 			}
 		}
 		return ind;
@@ -204,32 +223,50 @@ public class ItemStruct extends Item {
 		if (item.getType() == TAG_TYPE.WRITE_STRING)
 			return "string_write<WTX_STRING>";
 
-		ModelSiemens.logSiem.debug("Errore tipo: "+item.toStringExtended());
+		ModelSiemens.logSiem.debug("Errore tipo: " + item.toStringExtended());
 		return "null type";
 	}
 
-	private void applyStyle(CellStyle styleAlarms, CellStyle styleReads, CellStyle styleWrites, CellStyle stylePlates,
-			Item item, Row rowGen) {
+	private void applyStyle(XSSFWorkbook wb, CellStyle styleAlarms, CellStyle styleReads, CellStyle styleWrites,
+			CellStyle stylePlates, CellStyle styleAlarms_InitialRow, CellStyle styleReads_InitialRow,
+			CellStyle styleWrites_InitialRow, CellStyle stylePlates_InitialRow, boolean flagFirstLineInStruct,boolean enableFlagFirstLineInStruct, Item item, Row rowGen) {
 		for (int i = 0; i < rowGen.getLastCellNum(); i++) {
 			if (rowGen.getCell(i) != null) {
+
 				if (item.getType() == Item.TAG_TYPE.ALARM_BIT) {
-					rowGen.getCell(i).setCellStyle(styleAlarms);
+					if (flagFirstLineInStruct&&enableFlagFirstLineInStruct) {
+						rowGen.getCell(i).setCellStyle(styleAlarms_InitialRow);
+					} else {
+						rowGen.getCell(i).setCellStyle(styleAlarms);
+					}
 				}
 				if (item.getType() == Item.TAG_TYPE.READ_BIT || item.getType() == Item.TAG_TYPE.READ_INT
 						|| item.getType() == Item.TAG_TYPE.READ_DINT || item.getType() == Item.TAG_TYPE.READ_REAL
-						|| item.getType() == Item.TAG_TYPE.READ_STRING
-						|| item.getType() == Item.TAG_TYPE.READ_BYTE) {
-					rowGen.getCell(i).setCellStyle(styleReads);
+						|| item.getType() == Item.TAG_TYPE.READ_STRING || item.getType() == Item.TAG_TYPE.READ_BYTE) {
+
+					if (flagFirstLineInStruct&&enableFlagFirstLineInStruct) {
+						rowGen.getCell(i).setCellStyle(styleReads_InitialRow);
+					} else {
+						rowGen.getCell(i).setCellStyle(styleReads);
+					}
 				}
 				if (item.getType() == Item.TAG_TYPE.WRITE_BIT || item.getType() == Item.TAG_TYPE.WRITE_INT
 						|| item.getType() == Item.TAG_TYPE.WRITE_DINT || item.getType() == Item.TAG_TYPE.WRITE_REAL
-						|| item.getType() == Item.TAG_TYPE.WRITE_STRING
-						|| item.getType() == Item.TAG_TYPE.WRITE_BYTE) {
-					rowGen.getCell(i).setCellStyle(styleWrites);
+						|| item.getType() == Item.TAG_TYPE.WRITE_STRING || item.getType() == Item.TAG_TYPE.WRITE_BYTE) {
+					if (flagFirstLineInStruct&&enableFlagFirstLineInStruct) {
+						rowGen.getCell(i).setCellStyle(styleWrites_InitialRow);
+					} else {
+						rowGen.getCell(i).setCellStyle(styleWrites);
+					}
 				}
 				if (item.getType() == Item.TAG_TYPE.PLATE) {
-					rowGen.getCell(i).setCellStyle(stylePlates);
+					if (flagFirstLineInStruct&&enableFlagFirstLineInStruct) {
+						rowGen.getCell(i).setCellStyle(stylePlates_InitialRow);
+					} else {
+						rowGen.getCell(i).setCellStyle(stylePlates);
+					}
 				}
+
 			}
 		}
 	}
@@ -246,6 +283,17 @@ public class ItemStruct extends Item {
 		styleWrites.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		styleWrites.setBorderBottom(BorderStyle.THIN);
 		styleWrites.setBorderTop(BorderStyle.THIN);
+		styleWrites.setBorderRight(BorderStyle.THIN);
+		styleWrites.setBorderLeft(BorderStyle.THIN);
+		return styleWrites;
+	}
+	
+	private CellStyle makeStyleWrites_InitialRow(Workbook wb) {
+		CellStyle styleWrites = wb.createCellStyle();
+		styleWrites.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+		styleWrites.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		styleWrites.setBorderBottom(BorderStyle.THIN);
+		styleWrites.setBorderTop(BorderStyle.MEDIUM);
 		styleWrites.setBorderRight(BorderStyle.THIN);
 		styleWrites.setBorderLeft(BorderStyle.THIN);
 		return styleWrites;
@@ -267,6 +315,17 @@ public class ItemStruct extends Item {
 		styleWrites.setBorderLeft(BorderStyle.THIN);
 		return styleWrites;
 	}
+	
+	private CellStyle makeStylePlates_InitialRow(Workbook wb) {
+		CellStyle styleWrites = wb.createCellStyle();
+		styleWrites.setFillForegroundColor(IndexedColors.AQUA.getIndex());
+		styleWrites.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		styleWrites.setBorderBottom(BorderStyle.THIN);
+		styleWrites.setBorderTop(BorderStyle.MEDIUM);
+		styleWrites.setBorderRight(BorderStyle.THIN);
+		styleWrites.setBorderLeft(BorderStyle.THIN);
+		return styleWrites;
+	}
 
 	/**
 	 * Crea lo stile per le celle relative ai tag tipo read nel file excel
@@ -284,6 +343,17 @@ public class ItemStruct extends Item {
 		styleReads.setBorderLeft(BorderStyle.THIN);
 		return styleReads;
 	}
+	
+	private CellStyle makeStyleReads_InitialRow(Workbook wb) {
+		CellStyle styleReads = wb.createCellStyle();
+		styleReads.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+		styleReads.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		styleReads.setBorderBottom(BorderStyle.THIN);
+		styleReads.setBorderTop(BorderStyle.MEDIUM);
+		styleReads.setBorderRight(BorderStyle.THIN);
+		styleReads.setBorderLeft(BorderStyle.THIN);
+		return styleReads;
+	}
 
 	/**
 	 * Crea lo stile per le celle relative ai tag tipo alarm nel file excel
@@ -297,6 +367,17 @@ public class ItemStruct extends Item {
 		styleAlarms.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		styleAlarms.setBorderBottom(BorderStyle.THIN);
 		styleAlarms.setBorderTop(BorderStyle.THIN);
+		styleAlarms.setBorderRight(BorderStyle.THIN);
+		styleAlarms.setBorderLeft(BorderStyle.THIN);
+		return styleAlarms;
+	}
+	
+	private CellStyle makeStyleAlarms_InitialRow(Workbook wb) {
+		CellStyle styleAlarms = wb.createCellStyle();
+		styleAlarms.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+		styleAlarms.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		styleAlarms.setBorderBottom(BorderStyle.THIN);
+		styleAlarms.setBorderTop(BorderStyle.MEDIUM);
 		styleAlarms.setBorderRight(BorderStyle.THIN);
 		styleAlarms.setBorderLeft(BorderStyle.THIN);
 		return styleAlarms;
@@ -404,8 +485,8 @@ public class ItemStruct extends Item {
 
 	private String getHightLimit(String comment) {
 		if (comment.isBlank() || comment.isEmpty())
-			return "99999999"; 
-		
+			return "99999999";
+
 		Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(comment);
 		while (m.find()) {
 			comment = m.group(1);
