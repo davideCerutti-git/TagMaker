@@ -103,7 +103,7 @@ public class ItemLWord extends Item {
 	
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
-		String strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "LWORD"
+		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item)+"_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "LWORD"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBW" + item.getAddress().gByte());

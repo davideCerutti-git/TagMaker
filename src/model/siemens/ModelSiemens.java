@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import controller.MainViewControllerRockwell;
@@ -1654,7 +1655,7 @@ public class ModelSiemens {
 			if (nameSheet.equals(""))
 				nameSheet = "noName_" + index++;
 
-			Sheet sheet = wb.createSheet(nameSheet);
+			XSSFSheet sheet = wb.createSheet(nameSheet);
 			sheet.createFreezePane(3, 1);
 
 			resizeColoumns(sheet);
@@ -1794,7 +1795,11 @@ public class ModelSiemens {
 							cells[i] = "";
 							i++;
 						} else {
-							cells[i] = dataFormatter.formatCellValue(cell);
+							if (cell.getCellType() == CellType.FORMULA) {
+								cells[i] = cell.getStringCellValue();
+							} else {
+								cells[i] = dataFormatter.formatCellValue(cell);
+							}
 							i++;
 						}
 
@@ -1839,6 +1844,7 @@ public class ModelSiemens {
 		}
 
 		return true;
+
 	}
 
 	public Settings getProp() {

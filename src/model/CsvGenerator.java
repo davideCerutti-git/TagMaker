@@ -322,7 +322,7 @@ public class CsvGenerator {
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
 		// array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
-		array.add(3, fileNameNoExtension + "." + cleanNewLines(entry));
+		array.add(3, cleanNewLines(entry));
 		// TODO finire
 		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
@@ -358,8 +358,8 @@ public class CsvGenerator {
 		array.add(33, "");
 		array.add(34, "");
 		array.add(35, "");
-		array.add(36, fileNameNoExtension + "." + cleanNewLines(entry));
-		array.add(37, fileNameNoExtension + "." + cleanNewLines(entry));
+		array.add(36, cleanNewLines(entry));
+		array.add(37, cleanNewLines(entry));
 		array.add(38, "");
 		array.add(39, "");
 		array.add(40, "");

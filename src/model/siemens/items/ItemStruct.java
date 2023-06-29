@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
@@ -86,6 +87,21 @@ public class ItemStruct extends Item {
 			return "Struct [UDTName=" + titleUDT + ",name=" + name + ", address=" + address + "]";
 		return "Struct [UDTName=" + titleUDT + ",name=" + name + ", comment=" + comment + ", address=" + address + "]";
 	}
+	public static String toAlphabetic(int i) {
+//		ModelSiemens.logSiem.info("# "+i);
+	    if( i<0 ) {
+	        return "-"+toAlphabetic(-i-1);
+	    }
+
+	    int quot = i/26;
+	    int rem = i%26;
+	    char letter = (char)((int)'A' + rem);
+	    if( quot == 0 ) {
+	        return ""+letter;
+	    } else {
+	        return toAlphabetic(quot-1) + letter;
+	    }
+	}
 
 	public int generateXlsx(XSSFWorkbook wb, Sheet sheet, int ind, String strName, CellStyle style) {
 //		ModelSiemens.logSiem.info("Struct.generateXlsx " + strName);
@@ -120,9 +136,9 @@ public class ItemStruct extends Item {
 				rowGen.createCell(5).setCellValue("");
 				rowGen.createCell(6).setCellValue(getStringFromStruct(item));
 				rowGen.createCell(7).setCellValue("");
-				rowGen.createCell(8).setCellValue(getAbbrev(item.getComment()));
-				rowGen.createCell(9).setCellValue(getShortComment(item.getComment()));
-				rowGen.createCell(10).setCellValue(getLongComment(item.getComment()));
+				rowGen.createCell(8).setCellValue("");
+				rowGen.createCell(9).setCellValue(getLongComment(item.getComment()));
+				rowGen.createCell(10).setCellFormula("CONCATENATE("+toAlphabetic(8)+ind+","+toAlphabetic(9)+ind+")");
 				rowGen.createCell(11).setCellValue(getLowLimit(item.getComment()));
 				rowGen.createCell(12).setCellValue(getHightLimit(item.getComment()));
 				rowGen.createCell(13).setCellValue(getUM(item.getComment()));
@@ -188,30 +204,30 @@ public class ItemStruct extends Item {
 		if (item.getType() == TAG_TYPE.WRITE_STRING)
 			return "string_write<WTX_STRING>";
 
-		ModelSiemens.logSiem.debug("Errore tipo item=null: "+item.getType());
+		ModelSiemens.logSiem.debug("Errore tipo: "+item.toStringExtended());
 		return "null type";
 	}
 
 	private void applyStyle(CellStyle styleAlarms, CellStyle styleReads, CellStyle styleWrites, CellStyle stylePlates,
-			Item struct, Row rowGen) {
+			Item item, Row rowGen) {
 		for (int i = 0; i < rowGen.getLastCellNum(); i++) {
 			if (rowGen.getCell(i) != null) {
-				if (struct.getType() == Item.TAG_TYPE.ALARM_BIT) {
+				if (item.getType() == Item.TAG_TYPE.ALARM_BIT) {
 					rowGen.getCell(i).setCellStyle(styleAlarms);
 				}
-				if (struct.getType() == Item.TAG_TYPE.READ_BIT || struct.getType() == Item.TAG_TYPE.READ_INT
-						|| struct.getType() == Item.TAG_TYPE.READ_DINT || struct.getType() == Item.TAG_TYPE.READ_REAL
-						|| struct.getType() == Item.TAG_TYPE.READ_STRING
-						|| struct.getType() == Item.TAG_TYPE.READ_BYTE) {
+				if (item.getType() == Item.TAG_TYPE.READ_BIT || item.getType() == Item.TAG_TYPE.READ_INT
+						|| item.getType() == Item.TAG_TYPE.READ_DINT || item.getType() == Item.TAG_TYPE.READ_REAL
+						|| item.getType() == Item.TAG_TYPE.READ_STRING
+						|| item.getType() == Item.TAG_TYPE.READ_BYTE) {
 					rowGen.getCell(i).setCellStyle(styleReads);
 				}
-				if (struct.getType() == Item.TAG_TYPE.WRITE_BIT || struct.getType() == Item.TAG_TYPE.WRITE_INT
-						|| struct.getType() == Item.TAG_TYPE.WRITE_DINT || struct.getType() == Item.TAG_TYPE.WRITE_REAL
-						|| struct.getType() == Item.TAG_TYPE.WRITE_STRING
-						|| struct.getType() == Item.TAG_TYPE.WRITE_BYTE) {
+				if (item.getType() == Item.TAG_TYPE.WRITE_BIT || item.getType() == Item.TAG_TYPE.WRITE_INT
+						|| item.getType() == Item.TAG_TYPE.WRITE_DINT || item.getType() == Item.TAG_TYPE.WRITE_REAL
+						|| item.getType() == Item.TAG_TYPE.WRITE_STRING
+						|| item.getType() == Item.TAG_TYPE.WRITE_BYTE) {
 					rowGen.getCell(i).setCellStyle(styleWrites);
 				}
-				if (struct.getType() == Item.TAG_TYPE.PLATE) {
+				if (item.getType() == Item.TAG_TYPE.PLATE) {
 					rowGen.getCell(i).setCellStyle(stylePlates);
 				}
 			}

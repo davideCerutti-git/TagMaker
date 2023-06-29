@@ -15,12 +15,17 @@ public abstract class Item {
 	protected Address address;
 	protected boolean selected;
 	protected Item.TAG_TYPE tagType;
+	protected Item.TAG_CATEGORY tagCategory;
 	protected ItemStruct parent;
 
 
 	enum TAG_TYPE {
 		NULL, READ_BIT, READ_BYTE, READ_INT, READ_DINT, READ_REAL, READ_STRING, WRITE_BIT, WRITE_BYTE, WRITE_INT,
 		WRITE_DINT, WRITE_REAL, WRITE_STRING, ALARM_BIT,ALARM_BYTE,ALARM_WORD,ALARM_DWORD, PLATE;
+	}
+	
+	enum TAG_CATEGORY {
+		NULL, ALARM, READ, WRITE;
 	}
 
 	// ######################################
@@ -79,14 +84,17 @@ public abstract class Item {
 		if (!(this instanceof ItemStruct)) {
 			if (this.getSimbolicName().toString().toUpperCase().contains("ALM")) {
 				this.tagType = TAG_TYPE.ALARM_BIT;
+				this.tagCategory = TAG_CATEGORY.ALARM;
 //			} else if (this.getSimbolicName().toString().toUpperCase().contains("CAP")
 //					|| this.getSimbolicName().toString().toUpperCase().contains("PLATE")) {
 //				this.tagType = TAG_TYPE.PLATE;
 			} 
 
 			if (this.getSimbolicName().toString().toUpperCase().contains("HMW")
+					|| this.getSimbolicName().toString().toUpperCase().contains("HM_W")
 					|| this.getSimbolicName().toString().toUpperCase().contains("WRITE")
 					|| this.getSimbolicName().toString().toUpperCase().contains("MANCOM")) {
+				this.tagCategory = TAG_CATEGORY.WRITE;
 				if (this instanceof ItemBool) {
 					this.tagType = TAG_TYPE.WRITE_BIT;
 				} else if (this instanceof ItemInt) {
@@ -105,7 +113,9 @@ public abstract class Item {
 			} 
 
 			if (this.getSimbolicName().toString().toUpperCase().contains("HMR")
+					|| this.getSimbolicName().toString().toUpperCase().contains("HM_R")
 					|| this.getSimbolicName().toString().toUpperCase().contains("READ")) {
+				this.tagCategory = TAG_CATEGORY.READ;
 				if (this instanceof ItemBool) {
 					this.tagType = TAG_TYPE.READ_BIT;
 				} else if (this instanceof ItemInt) {
@@ -129,6 +139,10 @@ public abstract class Item {
 	protected TAG_TYPE getType() {
 		return this.tagType;
 	}
+	
+	protected TAG_CATEGORY getCategory() {
+		return this.tagCategory;
+	}
 
 	public String getDbName() {
 		return this.dbName;
@@ -151,6 +165,21 @@ public abstract class Item {
 
 	protected void insertItem(Item item, Row rowGen) {
 		ModelSiemens.logSiem.error("ERROR: " + item.getName());
+	}
+
+	public static String getStringTypeForSCADATag(Item item) {
+		if(item.getCategory()==TAG_CATEGORY.ALARM) {
+			return "_ALM";
+		}
+		
+		if(item.getCategory()==TAG_CATEGORY.WRITE) {
+			return "_HMW";
+		}
+		if(item.getCategory()==TAG_CATEGORY.READ) {
+			return "_HMR";
+		}
+		
+		return "";
 	}
 
 	

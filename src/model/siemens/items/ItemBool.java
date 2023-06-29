@@ -111,7 +111,7 @@ public class ItemBool extends Item {
 //				}
 //			}
 		} else {
-			strFormula = item.getDbName() + "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "X"
+			strFormula = item.getDbName() +Item.getStringTypeForSCADATag(item)+ "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "X"
 					+ ItemStruct.intToStringFormatted(item.getAddress().gByte()) + "_" + item.getAddress().gBit();
 			rowGen.createCell(5).setCellValue(strFormula);
 			if (item.getSimbolicName().toString().contains(".W.ManCmd"))
