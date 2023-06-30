@@ -1,7 +1,7 @@
 package model;
 
 public abstract class EntryXlsx {
-	
+
 	protected String fAddrSymPlc;
 	protected String fAddrAbsPlc;
 	protected String fTagNameSCADA;
@@ -18,10 +18,11 @@ public abstract class EntryXlsx {
 	protected String fLivello;
 	protected String fUpdated;
 	protected boolean flg_print;
-	
-	public EntryXlsx(String fDbNumber, String fWordNumber, String fBitNumber, String fAddrSymPlc, String fAddrAbsPlc, String fTagNameSCADA,
-			String fTipo, int fSviluppo, String fSigla, String fDescrizione, String fDescrizioneEstesa,
-			String fLimiteMIN, String fLimiteMAX, String fUM, String fUsoDelBit,String fCommento,String fLivello,String fUpdated,boolean flag_print) {
+
+	public EntryXlsx(String fDbNumber, String fWordNumber, String fBitNumber, String fAddrSymPlc, String fAddrAbsPlc,
+			String fTagNameSCADA, String fTipo, int fSviluppo, String fSigla, String fDescrizione,
+			String fDescrizioneEstesa, String fLimiteMIN, String fLimiteMAX, String fUM, String fUsoDelBit,
+			String fCommento, String fLivello, String fUpdated, boolean flag_print) {
 		this.fAddrSymPlc = fAddrSymPlc;
 		this.fAddrAbsPlc = fAddrAbsPlc;
 		this.fTagNameSCADA = fTagNameSCADA;
@@ -33,23 +34,19 @@ public abstract class EntryXlsx {
 		this.fLimiteMAX = fLimiteMAX;
 		this.fUM = fUM;
 		this.fUsoDelBit = fUsoDelBit;
-		this.fCommento=fCommento;
-		this.fLivello=fLivello;
-		this.fUpdated=fUpdated;
-		this.flg_print=flag_print;
-		
+		this.fCommento = fCommento;
+		this.fLivello = fLivello;
+		this.fUpdated = fUpdated;
+		this.flg_print = flag_print;
 
 	}
-	
-	//-----
+
 	/**
 	 * @return the fAddrAbsPlc
 	 */
 	public String getfAddrAbsPlc() {
 		return fAddrAbsPlc;
 	}
-
-
 
 	/**
 	 * @return the fAddrSymPlc
@@ -162,7 +159,7 @@ public abstract class EntryXlsx {
 	public void setfAddrAbsPlc(String fAddrAbsPlc) {
 		this.fAddrAbsPlc = fAddrAbsPlc;
 	}
-	
+
 	/**
 	 * @param fAddrSymPlc the fAddrSymPlc to set
 	 */

@@ -1,30 +1,11 @@
 package model.rockwell;
 
 import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 import org.apache.log4j.Logger;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.opencsv.CSVWriter;
 import controller.MainViewControllerRockwell;
@@ -38,19 +19,18 @@ public class ModelRockwell {
 	public static final Logger logRock = Logger.getLogger("rockwellLogger");
 	private static final int MAX_NUM_COL_XLS = 15;
 	private static final int NUM_BITS_IN_INT = 16;
-	static Settings properties;
-	ArrayList<DataType> listOfDataTypes = new ArrayList<DataType>();
-	ArrayList<Tag> listOfTags = new ArrayList<Tag>();
-	ArrayList<Machine> listOfMachines = new ArrayList<Machine>();
-	ArrayList<String> listOfStringProgram = new ArrayList<String>();
-
+	private static Settings properties;
+	private ArrayList<DataType> listOfDataTypes = new ArrayList<DataType>();
+	private ArrayList<Tag> listOfTags = new ArrayList<Tag>();
+	private ArrayList<Machine> listOfMachines = new ArrayList<Machine>();
+	private ArrayList<String> listOfStringProgram = new ArrayList<String>();
 	private MainViewControllerRockwell controller;
 	private CsvGenerator csvGenerator;
 
 	public ModelRockwell(Stage _primaryStage) {
 		primaryStage = _primaryStage;
 		readProperties();
-//TODO Attenzione! il costruttore viene richiamato due volte
+		// TODO Attenzione! il costruttore viene richiamato due volte
 	}
 
 	/**
@@ -62,7 +42,6 @@ public class ModelRockwell {
 	private boolean isUsedInProgram(String tag) {
 		for (String s : listOfStringProgram) {
 			if (s.contains(tag)) {
-				// System.out.println(listOfStringProgram.indexOf(s));
 				return true;
 			}
 		}
@@ -85,12 +64,10 @@ public class ModelRockwell {
 			}
 			if (line.contains("</Programs>") && flag) {
 				listOfStringProgram.add(line);
-				// logRock.debug(line);
 				flag = false;
 			}
 			if (flag) {
 				listOfStringProgram.add(line);
-				// logRock.debug(line);
 			}
 		}
 		reader.close();
@@ -103,11 +80,9 @@ public class ModelRockwell {
 	 * @throws IOException
 	 */
 	public void readL5X(String path) throws IOException {
-		ModelRockwell.logRock.info("start method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 		XmlParser xmlParser = new XmlParser(properties);
 		xmlParser.parse(listOfDataTypes, listOfTags, path);
 		loadProgramStrings(path);
-		ModelRockwell.logRock.info("end method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 	}
 
 	/**
@@ -117,10 +92,8 @@ public class ModelRockwell {
 	 * @throws IOException
 	 */
 	public void readXmlRaw(String path) throws IOException {
-		ModelRockwell.logRock.info("start method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 		XmlParser xmlParserRaw = new XmlParser(properties);
 		xmlParserRaw.parseRaw(listOfTags, path);
-		ModelRockwell.logRock.info("end method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 	}
 
 	/**
@@ -128,12 +101,10 @@ public class ModelRockwell {
 	 * @throws IOException
 	 */
 	public void generateXlsx(String path) throws IOException {
-		ModelRockwell.logRock.info("start method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 		findMachineNames();
 		makeEntryes();
 		readCommentsInTags();
 		makeXml(path);
-		ModelRockwell.logRock.info("end method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 	}
 
 	/**
@@ -141,12 +112,10 @@ public class ModelRockwell {
 	 * @throws IOException
 	 */
 	public void generateXmlRaw(String path) throws IOException {
-		ModelRockwell.logRock.info("start method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 		findMachineNamesRaw();
 		makeEntryesRaw();
 		readCommentsInTags();
 		makeXml(path);
-		ModelRockwell.logRock.info("end method: "+Thread.currentThread().getStackTrace()[1].getMethodName());
 	}
 
 	/**
@@ -155,7 +124,6 @@ public class ModelRockwell {
 	 * nel file settings
 	 */
 	private void findMachineNames() {
-		
 		ArrayList<String> suffixesList = getListSuffixes();
 		for (Tag tag : listOfTags) {
 			String tagName = tag.getfName();
@@ -169,7 +137,6 @@ public class ModelRockwell {
 					}
 					if (newName) {
 						listOfMachines.add(new Machine(nameMachineTmpString));
-						// logRock.debug(nameMachineTmpString);
 					}
 				}
 			}
@@ -185,7 +152,6 @@ public class ModelRockwell {
 		for (Tag tag : listOfTags) {
 			String tagName = tag.getfName();
 			listOfMachines.add(new Machine(tagName));
-			// logRock.debug(nameMachineTmpString);
 		}
 	}
 
@@ -193,59 +159,32 @@ public class ModelRockwell {
 	 * 
 	 */
 	private void makeEntryes() {
-//		for (Machine machine : listOfMachines) {
-//			ModelRockwell.logRock.info(machine.getfName());
-//		}
-//		ModelRockwell.logRock.info("---");
 		for (Machine machine : listOfMachines) {
 			for (Tag tag : listOfTags) {
 				if (removeSuffix(tag.getfName()).equals(machine.getfName())) {
 					if (tag.getChannel(properties) == Tag.ALARMSs) {
-//						ModelRockwell.logRock.info("generateEntries Tag.ALARMSs");
 						generateEntries(machine, tag, Tag.ALARMSs);
-//						ModelRockwell.logRock.info("generateEntries Tag.ALARMSs done");
-					}
-					else if (tag.getChannel(properties) == Tag.READs) {
-//						ModelRockwell.logRock.info("generateEntries Tag.READs");
-//						ModelRockwell.logRock.info("tag: "+tag.getfName());
+					} else if (tag.getChannel(properties) == Tag.READs) {
 						generateEntries(machine, tag, Tag.READs);
-//						ModelRockwell.logRock.info("generateEntries Tag.READs done");
-					} 
-					else if (tag.getChannel(properties) == Tag.WRITEs) {
-//						ModelRockwell.logRock.info("generateEntries Tag.WRITEs");
+					} else if (tag.getChannel(properties) == Tag.WRITEs) {
 						generateEntries(machine, tag, Tag.WRITEs);
-//						ModelRockwell.logRock.info("generateEntries Tag.WRITEs done");
-					} 
-					else {
-						ModelRockwell.logRock.error("Unable to reconize the channel of the tag --- " + tag.getChannel(properties));
+					} else {
+						ModelRockwell.logRock
+								.error("Unable to reconize the channel of the tag --- " + tag.getChannel(properties));
 					}
-					
 				}
-				
 			}
 		}
-		
 	}
 
 	/**
 	 * 
 	 */
 	private void makeEntryesRaw() {
-//		for (Machine machine : listOfMachines) {
-//			// logRock.debug(machine.getfName());
-//		}
 		for (Machine machine : listOfMachines) {
 			for (Tag tag : listOfTags) {
 				if (tag.getfName().equals(machine.getfName())) {
-//					if (tag.getChannel(properties) == Tag.ALARMSs) {
-//						generateEntries(machine, tag, Tag.ALARMSs);
-//					} else if (tag.getChannel(properties) == Tag.READs) {
-//						generateEntries(machine, tag, Tag.READs);
-//					} else if (tag.getChannel(properties) == Tag.WRITEs) {
-//						generateEntries(machine, tag, Tag.WRITEs);
-//					} else {
 					generateEntries(machine, tag, Tag.RAWs);
-//					}
 				}
 			}
 		}
@@ -255,31 +194,24 @@ public class ModelRockwell {
 	 * 
 	 */
 	private void readCommentsInTags() {
-
 		for (Machine machine : listOfMachines) {
 			for (Tag tag : listOfTags) {
 				for (Comment comment : tag.getfComments()) {
 					findOperand(machine, (tag.getfName() + comment.getfOperand()).toUpperCase(),
 							comment.getfDescription());
-
 				}
 			}
 		}
 	}
 
 	private void makeXml(String path) {
-//		System.out.println("ggg");
 		Workbook wb = new XSSFWorkbook();
-//		System.out.println("hhh");
 		boolean flagImport = Boolean.parseBoolean(properties.getProperty("importAllsTags"));
-
 		for (Machine machine : listOfMachines) {
-//			System.out.println(machine.getfName());
 			int index = 1;
 			int indexXml = 0;
 			Sheet sheet = wb.createSheet(machine.getfName());
 			sheet.createFreezePane(3, 1);
-
 			Row headerRow = sheet.createRow(0);
 			makeHeaderSheetXML(headerRow);
 			CellStyle styleHeader = makeStyleHeader(wb);
@@ -288,7 +220,6 @@ public class ModelRockwell {
 					headerRow.getCell(i).setCellStyle(styleHeader);
 				}
 			}
-
 			CellStyle styleAlarms = makeStyleAlarms(wb);
 			CellStyle styleReads = makeStyleReads(wb);
 			CellStyle styleWrites = makeStyleWrites(wb);
@@ -296,17 +227,6 @@ public class ModelRockwell {
 			Font fontReads = makefontReads(wb);
 			Font fontWrites = makefontWrites(wb);
 			String tagSCADA = "";
-
-//			CellRangeAddressList addressList = new CellRangeAddressList(1, 1500, 4, 4);
-//			DVConstraint dvConstraint = DVConstraint
-//					.createExplicitListConstraint(new String[] { "0", "1", "2", "3", "4" });
-//			DataValidation dataValidation = new HSSFDataValidation(addressList,
-//					dvConstraint);
-//			
-//			dataValidation.setSuppressDropDownArrow(false);
-//			sheet.addValidationData(dataValidation);
-
-
 			for (EntryRockwellXls entry : machine.getFgroupAlarms().getAlarmsBit()) {
 				entry.setfUM(getUM(entry.getfDescrizioneEstesa()));
 				entry.setfLimiteMAX(getLimiteMax(entry.getfDescrizioneEstesa()));
@@ -558,7 +478,6 @@ public class ModelRockwell {
 				if (flagImport || entry.isFlg_print())
 					makeCells(index++, sheet, styleWrites, fontWrites, entry);
 			}
-
 			sheet.setColumnWidth(0, convertChars(6));// Indice
 			sheet.setColumnWidth(1, convertChars(30));// Tag Scada
 			sheet.setColumnWidth(2, convertChars(50));// Indirizzo Plc
@@ -575,11 +494,9 @@ public class ModelRockwell {
 			sheet.setColumnWidth(13, convertChars(10));// Livello
 			sheet.setColumnWidth(14, convertChars(10));// UPDATED
 		}
-
 		try {
 			saveFileXls(path, wb);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -592,7 +509,6 @@ public class ModelRockwell {
 	private void findOperand(Machine _machine, String string, String sub) {
 		boolean flagSearchIfIsUsed = Boolean.parseBoolean(properties.getProperty("flagSearchIfTagIsUsed"));
 		for (EntryRockwellXls entry : _machine.getFgroupAlarms().getAlarmsBit()) {
-//			if(sub.contains("ciauuuuu")) {logRock.debug(string+" ---- "+entry.getfIndirizzoPlc().toUpperCase());}
 			if (entry.getfAddrPlc().toUpperCase().equals(string)) {
 				entry.setfDescrizioneEstesa(sub);
 				entry.setFlg_print(true);
@@ -600,7 +516,6 @@ public class ModelRockwell {
 			}
 		}
 		for (EntryRockwellXls entry : _machine.getFgroupAlarms().getAlarmsInt()) {
-			// if(sub.contains("prova")) {logRock.debug(sub);}
 			if (entry.getfAddrPlc().toUpperCase().equals(string.toUpperCase())) {
 				entry.setfDescrizioneEstesa(sub);
 				entry.setFlg_print(true);
@@ -608,7 +523,6 @@ public class ModelRockwell {
 			}
 		}
 		for (EntryRockwellXls entry : _machine.getFgroupAlarms().getAlarmsDint()) {
-			// if(sub.contains("prova")) {logRock.debug(sub);}
 			if (entry.getfAddrPlc().toUpperCase().equals(string.toUpperCase())) {
 				entry.setfDescrizioneEstesa(sub);
 				entry.setFlg_print(true);
@@ -636,7 +550,6 @@ public class ModelRockwell {
 				return;
 			}
 		}
-
 		for (EntryRockwellXls entry : _machine.getFgroupReads().getReadBit()) {
 			if (entry.getfAddrPlc().toUpperCase().equals(string.toUpperCase())) {
 				entry.setfDescrizioneEstesa(sub);
@@ -697,9 +610,7 @@ public class ModelRockwell {
 				entry.setFlg_print(false);
 			}
 		}
-
 		for (EntryRockwellXls entry : _machine.getFgroupWrites().getWriteBit()) {
-
 			if (entry.getfAddrPlc().toUpperCase().equals(string.toUpperCase())) {
 				entry.setfDescrizioneEstesa(sub);
 				entry.setFlg_print(true);
@@ -759,33 +670,6 @@ public class ModelRockwell {
 				entry.setFlg_print(false);
 			}
 		}
-
-	}
-
-	/**
-	 * @param comment
-	 * @return
-	 */
-	private CharSequence removeLastsChar(Comment comment) {
-//		String[] str=comment.getfOperand().split("\\.");
-//		StringBuffer strBuff=new StringBuffer();
-//		int i=0;
-//		for(String string:str) {
-//			strBuff.append(string+".");
-//			i++;
-//			if(i==str.length-2)break;
-//		}
-		int j = 0;
-		for (j = comment.getfOperand().length() - 1; j > 0; j--) {
-			if (comment.getfOperand().charAt(j) == '.') {
-				return comment.getfOperand().subSequence(0, j);
-			}
-		}
-
-//		System.out.println("0 ->"+str[0]);
-//		System.out.println("1->"+str[1]);
-		// TODO Finire
-		return comment.getfOperand().subSequence(0, j);
 	}
 
 	/**
@@ -794,18 +678,7 @@ public class ModelRockwell {
 	 * @throws IOException
 	 */
 	private void saveFileXls(String path, Workbook wb) throws IOException {
-//		FileChooser fileChooser = new FileChooser();
-//		FileChooser.ExtensionFilter extFilterXLSX = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xlsx");
-//		FileChooser.ExtensionFilter extFilterXLS = new FileChooser.ExtensionFilter("Excel files (*.xls)", "*.xls");
-//		fileChooser.getExtensionFilters().addAll(extFilterXLSX, extFilterXLS);
-//		fileChooser.setInitialDirectory(
-//				new File(System.getProperty("user.home") + getProperties().getProperty("filePath")));
-//		fileChooser.setInitialFileName(path);
-//		File file = fileChooser.showSaveDialog(primaryStage);
-		
-//		System.out.println(getProperties().getProperty("filePath")+"\\"+path);
-		//-----
-		File file=new File(getProperties().getProperty("filePath")+"\\"+path);
+		File file = new File(getProperties().getProperty("filePath") + "\\" + path);
 		if (file != null) {
 			try (FileOutputStream outputStream = new FileOutputStream(file.getAbsolutePath())) {
 				wb.write(outputStream);
@@ -827,7 +700,6 @@ public class ModelRockwell {
 	 * @param headerRow
 	 */
 	private void makeHeaderSheetXML(Row headerRow) {
-
 		headerRow.createCell(0).setCellValue("Indice");
 		headerRow.createCell(1).setCellValue("Tag Scada");
 		headerRow.createCell(2).setCellValue("Indirizzo Plc");
@@ -843,7 +715,6 @@ public class ModelRockwell {
 		headerRow.createCell(12).setCellValue("Commento");
 		headerRow.createCell(13).setCellValue("Livello");
 		headerRow.createCell(14).setCellValue("UPDATED");
-
 	}
 
 	/**
@@ -852,7 +723,7 @@ public class ModelRockwell {
 	public void readProperties() {
 		try {
 			properties = new Settings();
-			properties.load(new FileReader("properties/rockwellImporterSettings.cfg"));
+			properties.load(new File("properties/rockwellImporterSettings.cfg"));
 		} catch (IOException e) {
 			logRock.error("Unable to open properties file: properties/rockwellImporterSettings.cfg");
 		}
@@ -922,36 +793,21 @@ public class ModelRockwell {
 	 */
 	private void generateEntries(Machine machine, Tag tag, String _channel) {
 		StringBuffer sbTagNamePlc = new StringBuffer(tag.getfName());
-		// String descriptionTagPlc = "";
 		String dataType = tag.getDataType();
-//		ModelRockwell.logRock.info("dataType: "+dataType);
 		DataType dt = null;
-		// Cerco il tipo di dato del tag che sto considerando
 		for (DataType tmp_dt : listOfDataTypes) {
 			if (tmp_dt.getfName().equals(dataType)) {
 				dt = tmp_dt;
 				break;
 			}
 		}
-
 		if (dt == null) {
-//			System.out.println(tag.getfName());
-//			System.out.println(tag.getfComments());
-//			System.out.println(tag.getClass());
-//			System.out.println("DataType: "+dataType);
-//			System.out.println();
-//
-////			for (DataType tmp_dt : listOfDataTypes) {
-////				System.out.println(tmp_dt.getfName());
-////			}
-			
 			logRock.error("Unable to find dataType: " + dataType);
 			return;
 		}
 
 		// per ogni elemento da cui è composto il tag
 		String dimensionTagString = tag.getfDimensions();
-//		ModelRockwell.logRock.info("dimensionTagString: "+dimensionTagString);
 		int dimensionTagInt = 1;
 		if (!dimensionTagString.equals("")) {
 			dimensionTagInt = Integer.parseInt(dimensionTagString);
@@ -959,18 +815,15 @@ public class ModelRockwell {
 				dimensionTagInt = 1;
 			}
 		}
-//		ModelRockwell.logRock.info("dimensionTagInt: "+dimensionTagInt);
-
 		for (int indexDimensionsTag = 0; indexDimensionsTag < dimensionTagInt; indexDimensionsTag++) {
 			// per ogni membro da cui è composto il tipo di dato
 			for (Member m : dt.getfMembers()) {
-//				ModelRockwell.logRock.info("m.getfDataType(): "+m.getfDataType());
 				sbTagNamePlc.delete(0, sbTagNamePlc.length());
-				if (!dimensionTagString.equals(""))
+				if (!dimensionTagString.equals("")) {
 					sbTagNamePlc.append(tag.getfName() + "[" + indexDimensionsTag + "]");
-				else
+				} else {
 					sbTagNamePlc.append(tag.getfName());
-
+				}
 				if (m.getfDataType().equals("BIT")) {
 					generateEntryXls(machine, sbTagNamePlc, m, "BIT", _channel);
 				} else if (m.getfDataType().equals("INT")) {
@@ -986,12 +839,8 @@ public class ModelRockwell {
 				} else if (m.getfDataType().equals("STRING")) {
 					generateEntryXls(machine, sbTagNamePlc, m, "STRING", _channel);
 				} else {
-					
-					
-//					if(m.getfDataType().equals("MAC_ARM_ALM_STOPFAULTS"))System.out.println("#");
 					// se il membro non è composto da titpi di dato semplici
 					generateMember(machine, m, sbTagNamePlc, _channel);
-
 				}
 			}
 		}
@@ -1005,34 +854,25 @@ public class ModelRockwell {
 	 * @param _channel
 	 */
 	private void generateEntryXls(Machine machine, StringBuffer sbTagNamePlc, Member m, String _type, String _channel) {
-//		ModelRockwell.logRock.info("generateEntryXls");
 		String descriptionTagPlc;
 		EntryRockwellXls entry;
 		int dimension = m.getfDimension();
-//		ModelRockwell.logRock.info("dimension: "+dimension);
-//		if(dimension==0)dimension=1;
-
 		if (dimension == 0) {
 			StringBuffer _sb = new StringBuffer();
 			_sb = new StringBuffer(sbTagNamePlc);
-//			ModelRockwell.logRock.info("_sb: "+_sb);
 			_sb.append("." + m.getfName());
 //			ModelRockwell.logRock.info("_sb: "+_sb);
 //			//TODO Attenzione!!
 //			if (_sb.toString().contains("ZZZZ") )return;
 			descriptionTagPlc = m.getfDescription();
 			boolean flag_print = true;
-//			if (m.getfName().equals("rgxMan") || _channel.contentEquals(Tag.ALARMSs))
 			if (_channel.contentEquals(Tag.ALARMSs))
 				flag_print = false;
 			if (!checkifVector(machine, _sb, m, _type, _channel)) {
-//				ModelRockwell.logRock.info("checkifVector done");
-				entry = new EntryRockwellXls("", "", _sb.toString(), _type, 0, "", "", descriptionTagPlc, "", "", "", "", "",
-						"", "", flag_print);
-//				ModelRockwell.logRock.info("EntryRockwellXls done");
+				entry = new EntryRockwellXls("", "", _sb.toString(), _type, 0, "", "", descriptionTagPlc, "", "", "",
+						"", "", "", "", flag_print);
 				insertEntryXls(machine, entry, _type, _channel);
 			}
-
 		} else {
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < dimension; i++) {
@@ -1042,19 +882,16 @@ public class ModelRockwell {
 //				if (sb.toString().contains("ZZZZ") )return;
 				descriptionTagPlc = m.getfDescription();
 				boolean flag_print = true;
-//				if (m.getfName().equals("rgxMan") || _channel.contentEquals(Tag.ALARMSs))
 				if (_channel.contentEquals(Tag.ALARMSs))
 					flag_print = false;
 				if (!checkifVector(machine, sb, m, _type, _channel)) {
-					entry = new EntryRockwellXls("", "", sb.toString(), _type, 0, "", "", descriptionTagPlc, "", "", "", "", "",
-							"", "", flag_print);
+					entry = new EntryRockwellXls("", "", sb.toString(), _type, 0, "", "", descriptionTagPlc, "", "", "",
+							"", "", "", "", flag_print);
 					insertEntryXls(machine, entry, _type, _channel);
 				}
 				sb.delete(0, sb.length());
 			}
-
 		}
-//		ModelRockwell.logRock.info("generateEntryXls done ");
 	}
 
 	/**
@@ -1078,8 +915,8 @@ public class ModelRockwell {
 				if (((m.getfName().startsWith("rgx") || m.getfName().startsWith("x"))
 						&& m.getfDataType().equals("DINT")) || _channel.contentEquals(Tag.ALARMSs))
 					flag_print = false;
-				entry = new EntryRockwellXls("", "", _sb.toString(), "BIT", 0, "", "", descriptionTagPlc, "", "", "", "", "",
-						"", "", flag_print);
+				entry = new EntryRockwellXls("", "", _sb.toString(), "BIT", 0, "", "", descriptionTagPlc, "", "", "",
+						"", "", "", "", flag_print);
 				insertEntryXls(machine, entry, "BIT", _channel);
 			}
 			return true;
@@ -1093,8 +930,8 @@ public class ModelRockwell {
 				if (((m.getfName().startsWith("rgx") || m.getfName().startsWith("x"))
 						&& m.getfDataType().equals("DINT")) || _channel.contentEquals(Tag.ALARMSs))
 					flag_print = false;
-				entry = new EntryRockwellXls("", "", _sb.toString(), "BIT", 0, "", "", descriptionTagPlc, "", "", "", "", "",
-						"", "", flag_print);
+				entry = new EntryRockwellXls("", "", _sb.toString(), "BIT", 0, "", "", descriptionTagPlc, "", "", "",
+						"", "", "", "", flag_print);
 				insertEntryXls(machine, entry, "BIT", _channel);
 				// TODO COSA VUOL DIRE????
 			}
@@ -1112,7 +949,6 @@ public class ModelRockwell {
 	private void insertEntryXls(Machine machine, EntryRockwellXls entry, String _type, String _channel) {
 		if (entry.getfAddrPlc().contains("ZZZZ"))
 			return;
-
 		if (_channel.contentEquals(Tag.ALARMSs)) {
 			if (_type.equals("BIT")) {
 				machine.getFgroupAlarms().getAlarmsBit().add(entry);
@@ -1156,7 +992,6 @@ public class ModelRockwell {
 				machine.getFgroupWrites().getWriteString().add(entry);
 			}
 		}
-
 	}
 
 	/**
@@ -1174,7 +1009,6 @@ public class ModelRockwell {
 		for (DataType tmp_dt : listOfDataTypes) {
 			if (tmp_dt.getfName().equals(dataType)) {
 				dt = tmp_dt;
-				//System.out.println("ok ");
 				break;
 			}
 		}
@@ -1182,11 +1016,9 @@ public class ModelRockwell {
 			return;
 
 		String orig = sbTagName.toString();
-
 		int dimensionTagInt = _m.getfDimension();
 		if (dimensionTagInt == 0)
 			dimensionTagInt = 1;
-
 		// per ogni elemento da cui è composto il membro (potrebbe essere un vettore)
 		for (int dimensionsTag = 0; dimensionsTag < dimensionTagInt; dimensionsTag++) {
 			sbTagName.delete(0, sbTagName.length());
@@ -1220,23 +1052,16 @@ public class ModelRockwell {
 	 * @return
 	 */
 	private String removeSuffix(String getfName) {
-		String string;// =getfName;
+		String string;
 		ArrayList<String> suffixesList = getListSuffixes();
-		// System.out.println(suffixesList);
 		for (String suffix : suffixesList) {
 			if (getfName.contains(suffix)) {
 				string = getfName.replace(suffix, "");
-				// System.out.println(string);
 				return string;
 			}
 		}
 		return null;
 	}
-
-	/**
-	 * @param path
-	 * @throws IOException
-	 */
 
 	/**
 	 * @param comment
@@ -1248,27 +1073,29 @@ public class ModelRockwell {
 			comment = "" + comment.trim();
 			if (comment.contains("{")) {
 				comment = comment.split("\\{")[1];
-				if (comment.contains("}"))
+				if (comment.contains("}")) {
 					comment = comment.split("\\}")[0];
-
-				if (comment.split("\\|")[0].equals("X") || comment.split("\\|")[0].equals("x"))
+				}
+				if (comment.split("\\|")[0].equals("X") || comment.split("\\|")[0].equals("x")) {
 					str1 = "";
-				else
+				} else {
 					str1 = "[" + comment.split("\\|")[0].trim() + "]";
-				if (comment.split("\\|")[1].equals("X") || comment.split("\\|")[1].equals("x"))
+				}
+				if (comment.split("\\|")[1].equals("X") || comment.split("\\|")[1].equals("x")) {
 					str2 = "";
-				else
+				} else {
 					str2 = " [" + comment.split("\\|")[1].trim() + "]";
+				}
 				return str1 + str2;
 			} else if (comment.contains("[")) {
 				comment = comment.split("\\[")[1];
-				if (comment.endsWith("]"))
+				if (comment.endsWith("]")) {
 					comment = "" + comment.substring(0, comment.length() - 1);
+				}
 				return "[" + comment + "]";
 			}
 		}
 		return "";
-
 	}
 
 	/**
@@ -1279,11 +1106,13 @@ public class ModelRockwell {
 		if (getfDescrizioneEstesa != null) {
 			if (getfDescrizioneEstesa.contains("{")) {
 				getfDescrizioneEstesa = getfDescrizioneEstesa.split("\\{")[1].trim();
-				if (getfDescrizioneEstesa.contains("}"))
+				if (getfDescrizioneEstesa.contains("}")) {
 					getfDescrizioneEstesa = getfDescrizioneEstesa.split("\\}")[0].trim();
+				}
 				if (getfDescrizioneEstesa.split("\\|")[3].equals("X")
-						|| getfDescrizioneEstesa.split("\\|")[3].equals("x"))
+						|| getfDescrizioneEstesa.split("\\|")[3].equals("x")) {
 					return "99999999";
+				}
 				return getfDescrizioneEstesa.split("\\|")[3];
 			}
 		}
@@ -1298,11 +1127,13 @@ public class ModelRockwell {
 		if (getfDescrizioneEstesa != null) {
 			if (getfDescrizioneEstesa.contains("{")) {
 				getfDescrizioneEstesa = getfDescrizioneEstesa.split("\\{")[1];
-				if (getfDescrizioneEstesa.contains("}"))
+				if (getfDescrizioneEstesa.contains("}")) {
 					getfDescrizioneEstesa = getfDescrizioneEstesa.split("\\}")[0];
+				}
 				if (getfDescrizioneEstesa.split("\\|")[2].equals("X")
-						|| getfDescrizioneEstesa.split("\\|")[2].equals("x"))
+						|| getfDescrizioneEstesa.split("\\|")[2].equals("x")) {
 					return "-99999999";
+				}
 				return getfDescrizioneEstesa.split("\\|")[2];
 			}
 		}
@@ -1345,7 +1176,6 @@ public class ModelRockwell {
 			return tokens[index].trim();
 		}
 		return "";
-
 	}
 
 	/**
@@ -1353,15 +1183,16 @@ public class ModelRockwell {
 	 * @return
 	 */
 	private String addZeros(int i) {
-		if (i < 10)
+		if (i < 10) {
 			return "000" + i;
-		if (i < 100)
+		}
+		if (i < 100) {
 			return "00" + i;
-		if (i < 1000)
+		}
+		if (i < 1000) {
 			return "0" + i;
-
+		}
 		return "" + i;
-
 	}
 
 	/**
@@ -1380,8 +1211,7 @@ public class ModelRockwell {
 	 * @param _entry
 	 */
 	private void makeCells(int _index, Sheet _sheet, CellStyle _style, Font _font, EntryRockwellXls _entry) {
-		Row rowGen;
-		rowGen = populateCells(_index, _sheet, _entry);
+		Row rowGen = populateCells(_index, _sheet, _entry);
 		_style.setFont(_font);
 		for (int i = 0; i < MAX_NUM_COL_XLS; i++) {
 			if (rowGen.getCell(i) != null) {
@@ -1397,8 +1227,7 @@ public class ModelRockwell {
 	 * @return
 	 */
 	private Row populateCells(int index, Sheet sheet, EntryRockwellXls entry) {
-		Row rowGen;
-		rowGen = sheet.createRow(index);
+		Row rowGen = sheet.createRow(index);
 		rowGen.createCell(0).setCellValue(entry.getfIndice());
 		rowGen.createCell(1).setCellValue(entry.getfTagNameSCADA());
 		rowGen.createCell(2).setCellValue(entry.getfAddrPlc());
@@ -1540,7 +1369,6 @@ public class ModelRockwell {
 		for (String[] array : stringArray) {
 			writer.writeNext(array);
 		}
-
 		writer.close();
 		return "";
 	}
@@ -1551,7 +1379,6 @@ public class ModelRockwell {
 	 * @throws EncryptedDocumentException
 	 */
 	public void readXsl(String absolutePath) throws EncryptedDocumentException, IOException {
-
 		Workbook workbook = null;
 		Iterator<Sheet> sheetIterator = null;
 		workbook = WorkbookFactory.create(new File(absolutePath));
@@ -1564,7 +1391,7 @@ public class ModelRockwell {
 				Iterator<Row> rowIterator = sheet.rowIterator();
 				Row row = rowIterator.next();
 				while (rowIterator.hasNext()) {
-					row = rowIterator.next();//salto l'intestazione
+					row = rowIterator.next();// salto l'intestazione
 					Iterator<Cell> cellIterator = row.cellIterator();
 					String[] a = new String[15];
 					int i = 0;
@@ -1576,12 +1403,10 @@ public class ModelRockwell {
 							a[i++] = dataFormatter.formatCellValue(cell);
 						}
 					}
-
 					EntryRockwellXls entry = new EntryRockwellXls(a[0].trim(), a[1].trim(), a[2].trim(), a[3].trim(),
 							Integer.parseInt(a[4].trim()), a[5].trim(), a[6].trim(), a[7].trim(), a[8].trim(),
 							a[9].trim(), a[10].trim(), a[11].trim(), a[12].trim(), a[13].trim(), a[14].trim(),
 							Boolean.parseBoolean(a[14].trim()));
-
 					if (entry.getfTipo().trim().equals("bit_Anomalies<DA_BIT>")) {
 						getCsvGenerator().getListEntry_DA().add(entry);
 					} else if (entry.getfTipo().trim().equals("Int_Anomalies<AA_INT>")) {
@@ -1602,27 +1427,15 @@ public class ModelRockwell {
 						getCsvGenerator().getListEntry_AI().add(entry);
 					}
 					// TODO aggiungere gli altri casi, e controllare questi
-
 				}
 			}
 		}
 	}
 
-	
-
 	public void setController(MainViewControllerRockwell mainController) {
 		controller = mainController;
-
 	}
 
-//	/**
-//	 * @return the csvGenerator
-//	 */
-//	public CsvGenerator getCsvGenerator() {
-//		return csvGenerator;
-//	}
-//	
-	
 	/**
 	 * @return the csvGenerator
 	 */
@@ -1630,7 +1443,6 @@ public class ModelRockwell {
 		if (csvGenerator == null) {
 			csvGenerator = new CsvGenerator(properties, logRock, controller);
 		}
-
 		return csvGenerator;
 	}
 

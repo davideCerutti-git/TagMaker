@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -42,14 +41,11 @@ public class ItemDate extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,15 +57,8 @@ public class ItemDate extends Item {
 		ItemDate itemDate = new ItemDate(workingStruct.getDbName(), ModelSiemens.getNameString(str), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(2, 0);
-//		ModelSiemens.logSiem.info(itemDate.toStringExtended());
-
 		return itemDate;
 	}
-
-//	private static void incrementAddress(int[] tmp_num_word, int[] tmp_num_bit) {
-//
-//		tmp_num_word[0]=tmp_num_word[0]+2;
-//	}
 
 	@Override
 	public Address getAddress() {
@@ -77,44 +66,42 @@ public class ItemDate extends Item {
 	}
 
 	public void addAddresRec(Address gAddr) {
-//		ModelSiemens.logSiem.info("INT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.logSiem.info("DATE this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
-//		ModelSiemens.getgAddr().incrementAddress(2, 0);
 	}
 
 	@Override
 	public StringBuffer getSimbolicName() {
 		return parent.getSimbolicName().append("." + this.getName());
 	};
+
 	public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
-	
+
 	@Override
 	public Address getByteOccupation() {
-		return new Address(0,2,0);
+		return new Address(0, 2, 0);
 	}
-	
+
 	@Override
 	public String getComment() {
 		return this.comment;
 	}
-	
+
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
 	}
-	
+
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
-		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item)+"_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "DATE"
+		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item) + "_DB"
+				+ ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "DATE"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBW" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
-
 		if (item.getSimbolicName().toString().contains(".R."))
 			rowGen.createCell(6).setCellValue("Int_read<AI_INT>");// TODO questo è un Date ma per il momento viene
 																	// trattato come Int
@@ -122,4 +109,5 @@ public class ItemDate extends Item {
 			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");// TODO questo è un Date ma per il momento viene
 																	// trattato come Int
 	}
+	
 }

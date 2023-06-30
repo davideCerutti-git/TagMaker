@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -12,7 +11,7 @@ public class ItemByte extends Item {
 	public ItemByte(String dbName, String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
 		this.dbName = dbName;
 		this.value = 0;
-		this.name = stringName;// .replaceAll("\"", "");
+		this.name = stringName;
 		this.comment = stringComment;
 		this.address = addressGlobal;
 		this.selected = false;
@@ -42,14 +41,11 @@ public class ItemByte extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-//		ModelSiemens.logSiem
-//				.warn("Byte start:" + ModelSiemens.getgAddr().gByte() + " - " + ModelSiemens.getgAddr().gBit());
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
 		if (typeChanged) {
-//			ModelSiemens.logSiem.info("typeChanged");
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,19 +57,9 @@ public class ItemByte extends Item {
 		ItemByte itemByte = new ItemByte(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(1, 0);
-//		ModelSiemens.logSiem.info(itemByte.toStringExtended());
 		return itemByte;
 	}
-
-//	private static void incrementAddress(int[] tmp_num_word, int[] tmp_num_bit) {
-//		if(tmp_num_bit[0]>0) {
-//			tmp_num_word[0]++;
-//			tmp_num_bit[0]=0;
-//		}
-//
-//		tmp_num_word[0]=tmp_num_word[0]+1;
-//	}
-
+	
 	@Override
 	public Address getAddress() {
 		return this.address;
@@ -81,7 +67,6 @@ public class ItemByte extends Item {
 
 	public void addAddresRec(Address gAddr) {
 		this.address.add(gAddr);
-//		ModelSiemens.getgAddr().incrementAddress(1, 0);
 	}
 
 	@Override
@@ -92,6 +77,7 @@ public class ItemByte extends Item {
 	public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
+	
 	@Override
 	public Address getByteOccupation() {
 		return new Address(0,1,0);
@@ -119,4 +105,5 @@ public class ItemByte extends Item {
 		if (item.getSimbolicName().toString().contains(".W."))
 			rowGen.createCell(6).setCellValue("Byte_write<WAI_BYTE>");
 	}
+	
 }

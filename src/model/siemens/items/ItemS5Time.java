@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -42,14 +41,11 @@ public class ItemS5Time extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,15 +57,8 @@ public class ItemS5Time extends Item {
 		ItemS5Time itemS5Time = new ItemS5Time(workingStruct.getDbName(), ModelSiemens.getNameString(str), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(2, 0);
-//		ModelSiemens.logSiem.info(itemS5Time.toStringExtended());
-
 		return itemS5Time;
 	}
-
-//	private static void incrementAddress(int[] tmp_num_word, int[] tmp_num_bit) {
-//
-//		tmp_num_word[0]=tmp_num_word[0]+2;
-//	}
 
 	@Override
 	public Address getAddress() {
@@ -77,17 +66,15 @@ public class ItemS5Time extends Item {
 	}
 
 	public void addAddresRec(Address gAddr) {
-//		ModelSiemens.logSiem.info("INT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.logSiem.info("INT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
-//		ModelSiemens.getgAddr().incrementAddress(2, 0);
 	}
 
 	@Override
 	public StringBuffer getSimbolicName() {
 		return parent.getSimbolicName().append("." + this.getName());
 	};
+	
 	public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
@@ -122,4 +109,5 @@ public class ItemS5Time extends Item {
 			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");// TODO questo è un S5Time ma per il momento viene
 																	// trattato come Int
 	}
+	
 }

@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -42,14 +41,11 @@ public class ItemLTime extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,8 +57,6 @@ public class ItemLTime extends Item {
 		ItemLTime itemLTime = new ItemLTime(workingStruct.getDbName(), ModelSiemens.getNameString(str), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(8, 0);
-//		ModelSiemens.logSiem.info(itemLTime.toStringExtended());
-
 		return itemLTime;
 	}
 
@@ -74,13 +68,13 @@ public class ItemLTime extends Item {
 	public void addAddresRec(Address gAddr) {
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.logSiem.info("LTIME this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 	}
 
 	@Override
 	public StringBuffer getSimbolicName() {
 		return parent.getSimbolicName().append("." + this.getName());
 	};
+	
 	public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
@@ -100,7 +94,6 @@ public class ItemLTime extends Item {
 		this.dbName = nameDbItem;
 	}
 	
-	
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
 		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item)+"_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "LTIME"
@@ -116,4 +109,5 @@ public class ItemLTime extends Item {
 			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");// TODO questo è un LTime ma per il momento viene
 																	// trattato come Int
 	}
+	
 }

@@ -2,11 +2,8 @@ package model.siemens.items;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.poi.ss.usermodel.Row;
-
-import model.siemens.Address;
-import model.siemens.ModelSiemens;
+import model.siemens.*;
 
 public class ItemString extends Item {
 
@@ -25,14 +22,13 @@ public class ItemString extends Item {
 		this.parent = _parent;
 		this.setUpType();
 		super.toStringExtended();
-
 	}
 
 	@Override
 	public String toString() {
 		return name + " " + address;
 	}
-	
+
 	@Override
 	public String toStringExtended() {
 		if (comment.equals(""))
@@ -41,7 +37,7 @@ public class ItemString extends Item {
 		return "ItemString [value=" + value + ", name=" + name + ", comment=" + comment + ", address=" + address
 				+ ", simbolicName=" + this.getSimbolicName() + "]";
 	}
-	
+
 	@Override
 	public Item clone() throws CloneNotSupportedException {
 		return new ItemString(this.getDbName(), this.getName(), this.getComment(), this.getAddress().clone(),
@@ -49,15 +45,11 @@ public class ItemString extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -66,23 +58,18 @@ public class ItemString extends Item {
 				ModelSiemens.getgAddr().incrByte(1);
 			}
 		}
-		
-	
 		ItemString itemString = new ItemString(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
-				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0),0, workingStruct);
+				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), 0, workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(256, 0);
 		return itemString;
 	}
-	
-	public static ItemString makeItemFromStringInArrayForm(ItemStruct workingStruct, String str,
-			boolean typeChanged) {
+
+	public static ItemString makeItemFromStringInArrayForm(ItemStruct workingStruct, String str, boolean typeChanged) {
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -91,63 +78,44 @@ public class ItemString extends Item {
 				ModelSiemens.getgAddr().incrByte(1);
 			}
 		}
-		
-		String indexString=ModelSiemens.removeInitialBrackets(str);
-		indexString=ModelSiemens.removeComment(indexString);
-		indexString=indexString.split(":")[1].trim();
+		String indexString = ModelSiemens.removeInitialBrackets(str);
+		indexString = ModelSiemens.removeComment(indexString);
+		indexString = indexString.split(":")[1].trim();
 		Matcher m = Pattern.compile("\\[(.*?)\\]").matcher(indexString);
 		while (m.find()) {
-			indexString=m.group(1);
+			indexString = m.group(1);
 		}
-		int index=0;
-		if(isNumeric(indexString)) {
-			index=Integer.parseInt(indexString);
-		}else {
+		int index = 0;
+		if (isNumeric(indexString)) {
+			index = Integer.parseInt(indexString);
+		} else {
 			if (ModelSiemens.getPLCTags().get(indexString) != null) {
 				index = Integer.parseInt(ModelSiemens.getPLCTags().get(indexString));
 			} else {
 				ModelSiemens.logSiem.error("L'indice letto non è stato trovato!");
 			}
 		}
-//		ModelSiemens.logSiem.info("---> "+index);
-		
 		ItemString itemString = new ItemString(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
-				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0),0, workingStruct);
-		ModelSiemens.getgAddr().incrementAddress(index+2, 0);
+				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), 0, workingStruct);
+		ModelSiemens.getgAddr().incrementAddress(index + 2, 0);
 		return itemString;
 	}
-	
-	
-	public static boolean isNumeric(String strNum) {
-	    if (strNum == null) {
-	        return false;
-	    }
-	    try {
-	        double d = Double.parseDouble(strNum);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
-	}
-	
 
-//	private static void incrementAddress(int[] tmp_num_word, int[] tmp_num_bit) {
-//		// TODO da implementare
-//		System.err.println("Error increment not implemented!!");
-////		if(tmp_num_bit[0]>0) {
-////			tmp_num_word[0]++;
-////		
-////			tmp_num_bit[0]=0;
-////		}
-////		tmp_num_word[0]=tmp_num_word[0]+4;
-//	}
+	public static boolean isNumeric(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		try {
+			double d = Double.parseDouble(strNum);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
+	}
 
 	public int getNumChar() {
 		return numChar;
 	}
-
-
-
 
 	@Override
 	public Address getAddress() {
@@ -157,7 +125,6 @@ public class ItemString extends Item {
 	public void addAddresRec(Address gAddr) {
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.getgAddr().incrementAddress(4, 0);
 	}
 
 	@Override
@@ -178,17 +145,16 @@ public class ItemString extends Item {
 	public String getComment() {
 		return this.comment;
 	}
-	
+
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
 	}
-	
-	
+
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
-//		 System.err.println("#### "+item.getDbName()); 
-		String strFormula = item.getDbName() +Item.getStringTypeForSCADATag(item)+ "_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "TX"
+		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item) + "_DB"
+				+ ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "TX"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBS" + item.getAddress().gByte());
@@ -198,6 +164,5 @@ public class ItemString extends Item {
 		if (item.getSimbolicName().toString().contains(".W."))
 			rowGen.createCell(6).setCellValue("String_write<WAI_STRING>");
 	}
-
 
 }

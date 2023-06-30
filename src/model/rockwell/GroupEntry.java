@@ -3,21 +3,20 @@ package model.rockwell;
 import java.util.ArrayList;
 
 public class GroupEntry {
-	ArrayList<EntryRockwellXls> entryBit;
-	ArrayList<EntryRockwellXls> entryInt;
-	ArrayList<EntryRockwellXls> entryDint;
-	ArrayList<EntryRockwellXls> entryReal;
-	ArrayList<EntryRockwellXls> entryString;
-	ArrayList<EntryRockwellXls> entryManCmd;
-	
-	
-	
+	private ArrayList<EntryRockwellXls> entryBit;
+	private ArrayList<EntryRockwellXls> entryInt;
+	private ArrayList<EntryRockwellXls> entryDint;
+	private ArrayList<EntryRockwellXls> entryReal;
+	private ArrayList<EntryRockwellXls> entryString;
+	private ArrayList<EntryRockwellXls> entryManCmd;
+
 	public GroupEntry() {
-		entryBit= new ArrayList<EntryRockwellXls>();
-		entryInt= new ArrayList<EntryRockwellXls>();
-		entryDint= new ArrayList<EntryRockwellXls>();
-		entryReal= new ArrayList<EntryRockwellXls>();
-		entryString= new ArrayList<EntryRockwellXls>();
-		entryManCmd= new ArrayList<EntryRockwellXls>();
+		this.entryBit= new ArrayList<EntryRockwellXls>();
+		this.entryInt= new ArrayList<EntryRockwellXls>();
+		this.entryDint= new ArrayList<EntryRockwellXls>();
+		this.entryReal= new ArrayList<EntryRockwellXls>();
+		this.entryString= new ArrayList<EntryRockwellXls>();
+		this.entryManCmd= new ArrayList<EntryRockwellXls>();
 	}
+	
 }

@@ -1,9 +1,7 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
-import model.siemens.Address;
-import model.siemens.ModelSiemens;
+import model.siemens.*;
 
 public class ItemULInt extends Item {
 
@@ -42,14 +40,11 @@ public class ItemULInt extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,8 +56,6 @@ public class ItemULInt extends Item {
 		ItemULInt itemULInt = new ItemULInt(workingStruct.getDbName(), ModelSiemens.getNameString(str), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(8, 0);
-//		ModelSiemens.logSiem.info(itemULInt.toStringExtended());
-
 		return itemULInt;
 	}
 
@@ -74,7 +67,6 @@ public class ItemULInt extends Item {
 	public void addAddresRec(Address gAddr) {
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.logSiem.info("LINT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 	}
 
 	@Override
@@ -108,7 +100,6 @@ public class ItemULInt extends Item {
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBW" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
-
 		if (item.getSimbolicName().toString().contains(".R."))
 			rowGen.createCell(6).setCellValue("Int_read<AI_INT>");// TODO questo è un ULInt ma per il momento viene
 		// trattato come Int
@@ -116,4 +107,5 @@ public class ItemULInt extends Item {
 			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");// TODO questo è un ULInt ma per il momento viene
 		// trattato come Int
 	}
+	
 }

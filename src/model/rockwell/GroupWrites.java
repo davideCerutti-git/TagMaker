@@ -3,88 +3,68 @@ package model.rockwell;
 import java.util.ArrayList;
 
 public class GroupWrites {
-	
-	ArrayList<EntryRockwellXls> writeBit;
-	ArrayList<EntryRockwellXls> writeInt;
-	ArrayList<EntryRockwellXls> writeDint;
-	ArrayList<EntryRockwellXls> writeReal;
-	ArrayList<EntryRockwellXls> writeString;
-	ArrayList<EntryRockwellXls> writeManCmd;
-	
-	
-	
-	
-	
-	
+	private ArrayList<EntryRockwellXls> writeBit;
+	private ArrayList<EntryRockwellXls> writeInt;
+	private ArrayList<EntryRockwellXls> writeDint;
+	private ArrayList<EntryRockwellXls> writeReal;
+	private ArrayList<EntryRockwellXls> writeString;
+	private ArrayList<EntryRockwellXls> writeManCmd;
+
 	public GroupWrites() {
-		writeBit= new ArrayList<EntryRockwellXls>();
-		writeInt= new ArrayList<EntryRockwellXls>();
-		writeDint= new ArrayList<EntryRockwellXls>();
-		writeReal= new ArrayList<EntryRockwellXls>();
-		writeString= new ArrayList<EntryRockwellXls>();
-		writeManCmd= new ArrayList<EntryRockwellXls>();
+		this.writeBit = new ArrayList<EntryRockwellXls>();
+		this.writeInt = new ArrayList<EntryRockwellXls>();
+		this.writeDint = new ArrayList<EntryRockwellXls>();
+		this.writeReal = new ArrayList<EntryRockwellXls>();
+		this.writeString = new ArrayList<EntryRockwellXls>();
+		this.writeManCmd = new ArrayList<EntryRockwellXls>();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Getter and Setter
-	 */
+
 	public ArrayList<EntryRockwellXls> getWriteBit() {
-		return writeBit;
+		return this.writeBit;
 	}
+
 	public void setWriteBit(ArrayList<EntryRockwellXls> writeBit) {
 		this.writeBit = writeBit;
 	}
+
 	public ArrayList<EntryRockwellXls> getWriteInt() {
-		return writeInt;
+		return this.writeInt;
 	}
+
 	public void setWriteInt(ArrayList<EntryRockwellXls> writeInt) {
 		this.writeInt = writeInt;
 	}
+
 	public ArrayList<EntryRockwellXls> getWriteDint() {
-		return writeDint;
+		return this.writeDint;
 	}
+
 	public void setWriteDint(ArrayList<EntryRockwellXls> writeDint) {
 		this.writeDint = writeDint;
 	}
+
 	public ArrayList<EntryRockwellXls> getWriteReal() {
-		return writeReal;
+		return this.writeReal;
 	}
+
 	public void setWriteReal(ArrayList<EntryRockwellXls> writeReal) {
 		this.writeReal = writeReal;
 	}
+
 	public ArrayList<EntryRockwellXls> getWriteString() {
-		return writeString;
+		return this.writeString;
 	}
+
 	public void setWriteString(ArrayList<EntryRockwellXls> writeString) {
 		this.writeString = writeString;
 	}
+
 	public ArrayList<EntryRockwellXls> getWriteManCmd() {
-		return writeManCmd;
+		return this.writeManCmd;
 	}
+
 	public void setWriteManCmd(ArrayList<EntryRockwellXls> writeManCmd) {
 		this.writeManCmd = writeManCmd;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

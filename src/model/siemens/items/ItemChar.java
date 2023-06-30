@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -42,14 +41,11 @@ public class ItemChar extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-//		ModelSiemens.logSiem
-//				.warn("Byte start:" + ModelSiemens.getgAddr().gByte() + " - " + ModelSiemens.getgAddr().gBit());
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
 		if (typeChanged) {
-//			ModelSiemens.logSiem.info("typeChanged");
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,7 +57,6 @@ public class ItemChar extends Item {
 		ItemChar itemChar = new ItemChar(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(1, 0);
-//		ModelSiemens.logSiem.info(itemChar.toStringExtended());
 		return itemChar;
 	}
 
@@ -72,7 +67,6 @@ public class ItemChar extends Item {
 
 	public void addAddresRec(Address gAddr) {
 		this.address.add(gAddr);
-//		ModelSiemens.getgAddr().incrementAddress(1, 0);
 	}
 
 	@Override
@@ -112,4 +106,5 @@ public class ItemChar extends Item {
 			rowGen.createCell(6).setCellValue("Byte_write<WAI_BYTE>");// TODO questo è un char ma per il momento viene
 																		// trattato come byte
 	}
+	
 }

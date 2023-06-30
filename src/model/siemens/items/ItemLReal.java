@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -9,7 +8,8 @@ public class ItemLReal extends Item {
 
 	private int value;
 
-	public ItemLReal(String dbName, String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
+	public ItemLReal(String dbName, String stringName, String stringComment, Address addressGlobal,
+			ItemStruct _parent) {
 		this.dbName = dbName;
 		this.value = 0;
 		this.name = stringName;
@@ -42,14 +42,11 @@ public class ItemLReal extends Item {
 	}
 
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
-
 		if (typeChanged) {
-
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,8 +58,6 @@ public class ItemLReal extends Item {
 		ItemLReal itemLReal = new ItemLReal(workingStruct.getDbName(), ModelSiemens.getNameString(str), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(8, 0);
-//		ModelSiemens.logSiem.info(itemLInt.toStringExtended());
-
 		return itemLReal;
 	}
 
@@ -74,40 +69,40 @@ public class ItemLReal extends Item {
 	public void addAddresRec(Address gAddr) {
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.logSiem.info("LINT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 	}
 
 	@Override
 	public StringBuffer getSimbolicName() {
 		return parent.getSimbolicName().append("." + this.getName());
 	};
+
 	public void updateParent(ItemStruct workingStruct) {
 		this.parent = workingStruct;
 	}
-	
+
 	@Override
 	public Address getByteOccupation() {
-		return new Address(0,8,0);
+		return new Address(0, 8, 0);
 	}
-	
+
 	@Override
 	public String getComment() {
 		return this.comment;
 	}
-	
+
 	@Override
 	public void updateDbName(String nameDbItem) {
 		this.dbName = nameDbItem;
 	}
-	
+
 	@Override
 	protected void insertItem(Item item, Row rowGen) {
-		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item)+"_DB" + ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "LREAL"
+		String strFormula = item.getDbName() + Item.getStringTypeForSCADATag(item) + "_DB"
+				+ ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "LREAL"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBF" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
-
 		if (item.getSimbolicName().toString().contains(".R."))
 			rowGen.createCell(6).setCellValue("Real_read<AI_REAL>");// TODO questo è un LReal ma per il momento viene
 																	// trattato come Real
@@ -115,4 +110,5 @@ public class ItemLReal extends Item {
 			rowGen.createCell(6).setCellValue("Real_write<WAI_REAL>");// TODO questo è un LReal ma per il momento viene
 																		// trattato come Real
 	}
+
 }

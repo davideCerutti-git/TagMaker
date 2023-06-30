@@ -2,10 +2,12 @@ package model.rockwell;
 
 import java.util.ArrayList;
 
-public class ArrayMember extends DataMember{
+public class ArrayMember extends DataMember {
 
 	private int dimensions;
+	
 	private ArrayList<Element_> elements;
+
 	public int getDimensions() {
 		return dimensions;
 	}

@@ -10,12 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.rockwell.ModelRockwell;
+import model.siemens.ModelSiemens;
 import settings.Settings;
 import java.io.*;
 
-public class SettingsControllerRockwell implements Initializable {
-	private ModelRockwell model;
+public class SettingsControllerSiemens implements Initializable {
+	private ModelSiemens model;
 	private Settings properties;
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -45,7 +45,7 @@ public class SettingsControllerRockwell implements Initializable {
 
 	@FXML
 	void setCbxOpenXml(ActionEvent event) {
-		//TODO da rimuovere?
+		// TODO da rimuovere?
 //		if(cbxOpenXml.isSelected())
 //			properties.setProperty("openXlsAfterImport", "false");
 //		else 
@@ -54,11 +54,12 @@ public class SettingsControllerRockwell implements Initializable {
 
 	@FXML
 	void setImportAllsTags(ActionEvent event) {
-		//TODO da rimuovere?
+		// TODO da rimuovere?
 	}
 
 	@FXML
 	void cancelSettings(ActionEvent event) {
+//		ModelSiemens.logSiem.debug("Siemens settings changes canceled ");
 		Stage stage = (Stage) btnSave.getScene().getWindow();
 		stage.close();
 	}
@@ -91,20 +92,10 @@ public class SettingsControllerRockwell implements Initializable {
 		properties.setProperty("filePath", txtFieldDefaultFolder.getText());
 		if (cbxOpenXml.isSelected()) {
 			properties.setProperty("openXlsAfterImport", "true");
-		}else {
+		} else {
 			properties.setProperty("openXlsAfterImport", "false");
 		}
-		if (cbximportAllsTags.isSelected()) {
-			properties.setProperty("importAllsTags", "true");
-		}else {
-			properties.setProperty("importAllsTags", "false");
-		}
-		if (cbxImportOnlyUsedTags.isSelected()) {
-			properties.setProperty("flagSearchIfTagIsUsed", "true");
-		}else {
-			properties.setProperty("flagSearchIfTagIsUsed", "false");
-		}
-		properties.store(new FileOutputStream("properties/rockwellImporterSettings.cfg"), null);
+		properties.store(new FileOutputStream("properties/siemensImporterSettings.cfg"), null);
 		Stage stage = (Stage) btnSave.getScene().getWindow();
 		stage.close();
 	}
@@ -112,17 +103,21 @@ public class SettingsControllerRockwell implements Initializable {
 	@FXML // This method is called by the FXMLLoader when initialization is complete
 	void initialize() {
 		assert btnSave != null : "fx:id=\"btnSave\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert btnCancel != null : "fx:id=\"btnCancel\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert txtFieldDefaultFolder != null : "fx:id=\"txtFieldDefaultFolder\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert cbxOpenXml != null : "fx:id=\"cbxOpenXml\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert listViewSuffixesALARMs != null : "fx:id=\"listViewSuffixesALARMs\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert listViewSuffixesREADs != null : "fx:id=\"listViewSuffixesREADs\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert listViewSuffixesWRITEs != null : "fx:id=\"listViewSuffixesWRITEs\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert cbximportAllsTags != null : "fx:id=\"cbximportAllsTags\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
-		assert cbxImportOnlyUsedTags != null : "fx:id=\"cbxImportOnlyUsedTags\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
+		assert btnCancel != null
+				: "fx:id=\"btnCancel\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
+		assert txtFieldDefaultFolder != null
+				: "fx:id=\"txtFieldDefaultFolder\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
+		assert cbxOpenXml != null
+				: "fx:id=\"cbxOpenXml\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
+		assert listViewSuffixesALARMs != null
+				: "fx:id=\"listViewSuffixesALARMs\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
+		assert listViewSuffixesREADs != null
+				: "fx:id=\"listViewSuffixesREADs\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
+		assert listViewSuffixesWRITEs != null
+				: "fx:id=\"listViewSuffixesWRITEs\" was not injected: check your FXML file 'SettingsRockwell.fxml'.";
 	}
 
-	public void setModel(ModelRockwell _model) {
+	public void setModel(ModelSiemens _model) {
 		this.model = _model;
 	}
 
@@ -130,25 +125,16 @@ public class SettingsControllerRockwell implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		properties = new Settings();
 		try {
-			properties.load(new File("properties/rockwellImporterSettings.cfg"));
+			properties.load(new File("properties/siemensImporterSettings.cfg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		txtFieldDefaultFolder.setText(properties.getProperty("filePath").trim());
+
 		if (properties.getProperty("openXlsAfterImport").equals("true")) {
 			cbxOpenXml.setSelected(true);
-		}else {
+		} else {
 			cbxOpenXml.setSelected(false);
-		}
-		if (properties.getProperty("importAllsTags").equals("true")) {
-			cbximportAllsTags.setSelected(true);
-		}else {
-			cbximportAllsTags.setSelected(false);
-		}
-		if (properties.getProperty("flagSearchIfTagIsUsed").equals("true")) {
-			cbxImportOnlyUsedTags.setSelected(true);
-		}else {
-			cbxImportOnlyUsedTags.setSelected(false);
 		}
 		initializeListSuffixesALARMs();
 		initializeListSuffixesREADs();
@@ -185,20 +171,21 @@ public class SettingsControllerRockwell implements Initializable {
 	private ContextMenu makeContextMenuALARMs() {
 		contextMenuALARMs = new ContextMenu();
 		TextInputDialog textInputDialog = new TextInputDialog();
-		textInputDialog.setTitle("Enter a new suffix");
-		textInputDialog.setContentText("Suffix(es)");
-		textInputDialog.setHeaderText("Type new suffixes ( ; to separate strings)");
-		MenuItem addItem = new MenuItem("Add new suffix");
+		textInputDialog.setTitle("Enter a new string");
+		textInputDialog.setContentText("String(s)");
+		textInputDialog.setHeaderText("Type new string ( ; to separate string)");
+		MenuItem addItem = new MenuItem("Add new string");
 		addItem.setOnAction(e -> {
 			textInputDialog.showAndWait();
 			String textEnteredString = textInputDialog.getEditor().getText();
 			String[] listStrings = textEnteredString.trim().split(";");
 			for (String s : listStrings) {
-				if (s.trim().length() != 0)
+				if (s.trim().length() != 0) {
 					listViewSuffixesALARMs.getItems().add(s.trim());
+				}
 			}
 		});
-		MenuItem cancItem = new MenuItem("Canc selected suffix");
+		MenuItem cancItem = new MenuItem("Canc selected string");
 		cancItem.setOnAction(e -> {
 			listViewSuffixesALARMs.getItems().removeAll(listViewSuffixesALARMs.getSelectionModel().getSelectedItem());
 		});
@@ -209,10 +196,10 @@ public class SettingsControllerRockwell implements Initializable {
 	private ContextMenu makeContextMenuREADs() {
 		contextMenuREADs = new ContextMenu();
 		TextInputDialog textInputDialog = new TextInputDialog();
-		textInputDialog.setTitle("Enter a new suffix");
-		textInputDialog.setContentText("Suffix(es)");
-		textInputDialog.setHeaderText("Type new suffixes ( ; to separate strings)");
-		MenuItem addItem = new MenuItem("Add new suffix");
+		textInputDialog.setTitle("Enter a new string");
+		textInputDialog.setContentText("String(s)");
+		textInputDialog.setHeaderText("Type new string ( ; to separate strings)");
+		MenuItem addItem = new MenuItem("Add new string");
 		addItem.setOnAction(e -> {
 			textInputDialog.showAndWait();
 			String textEnteredString = textInputDialog.getEditor().getText();
@@ -222,7 +209,7 @@ public class SettingsControllerRockwell implements Initializable {
 					listViewSuffixesREADs.getItems().add(s.trim());
 			}
 		});
-		MenuItem cancItem = new MenuItem("Canc selected suffix");
+		MenuItem cancItem = new MenuItem("Canc selected string");
 		cancItem.setOnAction(e -> {
 			listViewSuffixesREADs.getItems().removeAll(listViewSuffixesREADs.getSelectionModel().getSelectedItem());
 		});
@@ -233,25 +220,30 @@ public class SettingsControllerRockwell implements Initializable {
 	private ContextMenu makeContextMenuWRITEs() {
 		contextMenuWRITEs = new ContextMenu();
 		TextInputDialog textInputDialog = new TextInputDialog();
-		textInputDialog.setTitle("Enter a new suffix");
-		textInputDialog.setContentText("Suffix(es)");
-		textInputDialog.setHeaderText("Type new suffixes ( ; to separate strings)");
-		MenuItem addItem = new MenuItem("Add new suffix");
+		textInputDialog.setTitle("Enter a new string");
+		textInputDialog.setContentText("String(s)");
+		textInputDialog.setHeaderText("Type new string ( ; to separate strings)");
+		MenuItem addItem = new MenuItem("Add new string");
 		addItem.setOnAction(e -> {
 			textInputDialog.showAndWait();
 			String textEnteredString = textInputDialog.getEditor().getText();
 			String[] listStrings = textEnteredString.trim().split(";");
 			for (String s : listStrings) {
-				if (s.trim().length() != 0)
+				if (s.trim().length() != 0) {
 					listViewSuffixesWRITEs.getItems().add(s.trim());
+				}
 			}
 		});
-		MenuItem cancItem = new MenuItem("Canc selected suffix");
+		MenuItem cancItem = new MenuItem("Canc selected string");
 		cancItem.setOnAction(e -> {
 			listViewSuffixesWRITEs.getItems().removeAll(listViewSuffixesWRITEs.getSelectionModel().getSelectedItem());
 		});
 		contextMenuWRITEs.getItems().addAll(addItem, new SeparatorMenuItem(), cancItem);
 		return contextMenuWRITEs;
 	}
-	
+
+	void closeWindow() {
+		ModelSiemens.readProperties();
+	}
+
 }

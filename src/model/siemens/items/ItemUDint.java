@@ -1,9 +1,7 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
-import model.siemens.Address;
-import model.siemens.ModelSiemens;
+import model.siemens.*;
 
 public class ItemUDint extends Item {
 
@@ -58,7 +56,6 @@ public class ItemUDint extends Item {
 		ItemUDint itemUdint = new ItemUDint(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(4, 0);
-//		ModelSiemens.logSiem.info(itemUdint.toStringExtended());
 		return itemUdint;
 	}
 
@@ -68,10 +65,8 @@ public class ItemUDint extends Item {
 	}
 
 	public void addAddresRec(Address gAddr) {
-//		ModelSiemens.logSiem.info("UDINT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.getgAddr().incrementAddress(4, 0);
 	}
 
 	@Override
@@ -111,6 +106,6 @@ public class ItemUDint extends Item {
 		if (item.getSimbolicName().toString().contains(".W."))
 			rowGen.createCell(6).setCellValue("Dint_write<WAI_DINT>");// TODO questo è un UDInt ma per il momento viene
 																		// trattato come DInt
-
 	}
+	
 }

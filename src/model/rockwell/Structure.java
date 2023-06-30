@@ -3,6 +3,8 @@ package model.rockwell;
 import java.util.ArrayList;
 
 public class Structure {
+	private String dataType;
+	private ArrayList <DataMember> dataMembers;
 	
 	public String getDataType() {
 		return dataType;
@@ -16,8 +18,5 @@ public class Structure {
 	public void setDataMembers(ArrayList<DataMember> dataMembers) {
 		this.dataMembers = dataMembers;
 	}
-	private String dataType;
-	private ArrayList <DataMember> dataMembers;
-
 
 }

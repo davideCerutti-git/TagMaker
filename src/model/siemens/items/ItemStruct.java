@@ -1,24 +1,10 @@
 package model.siemens.items;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-
+import java.util.*;
+import java.util.regex.*;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import model.siemens.Address;
-import model.siemens.ModelSiemens;
+import model.siemens.*;
 
 public class ItemStruct extends Item {
 
@@ -58,19 +44,14 @@ public class ItemStruct extends Item {
 				System.out.println(struct.toString());
 				((ItemStruct) struct).allToString();
 			} else if (struct instanceof ItemBool) {
-
 				System.out.println("	" + struct.toString());
 			} else if (struct instanceof ItemString) {
-
 				System.out.println("	" + struct.toString());
 			} else if (struct instanceof ItemInt) {
-
 				System.out.println("	" + struct.toString());
 			} else if (struct instanceof ItemDint) {
-
 				System.out.println("	" + struct.toString());
 			} else if (struct instanceof ItemReal) {
-
 				System.out.println("	" + struct.toString());
 			}
 		}
@@ -90,11 +71,9 @@ public class ItemStruct extends Item {
 	}
 
 	public static String toAlphabetic(int i) {
-//		ModelSiemens.logSiem.info("# "+i);
 		if (i < 0) {
 			return "-" + toAlphabetic(-i - 1);
 		}
-
 		int quot = i / 26;
 		int rem = i % 26;
 		char letter = (char) ((int) 'A' + rem);
@@ -106,7 +85,6 @@ public class ItemStruct extends Item {
 	}
 
 	public int generateXlsx(XSSFWorkbook wb, Sheet sheet, int ind, String strName, CellStyle style, boolean flagFirstLineInStruct,boolean enableFlagFirstLineInStruct) {
-//		ModelSiemens.logSiem.info("Struct.generateXlsx " + strName);
 		Font fontAlarms = makefontAlarms(wb);
 		Font fontReads = makefontReads(wb);
 		Font fontWrites = makefontWrites(wb);
@@ -129,18 +107,13 @@ public class ItemStruct extends Item {
 		styleWrites_InitialRow.setFont(fontWrites);
 
 		for (Item item : getListStructsList()) {
-//			ModelSiemens.logSiem.info("Struct.generateXlsx  for: " + struct.getName());
 			if (item instanceof ItemStruct) {
-//				System.out.println("struct:" + struct.getName());
 				flagFirstLineInStruct = true;
 				ind = ((ItemStruct) item).generateXlsx(wb, sheet, ind, strName, style,flagFirstLineInStruct,enableFlagFirstLineInStruct);
 				flagFirstLineInStruct = false;
 			} else {
-//			} else if (struct.getSimbolicName().contains("HMI") || struct.getSimbolicName().contains("ALARM")) {
-
 				Row rowGen = sheet.createRow(ind);
 				ind++;
-
 				rowGen.createCell(0).setCellValue(item.getAddress().getDB()); // Numero della DB
 				rowGen.createCell(1).setCellValue(item.getAddress().gByte());// Numero della word
 				rowGen.createCell(2).setCellValue("");
@@ -160,15 +133,11 @@ public class ItemStruct extends Item {
 				rowGen.createCell(15).setCellValue("");
 				rowGen.createCell(16).setCellValue(getLevel(item.getComment()));
 				rowGen.createCell(17).setCellValue("");
-
 				item.insertItem(item, rowGen);
 				applyStyle(wb, styleAlarms, styleReads, styleWrites, stylePlates, styleAlarms_InitialRow,
 						styleReads_InitialRow, styleWrites_InitialRow, stylePlates_InitialRow, flagFirstLineInStruct,enableFlagFirstLineInStruct, item,
 						rowGen);
-//				if (flag) {
 					flagFirstLineInStruct = false;
-//				}
-
 			}
 		}
 		return ind;
@@ -177,53 +146,37 @@ public class ItemStruct extends Item {
 	private String getStringFromStruct(Item item) {
 		if (item.getType() == TAG_TYPE.ALARM_BIT)
 			return "bit_Anomalies<DA_BIT>";
-
 		if (item.getType() == TAG_TYPE.ALARM_BYTE)
 			return "byte_Anomalies<DA_BYTE>";
-
 		if (item.getType() == TAG_TYPE.ALARM_WORD)
 			return "word_Anomalies<DA_WORD>";
-
 		if (item.getType() == TAG_TYPE.ALARM_DWORD)
 			return "dword_Anomalies<DA_DWORD>";
-
 		if (item.getType() == TAG_TYPE.READ_BIT)
 			return "bit_read<DI_BIT>";
-
 		if (item.getType() == TAG_TYPE.READ_BYTE)
 			return "byte_read<DI_BYTE>";
-
 		if (item.getType() == TAG_TYPE.READ_INT || item.getType() == TAG_TYPE.PLATE)
 			return "int_read<AI_INT>";
-
 		if (item.getType() == TAG_TYPE.READ_DINT)
 			return "dint_read<AI_DINT>";
-
 		if (item.getType() == TAG_TYPE.READ_REAL)
 			return "real_read<AI_REAL>";
-
 		if (item.getType() == TAG_TYPE.READ_STRING)
 			return "string_read<TX_STRING>";
-
 		if (item.getType() == TAG_TYPE.WRITE_BIT)
 			return "bit_write<WDI_BIT>";
-
 		if (item.getType() == TAG_TYPE.WRITE_BYTE)
 			return "byte_write<WDI_BYTE>";
-
 		if (item.getType() == TAG_TYPE.WRITE_INT)
 			return "int_write<WAI_INT>";
-
 		if (item.getType() == TAG_TYPE.WRITE_DINT)
 			return "dint_write<WAI_DINT>";
-
 		if (item.getType() == TAG_TYPE.WRITE_REAL)
 			return "real_write<WAI_REAL>";
-
 		if (item.getType() == TAG_TYPE.WRITE_STRING)
 			return "string_write<WTX_STRING>";
-
-		ModelSiemens.logSiem.debug("Errore tipo: " + item.toStringExtended());
+		ModelSiemens.logSiem.error("Errore tipo: " + item.toStringExtended());
 		return "null type";
 	}
 
@@ -232,7 +185,6 @@ public class ItemStruct extends Item {
 			CellStyle styleWrites_InitialRow, CellStyle stylePlates_InitialRow, boolean flagFirstLineInStruct,boolean enableFlagFirstLineInStruct, Item item, Row rowGen) {
 		for (int i = 0; i < rowGen.getLastCellNum(); i++) {
 			if (rowGen.getCell(i) != null) {
-
 				if (item.getType() == Item.TAG_TYPE.ALARM_BIT) {
 					if (flagFirstLineInStruct&&enableFlagFirstLineInStruct) {
 						rowGen.getCell(i).setCellStyle(styleAlarms_InitialRow);
@@ -266,7 +218,6 @@ public class ItemStruct extends Item {
 						rowGen.getCell(i).setCellStyle(stylePlates);
 					}
 				}
-
 			}
 		}
 	}
@@ -434,19 +385,16 @@ public class ItemStruct extends Item {
 	private String getLevel(String comment) {
 		if (comment.isBlank() || comment.isEmpty())
 			return "LineOps";
-
 		Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(comment);
 		while (m.find()) {
 			comment = m.group(1);
 		}
-
 		Pattern pattern = Pattern.compile("[^|]*|");
 		Matcher matcher = pattern.matcher(comment);
 		int count = 0;
 		while (matcher.find()) {
 			count++;
 		}
-
 		if (count == 4) {
 			if (comment.split("\\|")[4].equals("A") || comment.split("\\|")[4].equals("a"))
 				return "Administrators";
@@ -467,7 +415,6 @@ public class ItemStruct extends Item {
 				comment = comment.split("\\{")[1];
 				if (comment.contains("}"))
 					comment = comment.split("\\}")[0];
-
 				if (comment.split("\\|")[0].equals("X") || comment.split("\\|")[0].equals("x"))
 					str1 = "";
 				else
@@ -480,25 +427,21 @@ public class ItemStruct extends Item {
 			}
 		}
 		return "";
-
 	}
 
 	private String getHightLimit(String comment) {
 		if (comment.isBlank() || comment.isEmpty())
 			return "99999999";
-
 		Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(comment);
 		while (m.find()) {
 			comment = m.group(1);
 		}
-
 		Pattern pattern = Pattern.compile("[^|]*|");
 		Matcher matcher = pattern.matcher(comment);
 		int count = 0;
 		while (matcher.find()) {
 			count++;
 		}
-
 		if (count == 4) {
 			if (comment.split("\\|")[3].equals("X") || comment.split("\\|")[3].equals("x"))
 				return "99999999";
@@ -514,14 +457,12 @@ public class ItemStruct extends Item {
 		while (m.find()) {
 			comment = m.group(1);
 		}
-
 		Pattern pattern = Pattern.compile("[^|]*|");
 		Matcher matcher = pattern.matcher(comment);
 		int count = 0;
 		while (matcher.find()) {
 			count++;
 		}
-
 		if (count == 4) {
 			if (comment.split("\\|")[2].equals("X") || comment.split("\\|")[2].equals("x"))
 				return "-99999999";
@@ -636,7 +577,6 @@ public class ItemStruct extends Item {
 
 	@Override
 	public Item clone() throws CloneNotSupportedException {
-
 		ItemStruct st = new ItemStruct(this.getTitleUDT(), this.getDbName(), this.getName(), this.getComment(),
 				this.getAddress().clone(), this.getParent(), this.getByteSize(), this.getBitSize());
 		st.getStructlist().clear();
@@ -696,7 +636,6 @@ public class ItemStruct extends Item {
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct, 0,
 				0);
 		ModelSiemens.getgAddr().incrementAddress(0, 0);
-//		ModelSiemens.logSiem.info(itemStruct.toStringExtended());
 		return itemStruct;
 	}
 
@@ -707,7 +646,6 @@ public class ItemStruct extends Item {
 		ItemStruct itemStruct = new ItemStruct("Struct generic", workingStruct.getDbName(),
 				ModelSiemens.getNameItemFromStringLine(lineReaded), "",
 				new Address(workingStruct.getAddress().getDB(), 0, 0), workingStruct, 0, 0);
-//		ModelSiemens.logSiem.info(itemStruct.toStringExtended());
 		return itemStruct;
 	}
 
@@ -719,7 +657,6 @@ public class ItemStruct extends Item {
 	public void setSize(int gByte, int gBit) {
 		this.sizeByte = gByte;
 		this.sizeBit = gBit;
-
 	}
 
 	public int getByteSize() {
@@ -740,13 +677,11 @@ public class ItemStruct extends Item {
 	}
 
 	public void updateName(String nameItem) {
-//		ModelSiemens.logSiem.info("updating name: " + nameItem);
 		this.name = nameItem;
 	}
 
 	@Override
 	public void updateDbName(String nameDbItem) {
-//		ModelSiemens.logSiem.info("updating nameDbItem: " + nameDbItem);
 		this.dbName = nameDbItem;
 		for (Item item : getListStructsList()) {
 			item.updateDbName(nameDbItem);
@@ -778,7 +713,6 @@ public class ItemStruct extends Item {
 	}
 
 	public void updateTitleUdt(String string) {
-//		ModelSiemens.logSiem.info("updating titleUDT: " + string);
 		this.titleUDT = string;
 	}
 

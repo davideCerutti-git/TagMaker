@@ -1,10 +1,6 @@
 package model.rockwell;
 
 public class Member {
-	
-	/**
-	 * Fields
-	 */
 	private String fName;
 	private String fDataType;
 	private int fDimension;
@@ -14,65 +10,77 @@ public class Member {
 	private String fTarget;
 	private int fBitNumber;
 	private String fDescription;
-	
-	
-	/**
-	 * Getter & Setter
-	 */
+
 	public String getfName() {
-		return fName;
+		return this.fName;
 	}
+
 	public void setfName(String fName) {
 		this.fName = fName;
 	}
+
 	public String getfDataType() {
-		return fDataType;
+		return this.fDataType;
 	}
+
 	public void setfDataType(String fDataType) {
 		this.fDataType = fDataType;
 	}
+
 	public int getfDimension() {
-		return fDimension;
+		return this.fDimension;
 	}
+
 	public void setfDimension(int fDimension) {
 		this.fDimension = fDimension;
 	}
+
 	public String getfRadix() {
-		return fRadix;
+		return this.fRadix;
 	}
+
 	public void setfRadix(String fRadix) {
 		this.fRadix = fRadix;
 	}
+
 	public boolean isfHidden() {
-		return fHidden;
+		return this.fHidden;
 	}
+
 	public void setfHidden(boolean fHidden) {
 		this.fHidden = fHidden;
 	}
+
 	public String getfExternalAccess() {
-		return fExternalAccess;
+		return this.fExternalAccess;
 	}
+
 	public void setfExternalAccess(String fExternalAccess) {
 		this.fExternalAccess = fExternalAccess;
 	}
+
 	public String getfTarget() {
-		return fTarget;
+		return this.fTarget;
 	}
+
 	public void setfTarget(String fTarget) {
 		this.fTarget = fTarget;
 	}
+
 	public int getfBitNumber() {
-		return fBitNumber;
+		return this.fBitNumber;
 	}
+
 	public void setfBitNumber(int fBitNumber) {
 		this.fBitNumber = fBitNumber;
 	}
+
 	public String getfDescription() {
-		return fDescription;
+		return this.fDescription;
 	}
+
 	public void setfDescription(String fDescription) {
 		this.fDescription = fDescription;
 	}
-	
-	
+
 }

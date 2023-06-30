@@ -4,29 +4,21 @@ import java.util.ArrayList;
 import settings.Settings;
 
 public class Tag {
-
 	public static final String ALARMSs = "ALARM_CHANNEL";
 	public static final String READs = "READ_CHANNEL";
 	public static final String WRITEs = "WRITE_CHANNEL";
 	public static final String RAWs = "RAW_CHANNEL";
-	/**
-	 * Fields
-	 */
 	private String fName;
 	private String fTagType;
 	private String DataType;
 	private boolean fConstant;
 	private String fExternalAccess;
-	private String fDimensions="";
+	private String fDimensions = "";
 	private ArrayList<Comment> fComments;
 	private ArrayList<Data> fData;
-	
 
-	/**
-	 * Getter & Setter
-	 */
 	public String getfName() {
-		return fName;
+		return this.fName;
 	}
 
 	public void setfName(String fName) {
@@ -34,7 +26,7 @@ public class Tag {
 	}
 
 	public String getfTagType() {
-		return fTagType;
+		return this.fTagType;
 	}
 
 	public void setfTagType(String fTagType) {
@@ -42,15 +34,15 @@ public class Tag {
 	}
 
 	public String getDataType() {
-		return DataType;
+		return this.DataType;
 	}
 
 	public void setDataType(String dataType) {
-		DataType = dataType;
+		this.DataType = dataType;
 	}
 
 	public boolean isfConstant() {
-		return fConstant;
+		return this.fConstant;
 	}
 
 	public void setfConstant(boolean fConstant) {
@@ -58,7 +50,7 @@ public class Tag {
 	}
 
 	public String getfExternalAccess() {
-		return fExternalAccess;
+		return this.fExternalAccess;
 	}
 
 	public void setfExternalAccess(String fExternalAccess) {
@@ -66,7 +58,7 @@ public class Tag {
 	}
 
 	public String getfDimensions() {
-		return fDimensions;
+		return this.fDimensions;
 	}
 
 	public void setfDimensions(String fDimensions) {
@@ -74,7 +66,7 @@ public class Tag {
 	}
 
 	public ArrayList<Comment> getfComments() {
-		return fComments;
+		return this.fComments;
 	}
 
 	public void setfComments(ArrayList<Comment> fComments) {
@@ -94,7 +86,6 @@ public class Tag {
 				return ALARMSs;
 			}
 		}
-
 		stringsArray = null;
 		try {
 			stringsArray = properties.getProperty("suffixList_READs").trim().split(";");
@@ -107,7 +98,6 @@ public class Tag {
 				return READs;
 			}
 		}
-
 		stringsArray = null;
 		try {
 			stringsArray = properties.getProperty("suffixList_WRITEs").trim().split(";");
@@ -120,15 +110,15 @@ public class Tag {
 				return WRITEs;
 			}
 		}
-
 		return RAWs;
 	}
 
 	public ArrayList<Data> getfData() {
-		return fData;
+		return this.fData;
 	}
 
 	public void setfData(ArrayList<Data> fData) {
 		this.fData = fData;
 	}
+
 }

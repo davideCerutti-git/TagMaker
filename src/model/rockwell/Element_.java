@@ -1,6 +1,10 @@
 package model.rockwell;
 
 public class Element_ {
+	
+	private String index;
+	private Structure structure;
+	
 	public String getIndex() {
 		return index;
 	}
@@ -16,8 +20,5 @@ public class Element_ {
 	public void setStructure(Structure structure) {
 		this.structure = structure;
 	}
-
-	private String index;
-	private Structure structure;
 
 }

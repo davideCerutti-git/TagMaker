@@ -1,9 +1,7 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
-import model.siemens.Address;
-import model.siemens.ModelSiemens;
+import model.siemens.*;
 
 public class ItemUSInt extends Item {
 
@@ -42,14 +40,11 @@ public class ItemUSInt extends Item {
 	}
 	
 	public static Item makeItemFromString(ItemStruct workingStruct, String str, boolean typeChanged) {
-//		ModelSiemens.logSiem
-//				.warn("Byte start:" + ModelSiemens.getgAddr().gByte() + " - " + ModelSiemens.getgAddr().gBit());
 		String comment = "";
 		if (str.split("//").length > 1) {
 			comment = str.split("//")[1].trim();
 		}
 		if (typeChanged) {
-//			ModelSiemens.logSiem.info("typeChanged");
 			if (ModelSiemens.getgAddr().gBit() > 0) {
 				ModelSiemens.getgAddr().incrementAddress(1, 0);
 				ModelSiemens.getgAddr().setBit(0);
@@ -61,7 +56,6 @@ public class ItemUSInt extends Item {
 		ItemUSInt itemUSInt = new ItemUSInt(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(1, 0);
-//		ModelSiemens.logSiem.info(itemUSInt.toStringExtended());
 		return itemUSInt;
 	}
 
@@ -71,11 +65,8 @@ public class ItemUSInt extends Item {
 	}
 
 	public void addAddresRec(Address gAddr) {
-//		ModelSiemens.logSiem.info("INT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.logSiem.info("INT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
-//		ModelSiemens.getgAddr().incrementAddress(2, 0);
 	}
 
 	@Override
@@ -109,7 +100,6 @@ public class ItemUSInt extends Item {
 		rowGen.createCell(5).setCellValue(strFormula);
 		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBW" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
-
 		if (item.getSimbolicName().toString().contains(".R."))
 			rowGen.createCell(6).setCellValue("Int_read<AI_INT>");// TODO questo è un USInt ma per il momento viene
 																	// trattato come Int
@@ -117,4 +107,5 @@ public class ItemUSInt extends Item {
 			rowGen.createCell(6).setCellValue("Int_write<WAI_INT>");// TODO questo è un USInt ma per il momento viene
 																	// trattato come Int
 	}
+	
 }

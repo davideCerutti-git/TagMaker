@@ -1,7 +1,6 @@
 package model.siemens.items;
 
 import org.apache.poi.ss.usermodel.Row;
-
 import model.siemens.Address;
 import model.siemens.ModelSiemens;
 
@@ -12,7 +11,7 @@ public class ItemDint extends Item {
 	public ItemDint(String dbName, String stringName, String stringComment, Address addressGlobal, ItemStruct _parent) {
 		this.dbName = dbName;
 		this.value = 0;
-		this.name = stringName;// .replaceAll("\"", "");
+		this.name = stringName;
 		this.comment = stringComment;
 		this.address = addressGlobal;
 		this.selected = false;
@@ -58,7 +57,6 @@ public class ItemDint extends Item {
 		ItemDint itemdint = new ItemDint(workingStruct.getDbName(), str.split(":")[0].trim(), comment,
 				new Address(workingStruct.getAddress().getDB(), ModelSiemens.getgAddr().gByte(), 0), workingStruct);
 		ModelSiemens.getgAddr().incrementAddress(4, 0);
-//		ModelSiemens.logSiem.info(itemdint.toStringExtended());
 		return itemdint;
 	}
 
@@ -68,10 +66,8 @@ public class ItemDint extends Item {
 	}
 
 	public void addAddresRec(Address gAddr) {
-//		ModelSiemens.logSiem.info("DINT this: "+this.address.gByte()+"  +  global: "+gAddr.gByte());
 		this.address.setDB_fromAddress(gAddr);
 		this.address.add(gAddr);
-//		ModelSiemens.getgAddr().incrementAddress(4, 0);
 	}
 
 	@Override
@@ -109,6 +105,6 @@ public class ItemDint extends Item {
 			rowGen.createCell(6).setCellValue("Dint_read<AI_DINT>");
 		if (item.getSimbolicName().toString().contains(".W."))
 			rowGen.createCell(6).setCellValue("Dint_write<WAI_DINT>");
-
 	}
+	
 }

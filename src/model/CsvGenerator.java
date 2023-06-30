@@ -1,29 +1,12 @@
 package model;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.io.FilenameUtils;
+import java.io.*;
+import java.util.*;
 import org.apache.log4j.Logger;
-import controller.MainViewControllerRockwell;
-import controller.MainViewControllerSiemens;
-import controller.ViewController;
-import model.rockwell.ModelRockwell;
-import model.siemens.ModelSiemens;
+import controller.*;
 import settings.Settings;
 
 public class CsvGenerator {
-
-	/*
-	 * ================================================================== Liste di
-	 * "righe" prese dal file Excel DA = digital alarm
-	 * ==================================================================
-	 */
 	private ArrayList<EntryXlsx> listEntry_DA = new ArrayList<EntryXlsx>();
 	private ArrayList<EntryXlsx> listEntry_DI = new ArrayList<EntryXlsx>();
 	private ArrayList<EntryXlsx> listEntry_AI = new ArrayList<EntryXlsx>();
@@ -41,7 +24,6 @@ public class CsvGenerator {
 	private List<String> listOfScaleDiv_1000;
 	private List<String> listOfScaleDiv_100;
 	private List<String> listOfScaleDiv_10;
-	private String fileNameNoExtension;
 
 	private static Settings properties;
 	private static Logger logger;
@@ -52,68 +34,56 @@ public class CsvGenerator {
 		CsvGenerator.logger = logger;
 		CsvGenerator.controller = controller;
 	}
-	//-----
+
 	/**
 	 * @param path
 	 * @throws IOException
 	 */
-	public void generateCSV(String path, boolean flagSymbolicAddress,boolean flagRockwellSiemens) throws IOException {
-
+	public void generateCSV(String path, boolean flagSymbolicAddress, boolean flagRockwellSiemens) throws IOException {
 		String[] arrayMul1000000 = properties.getProperty("scaleMul_1000000").split(";");
 		for (String s : arrayMul1000000) {
 			s = s.trim();
 		}
-
 		String[] arrayMul100000 = properties.getProperty("scaleMul_100000").split(";");
 		for (String s : arrayMul100000) {
 			s = s.trim();
 		}
-
 		String[] arrayMul10000 = properties.getProperty("scaleMul_10000").split(";");
 		for (String s : arrayMul10000) {
 			s = s.trim();
 		}
-
 		String[] arrayMul1000 = properties.getProperty("scaleMul_1000").split(";");
 		for (String s : arrayMul1000) {
 			s = s.trim();
 		}
-
 		String[] arrayMul100 = properties.getProperty("scaleMul_100").split(";");
 		for (String s : arrayMul100) {
 			s = s.trim();
 		}
-
 		String[] arrayMul10 = properties.getProperty("scaleMul_10").split(";");
 		for (String s : arrayMul10) {
 			s = s.trim();
 		}
-
 		String[] arrayDiv1000000 = properties.getProperty("scaleDiv_1000000").split(";");
 		for (String s : arrayDiv1000000) {
 			s = s.trim();
 		}
-
 		String[] arrayDiv100000 = properties.getProperty("scaleDiv_100000").split(";");
 		for (String s : arrayDiv100000) {
 			s = s.trim();
 		}
-
 		String[] arrayDiv10000 = properties.getProperty("scaleDiv_10000").split(";");
 		for (String s : arrayDiv10000) {
 			s = s.trim();
 		}
-
 		String[] arrayDiv1000 = properties.getProperty("scaleDiv_1000").split(";");
 		for (String s : arrayDiv1000) {
 			s = s.trim();
 		}
-
 		String[] arrayDiv100 = properties.getProperty("scaleDiv_100").split(";");
 		for (String s : arrayDiv100) {
 			s = s.trim();
 		}
-
 		String[] arrayDiv10 = properties.getProperty("scaleDiv_10").split(";");
 		for (String s : arrayDiv10) {
 			s = s.trim();
@@ -133,30 +103,22 @@ public class CsvGenerator {
 		listOfScaleDiv_100 = Arrays.asList(arrayDiv100);
 		listOfScaleDiv_10 = Arrays.asList(arrayDiv10);
 
-		File f = new File(path);
-		fileNameNoExtension = FilenameUtils.removeExtension(f.getName());
-
 		BufferedWriter writer = new BufferedWriter(new FileWriter(path));
 		writer.write(properties.getProperty("csvHeaderMain_1") + "\n\n");
 		writer.write(properties.getProperty("csvHeaderMain_2") + "\n");
 
 		if (!listEntry_DA.isEmpty()) {
-
 			writer.write(properties.getProperty("csvHeader1_DA") + "\n");
 			writer.write(properties.getProperty("csvHeader2_DA") + "\n");
 			List<String[]> listRows_DA = new ArrayList<String[]>();
 			for (EntryXlsx entry : listEntry_DA) {
 				if (entry.fDescrizioneEstesa.isEmpty() || entry.fDescrizioneEstesa.isBlank()) {
 				} else {
-					if (listRows_DA == null) {
-						;
-					}
-					listRows_DA.add(generateEntryVectString_DA(entry, flagSymbolicAddress,flagRockwellSiemens));
+					listRows_DA.add(generateEntryVectString_DA(entry, flagSymbolicAddress, flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_DA);
 		}
-
 		if (!listEntry_AA.isEmpty()) {
 			writer.write(properties.getProperty("csvHeader1_AA") + "\n");
 			writer.write(properties.getProperty("csvHeader2_AA") + "\n");
@@ -165,12 +127,11 @@ public class CsvGenerator {
 				if (entry.fDescrizioneEstesa.isEmpty()) {
 					;
 				} else {
-					listRows_AA.add(generateEntryVectString_AA(entry, flagSymbolicAddress,flagRockwellSiemens));
+					listRows_AA.add(generateEntryVectString_AA(entry, flagSymbolicAddress, flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_AA);
 		}
-
 		if (!listEntry_DI.isEmpty()) {
 			writer.write("\n" + properties.getProperty("header1_DI") + "\n");
 			writer.write(properties.getProperty("header2_DI") + "\n");
@@ -179,12 +140,11 @@ public class CsvGenerator {
 				if (entry.fDescrizioneEstesa.isEmpty()) {
 					;
 				} else {
-					listRows_DI.add(generateEntryVectString_DI(entry, flagSymbolicAddress,flagRockwellSiemens));
+					listRows_DI.add(generateEntryVectString_DI(entry, flagSymbolicAddress, flagRockwellSiemens));
 				}
 			}
 			write(writer, listRows_DI);
 		}
-
 		if (!listEntry_AI.isEmpty()) {
 			writer.write("\n" + properties.getProperty("header1_AI") + "\n");
 			writer.write(properties.getProperty("header2_AI") + "\n");
@@ -198,7 +158,6 @@ public class CsvGenerator {
 			}
 			write(writer, listRows_AI);
 		}
-
 		writer.write("\n" + properties.getProperty("csvFileEndFileString"));
 		writer.flush();
 		writer.close();
@@ -224,16 +183,15 @@ public class CsvGenerator {
 	 * @throws IOException
 	 */
 	private void writeEntry(BufferedWriter writer, String[] vect) throws IOException {
-
 		writer.write("\"");
 		for (String s : vect) {
 			writer.write(s + "\";\"");
 		}
 		writer.write("\"\n");
-
 	}
 
-	private String[] generateEntryVectString_AA(EntryXlsx entry, boolean flagSymbolicAddress,boolean flagRockwellSiemens) {
+	private String[] generateEntryVectString_AA(EntryXlsx entry, boolean flagSymbolicAddress,
+			boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "AA");
 		array.add(1, entry.getfTagNameSCADA());
@@ -242,7 +200,6 @@ public class CsvGenerator {
 		// TODO finire
 		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
-		// TODO finire
 		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(7, "AUTO");
 		array.add(8, "ON");
@@ -306,7 +263,6 @@ public class CsvGenerator {
 		array.add(66, "DISABLE");
 		array.add(67, "DISABLE");
 		array.add(68, "");
-
 		String[] arr = new String[array.size()];
 		arr = array.toArray(arr);
 		return arr;
@@ -316,18 +272,16 @@ public class CsvGenerator {
 	 * @param entry
 	 * @return
 	 */
-	private String[] generateEntryVectString_DA(EntryXlsx entry, boolean flagSymbolicAddress,boolean flagRockwellSiemens) {
+	private String[] generateEntryVectString_DA(EntryXlsx entry, boolean flagSymbolicAddress,
+			boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "DA");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
-		// array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
 		array.add(3, cleanNewLines(entry));
 		// TODO finire
 		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
-		// TODO finire
-		getDriverPrefix();
 		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(7, "AUTO");
 		array.add(8, "ON");
@@ -391,7 +345,6 @@ public class CsvGenerator {
 		array.add(66, "DISABLE");
 		array.add(67, "DISABLE");
 		array.add(68, "");
-
 		String[] arr = new String[array.size()];
 		arr = array.toArray(arr);
 		return arr;
@@ -401,7 +354,8 @@ public class CsvGenerator {
 	 * @param entry
 	 * @return
 	 */
-	private String[] generateEntryVectString_DI(EntryXlsx entry, boolean flagSymbolicAddress,boolean flagRockwellSiemens) {
+	private String[] generateEntryVectString_DI(EntryXlsx entry, boolean flagSymbolicAddress,
+			boolean flagRockwellSiemens) {
 		ArrayList<String> array = new ArrayList<String>();
 		array.add(0, "DI");
 		array.add(1, entry.getfTagNameSCADA());
@@ -409,7 +363,6 @@ public class CsvGenerator {
 		array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
 		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
-		// TODO il false è da correggere
 		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
 		array.add(7, "AUTO");
 		array.add(8, "ON");
@@ -465,7 +418,6 @@ public class CsvGenerator {
 		array.add(58, "0");
 		array.add(59, "DISABLE");
 		array.add(60, "");
-
 		String[] arr = new String[array.size()];
 		arr = array.toArray(arr);
 		return arr;
@@ -561,7 +513,6 @@ public class CsvGenerator {
 		array.add(71, getScaleHigh(entry));// scale high
 		array.add(72, "DISABLE");
 		array.add(73, "");
-
 		String[] arr = new String[array.size()];
 		arr = array.toArray(arr);
 		return arr;
@@ -636,7 +587,6 @@ public class CsvGenerator {
 			} else if (umPlc.equals(umScada)) {
 				return "1";// per 1
 			}
-
 			logger.error("Conversion rule not found -> " + umConversion);
 		}
 		return "1";
@@ -857,7 +807,6 @@ public class CsvGenerator {
 		if (s2.contains(";")) {
 			s3 = s2.replace(";", " ");
 		}
-
 		return s3;
 	}
 
@@ -868,15 +817,12 @@ public class CsvGenerator {
 	 * @return
 	 */
 	private String getContentOfBraces(String string) {
-
-//		System.out.println(string);
 		// TODO aggiungere test
 		if (string.contains("{") && string.contains("}")) {
 			String s1 = string.split("\\{")[1].trim();
 			String s2 = s1.split("\\}")[0].trim();
 			return s2;
 		}
-
 		return "NO PARAMETERS";
 	}
 
@@ -888,13 +834,11 @@ public class CsvGenerator {
 	 */
 	private String getContentNoBraces(String string) {
 		String s2 = "";
-//		String s = string.replaceAll("\\{.*?\\}", "").trim().replaceAll("\\(.*?\\)", "");
 		if (string.contains("=")) {
 			s2 = string.replace("=", "\'=\'");
 		}
 		String s3 = s2.replaceAll(";", "");
 		String s4 = s3.replaceAll("\"", "");
-//		System.out.println(s4);
 		return s4;
 	}
 

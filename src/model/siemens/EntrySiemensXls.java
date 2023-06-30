@@ -9,26 +9,10 @@ public class EntrySiemensXls extends EntryXlsx {
 	private String fBitNumber;
 	private String fAddrAbsPlc;
 
-	public EntrySiemensXls(
-			String fDbNumber,
-			String fWordNumber,
-			String fBitNumber, 
-			String fAddrSymPlc,
-			String fAddrAbsPlc, 
-			String fTagNameSCADA,
-			String fTipo,
-			int fSviluppo, 
-			String fSigla, 
-			String fDescrizione,
-			String fDescrizioneEstesa,
-			String fLimiteMIN, 
-			String fLimiteMAX, 
-			String fUM,
-			String fUsoDelBit,
-			String fCommento, 
-			String fLivello, 
-			String fUpdated,
-			boolean flag_print) {
+	public EntrySiemensXls(String fDbNumber, String fWordNumber, String fBitNumber, String fAddrSymPlc,
+			String fAddrAbsPlc, String fTagNameSCADA, String fTipo, int fSviluppo, String fSigla, String fDescrizione,
+			String fDescrizioneEstesa, String fLimiteMIN, String fLimiteMAX, String fUM, String fUsoDelBit,
+			String fCommento, String fLivello, String fUpdated, boolean flag_print) {
 		super(fDbNumber, fWordNumber, fBitNumber, fAddrSymPlc, fAddrAbsPlc, fTagNameSCADA, fTipo, fSviluppo, fSigla,
 				fDescrizione, fDescrizioneEstesa, fLimiteMIN, fLimiteMAX, fUM, fUsoDelBit, fCommento, fLivello,
 				fUpdated, flag_print);
@@ -37,13 +21,7 @@ public class EntrySiemensXls extends EntryXlsx {
 		this.fBitNumber = fBitNumber;
 		this.fAddrAbsPlc = fAddrAbsPlc;
 		this.fDescrizioneEstesa = fDescrizioneEstesa.replaceAll("\"", "").replaceAll(";", "").trim();
-		
-//		System.out.println(fDescrizioneEstesa);
 	}
-
-	/**
-	 * Getter and Setter
-	 */
 
 	/**
 	 * @return the fAddrAbsPlc
