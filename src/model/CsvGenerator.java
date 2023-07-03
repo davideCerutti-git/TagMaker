@@ -196,7 +196,7 @@ public class CsvGenerator {
 		array.add(0, "AA");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
-		array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
+		array.add(3, cleanNewLines(entry));
 		// TODO finire
 		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
@@ -360,7 +360,7 @@ public class CsvGenerator {
 		array.add(0, "DI");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
-		array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
+		array.add(3, cleanNewLines(entry));
 		array.add(4, getDriverName(flagRockwellSiemens));
 		array.add(5, "");
 		array.add(6, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
@@ -394,8 +394,8 @@ public class CsvGenerator {
 		array.add(34, "");
 		array.add(35, "");
 		array.add(36, "");
-		array.add(37, cleanNewLines(entry));
-		array.add(38, cleanNewLines(entry));
+		array.add(37, "");//cleanNewLines(entry));
+		array.add(38, "");//cleanNewLines(entry));
 		array.add(39, "NONE");
 		array.add(40, "YES");
 		array.add(41, "NO");
@@ -433,7 +433,7 @@ public class CsvGenerator {
 		array.add(0, "AI");
 		array.add(1, entry.getfTagNameSCADA());
 		array.add(2, "");
-		array.add(3, getContentNoBraces(entry.getfDescrizioneEstesa()));
+		array.add(3, cleanNewLines(entry));
 		array.add(4, "ON");
 		array.add(5, "0,10");// Scan time
 		array.add(6, "0");
@@ -482,8 +482,8 @@ public class CsvGenerator {
 		array.add(40, "");
 		array.add(41, "");
 		array.add(42, "");
-		array.add(43, cleanNewLines(entry));// descrizione pulita da ritorni a capo e ; e con = modificati in '='
-		array.add(44, cleanNewLines(entry));// descrizione pulita da ritorni a capo e ; e con = modificati in '='
+		array.add(43, "");//cleanNewLines(entry));// descrizione pulita da ritorni a capo e ; e con = modificati in '='
+		array.add(44, "");//cleanNewLines(entry));// descrizione pulita da ritorni a capo e ; e con = modificati in '='
 		array.add(45, "NONE");
 		array.add(46, "YES");
 		array.add(47, "NO");
