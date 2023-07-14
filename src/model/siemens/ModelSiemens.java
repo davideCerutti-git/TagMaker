@@ -1561,6 +1561,7 @@ public class ModelSiemens {
 		this.getCsvGenerator().getListEntry_AA().clear();
 		this.getCsvGenerator().getListEntry_DI().clear();
 		this.getCsvGenerator().getListEntry_AI().clear();
+		this.getCsvGenerator().getListEntry_TX().clear();
 	}
 
 	public void setController(MainViewControllerSiemens mainController) {
