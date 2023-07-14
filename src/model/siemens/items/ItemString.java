@@ -157,7 +157,8 @@ public class ItemString extends Item {
 				+ ItemStruct.intToStringFormatted(item.getAddress().getDB()) + "TX"
 				+ ItemStruct.intToStringFormatted(item.getAddress().gByte());
 		rowGen.createCell(5).setCellValue(strFormula);
-		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBS" + item.getAddress().gByte());
+		rowGen.createCell(4).setCellValue("DB" + item.getAddress().getDB() + ".DBT" + item.getAddress().gByte());
+		ModelSiemens.logSiem.debug("DB" + item.getAddress().getDB() + ".DBT" + item.getAddress().gByte());
 		rowGen.createCell(3).setCellValue(item.getSimbolicName().toString());
 		if (item.getSimbolicName().toString().contains(".R."))
 			rowGen.createCell(6).setCellValue("String_read<AI_STRING>");

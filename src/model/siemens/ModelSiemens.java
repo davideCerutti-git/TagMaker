@@ -1495,10 +1495,8 @@ public class ModelSiemens {
 								|| entry.getfTipo().trim().equals("bit_manual_cmd<DI_BIT>")
 								|| entry.getfTipo().trim().equals("bit_write<WDI_BIT>")) {
 							this.getCsvGenerator().getListEntry_DI().add(entry);
-						} else if (entry.getfTipo().trim().equals("string_write<WTX_STRING>")
-								|| entry.getfTipo().trim().equals("dint_read<AI_DINT>")
+						} else if (entry.getfTipo().trim().equals("dint_read<AI_DINT>")
 								|| entry.getfTipo().trim().equals("int_write<WAI_INT>")
-								|| entry.getfTipo().trim().equals("string_read<TX_STRING>")
 								|| entry.getfTipo().trim().equals("real_write<WAI_REAL>")
 								|| entry.getfTipo().trim().equals("dint_write<WAI_DINT>")
 								|| entry.getfTipo().trim().equals("int_read<AI_INT>")
@@ -1506,7 +1504,11 @@ public class ModelSiemens {
 								|| entry.getfTipo().trim().equals("byte_write<WDI_BYTE>")
 								|| entry.getfTipo().trim().equals("byte_read<DI_BYTE>")) {
 							this.getCsvGenerator().getListEntry_AI().add(entry);
-						} else {
+						}else if (entry.getfTipo().trim().equals("string_write<WTX_STRING>")
+								|| entry.getfTipo().trim().equals("string_read<TX_STRING>")) {
+							this.getCsvGenerator().getListEntry_TX().add(entry);
+						}
+						else {
 							ModelSiemens.logSiem.error("Errore. Tipo non riconosciuto: " + entry.getfTipo().trim());
 							return false;
 						}

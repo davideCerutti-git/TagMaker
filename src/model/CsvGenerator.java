@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import org.apache.log4j.Logger;
 import controller.*;
+import model.siemens.ModelSiemens;
 import settings.Settings;
 
 public class CsvGenerator {
@@ -11,6 +12,7 @@ public class CsvGenerator {
 	private ArrayList<EntryXlsx> listEntry_DI = new ArrayList<EntryXlsx>();
 	private ArrayList<EntryXlsx> listEntry_AI = new ArrayList<EntryXlsx>();
 	private ArrayList<EntryXlsx> listEntry_AA = new ArrayList<EntryXlsx>();
+	private ArrayList<EntryXlsx> listEntry_TX = new ArrayList<EntryXlsx>();
 
 	private List<String> listOfScaleMul_1000000;
 	private List<String> listOfScaleMul_100000;
@@ -119,6 +121,20 @@ public class CsvGenerator {
 			}
 			write(writer, listRows_DA);
 		}
+		
+		if (!listEntry_TX.isEmpty()) {
+			writer.write(properties.getProperty("csvHeader1_TX") + "\n");
+			writer.write(properties.getProperty("csvHeader2_TX") + "\n");
+			List<String[]> listRows_TX = new ArrayList<String[]>();
+			for (EntryXlsx entry : listEntry_TX) {
+				if (entry.fDescrizioneEstesa.isEmpty() || entry.fDescrizioneEstesa.isBlank()) {
+				} else {
+					listRows_TX.add(generateEntryVectString_TX(entry, flagSymbolicAddress, flagRockwellSiemens));
+				}
+			}
+			write(writer, listRows_TX);
+		}
+		
 		if (!listEntry_AA.isEmpty()) {
 			writer.write(properties.getProperty("csvHeader1_AA") + "\n");
 			writer.write(properties.getProperty("csvHeader2_AA") + "\n");
@@ -345,6 +361,74 @@ public class CsvGenerator {
 		array.add(66, "DISABLE");
 		array.add(67, "DISABLE");
 		array.add(68, "");
+		String[] arr = new String[array.size()];
+		arr = array.toArray(arr);
+		return arr;
+	}
+	
+	
+	/**
+	 * @param entry
+	 * @return
+	 */
+	private String[] generateEntryVectString_TX(EntryXlsx entry, boolean flagSymbolicAddress,
+			boolean flagRockwellSiemens) {
+		ArrayList<String> array = new ArrayList<String>();
+		array.add(0, "TX");
+		array.add(1, entry.getfTagNameSCADA());
+		array.add(2, "ON");
+		array.add(3, "1");
+		array.add(4, "AUTO");
+		array.add(5, getDriverName(flagRockwellSiemens));
+		array.add(6, "");
+		array.add(7, getDriverPrefix() + (flagSymbolicAddress ? entry.getfAddrPlc() : entry.getfAddrAbsPlc()));
+		array.add(8, "20");
+		array.add(9, "ENABLE");
+		array.add(10, "NONE");
+		array.add(11, "DISABLE");
+		array.add(12, "NONE");
+		array.add(13, "NONE");
+		array.add(14, "NONE");
+		array.add(15, "ALL");
+		array.add(16, "");
+		array.add(17, "");
+		array.add(18, "");
+		array.add(19, "");
+		array.add(20, "");
+		array.add(21, "");
+		array.add(22, "");
+		array.add(23, "");
+		array.add(24, "");
+		array.add(25, "");
+		array.add(26, "");
+		array.add(27, "");
+		array.add(28, "");
+		array.add(29, "");
+		array.add(30, "");
+		array.add(31, "");
+		array.add(32, cleanNewLines(entry));
+		array.add(33, "NONE");
+		array.add(34, "NO");
+		array.add(35, "YES");
+		array.add(36, "REJECT");
+		array.add(37, "NO");
+		array.add(38, "0");
+		array.add(39, "1.000");
+		array.add(40, "0");
+		array.add(41, "NO");
+		array.add(42, "NO");
+		array.add(43, "0");
+		array.add(44, "0");
+		array.add(45, "NO");
+		array.add(46, "5.000,0");
+		array.add(47, "0,0");
+		array.add(48, "Milliseconds");
+		array.add(49, "DISABLE");
+		array.add(50, "0,0000");
+		array.add(51, "Absolute");
+		array.add(52, "0");
+		array.add(53, "DISABLE");
+		array.add(54, "DISABLE");
 		String[] arr = new String[array.size()];
 		arr = array.toArray(arr);
 		return arr;
@@ -847,6 +931,13 @@ public class CsvGenerator {
 	 */
 	public ArrayList<EntryXlsx> getListEntry_DA() {
 		return listEntry_DA;
+	}
+	
+	/**
+	 * @return the listEntry_TX
+	 */
+	public ArrayList<EntryXlsx> getListEntry_TX() {
+		return listEntry_TX;
 	}
 
 	/**
