@@ -407,7 +407,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 				+ "					FixReadCap_copy=331\n"
 				+ "in questo file viene indicato a sinistra dell'uguale il nome simbolico della db e a destra il numero della db");
 		makePopOverInfo(buttonXlsxToCsv,
-				"Converte un file xlsx (formato Bottero) in \nfile csv (formato importabile in iFix)\nPer il momento solo in assoluto!");
+				"Converte un file xlsx (formato Bottero) in \nfile csv (formato importabile in iFix)");
 		ToggleGroup tg = new ToggleGroup();
 		rbAbsolute.setSelected(Boolean.parseBoolean(properties.getProperty("absoluteAddressSelected")));
 		rbSymbolic.setSelected(!Boolean.parseBoolean(properties.getProperty("absoluteAddressSelected")));
