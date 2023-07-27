@@ -173,9 +173,13 @@ public class ModelSiemens {
 		ModelSiemens.getgAddr().resetAddress();
 		ModelSiemens.getgAddr().setDB(tmp_num_db);
 		dblist.add(tmpDbBlock);
-		while ((!line.contains("STRUCT") && !line.contains("VAR")) && line != null) {
+		line = br.readLine();
+//		ModelSiemens.logSiem.info(line);
+		while ((!line.contains("STRUCT") && !line.contains("RETAIN")&& !line.contains("VERSION")) && line != null) {
 			line = br.readLine();
+//			ModelSiemens.logSiem.info(line);
 		}
+		line = br.readLine();
 		readLineRecursive(br, tmpDbBlock.getMainStruct(), false);
 		return true;
 	}
@@ -235,22 +239,26 @@ public class ModelSiemens {
 
 	private static void readLineRecursive(BufferedReader br, ItemStruct workingStruct, boolean flag)
 			throws IOException, CloneNotSupportedException {
-
+//		logSiem.debug("readLineRecursive");
 		String lineReaded = "";
 
 		while (lineReaded != null) {
 			lineReaded = br.readLine();
+//			ModelSiemens.logSiem.info(lineReaded);
 			lineReaded = removeInitialBrackets(lineReaded);
 			if (lineReaded == null || lineReaded.contains("END_TYPE") || lineReaded.contains("END_DATA_BLOCK")
-					|| lineReaded.contains("END_STRUCT") || lineReaded.contains("END_VAR")) {
+					|| lineReaded.contains("END_STRUCT") || lineReaded.contains("END_VAR")|| lineReaded.trim().isEmpty()) {
 //				logSiem.debug("end recursion.");
 				return;
 			}
 			String line = removeInitialBrackets(lineReaded);
 			line = removeComment(line);
-			if (line.split(":").length > 1 && line.split(":")[1].contains("Array[")) {
+			if(detectedUDT(line)) {
+//				ModelSiemens.logSiem.debug("dddd: "+line);
+				manageUDT(workingStruct, lineReaded);
+			}else if (detectedArray(line)) {
 				manageArray(workingStruct, lineReaded, flag);
-			} else if (line.toLowerCase().contains("struct")) {
+			} else if (detectedStruct(line)) {
 				manageStructSimple(br, workingStruct, lineReaded, flag);
 			} else {
 				manageTypeSimple(workingStruct, lineReaded, flag);
@@ -258,10 +266,51 @@ public class ModelSiemens {
 		}
 	}
 
+	private static void manageUDT(ItemStruct workingStruct, String lineReaded) throws CloneNotSupportedException {
+//		logSiem.info("manageUDT");
+		if (ModelSiemens.getgAddr().gBit() > 0) {
+			ModelSiemens.getgAddr().incrementAddress(1, 0);
+			ModelSiemens.getgAddr().setBit(0);
+		}
+		if ((ModelSiemens.getgAddr().gByte() % 2) != 0) {
+			ModelSiemens.getgAddr().incrByte(1);
+		}
+//		String str =lineReaded.replace('"', ' ').trim();
+		String str =lineReaded.trim();
+		ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, workingStruct)
+				.clone();
+		
+		itemUDT.updateName(str);
+		
+		itemUDT.setUpType();
+		itemUDT.addAddresRec(gAddr);
+		ModelSiemens.getgAddr().incrementAddress(itemUDT.getByteSize(), itemUDT.getBitSize());
+		workingStruct.addItem(itemUDT);
+//		logSiem.info("manageUDT");
+		
+		
+	}
+
+	private static boolean detectedUDT(String line) {
+		if(line.trim().isEmpty())return false;
+		line = line.replaceAll("\".*?\" ?", "");
+		line=line.replace("\"", "").trim();
+		return line.isEmpty();
+	}
+
+	private static boolean detectedStruct(String line) {
+		return line.toLowerCase().contains("struct");
+	}
+
+	private static boolean detectedArray(String line) {
+		return line.split(":").length > 1 && line.split(":")[1].contains("Array[");
+	}
+
 	private static void manageTypeSimple(ItemStruct workingStruct, String lineReaded, boolean flag)
 			throws CloneNotSupportedException {
 
-		String str = lineReaded.split("//")[0].replaceAll("\\{.*?\\}", "").trim().replaceAll(" +", " ");
+//		String str = lineReaded.split("//")[0].replaceAll("\\{.*?\\}", "").trim().replaceAll(" +", " ");
+		String str=reomveValue(removeComment(removeInitialBrackets(lineReaded)));
 		if (str.split(":")[1].contains("Bool;")) {
 			manageBool(workingStruct, lineReaded, lastSimpleType != SimpleSiemensType.BOOL);
 			lastSimpleType = SimpleSiemensType.BOOL;
@@ -346,8 +395,16 @@ public class ModelSiemens {
 				manageUDT_DataBlock(workingStruct, lineReaded);
 			}
 		} else {
-			logSiem.error("Tipo non riconosciuto! " + lineReaded + " -> " + lineReaded.split(":")[1]);
+			logSiem.error("Tipo non riconosciuto!");
+			logSiem.error("Linea letta: "+lineReaded);
+			logSiem.error("tipo: "+lineReaded.split(":")[1]);
 		}
+	}
+
+	private static String reomveValue(String string) {
+//		logSiem.error("TIPO: "+string.split(":=")[0]+";");
+		if(string.contains(":="))return string.split(":=")[0].trim()+";";
+		return string;
 	}
 
 	private static boolean typeExist(String string) {
@@ -393,7 +450,7 @@ public class ModelSiemens {
 		str = removeComment(str);
 		str = getTypeString(str);
 
-		ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, getNameItemFromStringLine(lineReaded), workingStruct)
+		ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, workingStruct)
 				.clone();
 		itemUDT.updateName(getNameItemFromStringLine(lineReaded));
 		itemUDT.setUpType();
@@ -415,7 +472,7 @@ public class ModelSiemens {
 		String str = removeInitialBrackets(lineReaded);
 		str = removeComment(str);
 		str = getTypeString(str);
-		ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, getNameItemFromStringLine(lineReaded), workingStruct)
+		ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, workingStruct)
 				.clone();
 		itemUDT.updateName(getNameItemFromStringLine(lineReaded));
 		itemUDT.updateParent(workingStruct);
@@ -426,9 +483,12 @@ public class ModelSiemens {
 		workingStruct.addItem(itemUDT);
 	}
 
-	private static ItemStruct getUDTFromName(String str, String string, ItemStruct parent) {
+	private static ItemStruct getUDTFromName(String str, ItemStruct parent) {
 //		logSiem.info("getUDTFromName");
 		for (ItemStruct item : udtlist) {
+//			logSiem.info("getUDTFromName");
+//			ModelSiemens.logSiem.info(item.getTitleUDT());
+//			ModelSiemens.logSiem.info(str);
 			if (item.getTitleUDT().equals(str)) {
 				if (parent != null)
 					item.setParent(parent);
@@ -437,6 +497,7 @@ public class ModelSiemens {
 				return item;
 			}
 		}
+		ModelSiemens.logSiem.error("return null.");
 		return null;
 	}
 
@@ -843,8 +904,7 @@ public class ModelSiemens {
 			str = getTypeString(str);
 			str = getTypeArrayString(str);
 
-			ItemStruct itemUDT = (ItemStruct) getUDTFromName(str, getNameItemFromStringLine(lineReaded) + "[" + i + "]",
-					workingStruct).clone();
+			ItemStruct itemUDT = (ItemStruct) getUDTFromName(str,workingStruct).clone();
 			itemUDT.updateDbName(workingStruct.getDbName());
 			itemUDT.updateName(getNameItemFromStringLine(lineReaded) + "[" + i + "]");
 			itemUDT.updateParent(workingStruct);
