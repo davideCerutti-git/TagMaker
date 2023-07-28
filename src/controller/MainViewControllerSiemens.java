@@ -120,7 +120,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 	void openChooseFileDb(ActionEvent event) {
 		ValidationSupport.setRequired(textFieldChooseDb, false);
 		String filePath = "";
-		model.readProperties();
+		ModelSiemens.readProperties();
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open db File");
 		fc.getExtensionFilters().addAll(new ExtensionFilter("db Files", "*.db"));

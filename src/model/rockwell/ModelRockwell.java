@@ -720,7 +720,7 @@ public class ModelRockwell {
 	/**
 	 * Legge il file settings
 	 */
-	public void readProperties() {
+	public static void readProperties() {
 		try {
 			properties = new Settings();
 			properties.load(new File("properties/rockwellImporterSettings.cfg"));

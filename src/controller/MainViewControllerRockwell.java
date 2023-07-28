@@ -176,9 +176,10 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 
 	@FXML
 	void openChooseFileL5X(ActionEvent event) {
+		ModelRockwell.logRock.info("openChooseFileL5X");
 		ValidationSupport.setRequired(textFieldChooseXml, false);
 		String filePath = "";
-		model.readProperties();
+		ModelRockwell.readProperties();
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open XML File");
 		fc.getExtensionFilters().addAll(new ExtensionFilter("L5X Files", "*.L5X"));
@@ -188,10 +189,14 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 		} else {
 			fc.setInitialDirectory(new File(System.getProperty("user.home") + "\\Desktop\\"));
 		}
+		selectedFiles_L5X = fc.showOpenMultipleDialog(buttonXmlToXls.getParent().getScene().getWindow());
+		
 		String s = "";
 		if (selectedFiles_L5X == null) {
+			ModelRockwell.logRock.info("selectedFiles_L5X == null");
 			return;
 		}
+		
 		for (File f : selectedFiles_L5X) {
 			if (selectedFiles_L5X.size() > 1) {
 				s = s + f.getName() + " ; ";
