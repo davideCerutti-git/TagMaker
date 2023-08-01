@@ -89,7 +89,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 
 	public MainViewControllerSiemens() {
 		model = new ModelSiemens(null);
-		properties = model.getProp();
+		properties = ModelSiemens.getProp();
 	}
 
 	@FXML
@@ -109,7 +109,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 
 	public void setModel(ModelSiemens modelSiemens) {
 		model = modelSiemens;
-		properties = model.getProp();
+		properties = ModelSiemens.getProp();
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 		ValidationSupport.setRequired(textFieldChooseXlsx, false);
 		ValidationSupport.setRequired(txtFieldPrefixDriver, false);
 		String filePath = "";
-		model.readProperties();
+		ModelSiemens.readProperties();
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open xlsx File");
 		fc.getExtensionFilters().addAll(new ExtensionFilter("xlsx Files", "*.xlsx"));
@@ -457,8 +457,7 @@ public class MainViewControllerSiemens extends ViewController implements Initial
 	}
 
 	private boolean isFileClosed(File file) {
-		try {
-			FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
+		try (FileChannel channel = new RandomAccessFile(file, "rw").getChannel()) {
 			FileLock lock = channel.tryLock();
 			if (lock == null) {
 				return false;

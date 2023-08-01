@@ -106,6 +106,7 @@ public class ItemString extends Item {
 			return false;
 		}
 		try {
+			@SuppressWarnings("unused")
 			double d = Double.parseDouble(strNum);
 		} catch (NumberFormatException nfe) {
 			return false;

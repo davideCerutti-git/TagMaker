@@ -56,10 +56,10 @@ public class ModelSiemens {
 
 	/** ###### CONSTRUCTORS ###### */
 	public ModelSiemens(Stage _primaryStage) {
-		this.dblist = new ArrayList<DB>();
-		this.udtlist = new ArrayList<ItemStruct>();
-		this.PLCTags = new HashMap<String, String>();
-		this.udtlist = new ArrayList<ItemStruct>();
+		ModelSiemens.dblist = new ArrayList<DB>();
+		ModelSiemens.udtlist = new ArrayList<ItemStruct>();
+		ModelSiemens.PLCTags = new HashMap<String, String>();
+		ModelSiemens.udtlist = new ArrayList<ItemStruct>();
 		readProperties();
 
 		// TODO Attenzione! il costruttore viene richiamato due volte

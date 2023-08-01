@@ -28,7 +28,7 @@ public class ModelRockwell {
 	private CsvGenerator csvGenerator;
 
 	public ModelRockwell(Stage _primaryStage) {
-		primaryStage = _primaryStage;
+		setPrimaryStage(_primaryStage);
 		readProperties();
 		// TODO Attenzione! il costruttore viene richiamato due volte
 	}
@@ -1444,6 +1444,14 @@ public class ModelRockwell {
 			csvGenerator = new CsvGenerator(properties, logRock, controller);
 		}
 		return csvGenerator;
+	}
+
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
 	}
 
 }

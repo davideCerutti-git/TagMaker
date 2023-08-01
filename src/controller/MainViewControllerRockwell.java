@@ -33,7 +33,6 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 	private URL location;
 	@FXML // fx:id="mainPane"
 	private StackPane mainStackPane; // Value injected by FXMLLoader
-	private VBox box;
 	@FXML // fx:id="buttonBack"
 	private Button buttonBack; // Value injected by FXMLLoader
 	@FXML // fx:id="labelLocationXml"
@@ -143,7 +142,7 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 	void openChooseFileXls(ActionEvent event) {
 		ValidationSupport.setRequired(textFieldChooseXls, false);
 		String filePath = "";
-		model.readProperties();
+		ModelRockwell.readProperties();
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open XLS File");
 		fc.getExtensionFilters().addAll(new ExtensionFilter("XLSX Files", "*.xlsx"));
@@ -287,7 +286,7 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 
 		@Override
 		protected Void call() throws Exception {
-			model.readProperties();
+			ModelRockwell.readProperties();
 			boolean rawExport = Boolean.parseBoolean(properties.getProperty("rawExport"));
 			if (selectedFiles_L5X != null) {
 				if (!rawExport) {
@@ -375,8 +374,7 @@ public class MainViewControllerRockwell extends ViewController implements Initia
 	}
 
 	private boolean isFileClosed(File file) {
-		try {
-			FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
+		try (FileChannel channel = new RandomAccessFile(file, "rw").getChannel()) {
 			FileLock lock = channel.tryLock();
 			if (lock == null) {
 				return false;

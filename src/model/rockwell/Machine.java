@@ -13,7 +13,7 @@ public class Machine {
 		this.fgroupAlarms = new GroupAlarms();
 		this.fgroupReads = new GroupReads();
 		this.fgroupWrites = new GroupWrites();
-		this.fgroupEntryes = new GroupEntry();
+		this.setFgroupEntryes(new GroupEntry());
 	}
 
 	public String getfName() {
@@ -46,6 +46,14 @@ public class Machine {
 
 	public void setFgroupWrites(GroupWrites fgroupWrites) {
 		this.fgroupWrites = fgroupWrites;
+	}
+
+	public GroupEntry getFgroupEntryes() {
+		return fgroupEntryes;
+	}
+
+	public void setFgroupEntryes(GroupEntry fgroupEntryes) {
+		this.fgroupEntryes = fgroupEntryes;
 	}
 
 }

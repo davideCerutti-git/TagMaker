@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 import org.apache.log4j.Logger;
 import controller.*;
-import model.siemens.ModelSiemens;
 import settings.Settings;
 
 public class CsvGenerator {

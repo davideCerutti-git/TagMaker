@@ -200,6 +200,7 @@ public class XmlParser {
 
 		NodeList nlsmMembers = structureElement.getElementsByTagName("StructureMember");
 		for (int u = 0; u < nlsmMembers.getLength(); u++) {
+			@SuppressWarnings("unused")
 			Element structureMemberElement = (Element) nlsmMembers.item(u);
 			StructureMember sm = new StructureMember();
 			// ricorro Structure
